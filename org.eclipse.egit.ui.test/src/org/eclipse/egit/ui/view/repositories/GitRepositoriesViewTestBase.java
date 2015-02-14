@@ -79,7 +79,7 @@ public abstract class GitRepositoriesViewTestBase extends
 	}
 
 	protected static void setVerboseBranchMode(boolean state) {
-		ICommandService srv = (ICommandService) PlatformUI.getWorkbench()
+		ICommandService srv = PlatformUI.getWorkbench()
 				.getService(ICommandService.class);
 		State verboseBranchModeState = srv.getCommand(
 				ToggleBranchCommitCommand.ID).getState(
