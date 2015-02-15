@@ -11,12 +11,15 @@ package org.eclipse.egit.gitflow;
 import org.eclipse.egit.gitflow.op.FeatureFinishOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureStartOperationTest;
 import org.eclipse.egit.gitflow.op.InitOperationTest;
+import org.eclipse.egit.gitflow.op.ReleaseFinishOperationTest;
+import org.eclipse.egit.gitflow.op.ReleaseStartOperationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ InitOperationTest.class, FeatureStartOperationTest.class, FeatureFinishOperationTest.class })
+@SuiteClasses({ InitOperationTest.class, FeatureStartOperationTest.class, FeatureFinishOperationTest.class,
+	ReleaseStartOperationTest.class, ReleaseFinishOperationTest.class })
 public class AllTests {
 
 }

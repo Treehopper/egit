@@ -40,6 +40,28 @@
                   </reference>
                </visibleWhen>
             </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.releaseStart"
+                  label="%TeamGitFlowReleaseStart.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.releaseFinish"
+                  label="%TeamGitFlowReleaseFinish.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -57,6 +79,14 @@
       <command
             id="org.eclipse.egit.gitflow.ui.command.featureFinish"
             name="%TeamGitFlowFeatureFinish.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.releaseStart"
+            name="%TeamGitFlowReleaseStart.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.releaseFinish"
+            name="%TeamGitFlowReleaseFinish.name">
       </command>
    </extension>
    <extension
@@ -95,6 +125,36 @@
             commandId="org.eclipse.egit.gitflow.ui.command.featureFinish">
          <class
                class="org.eclipse.egit.gitflow.ui.internal.actions.FeatureFinishHandler">
+         </class>
+         <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.releaseStart">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.ReleaseStartHandler">
+         </class>
+         <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.releaseFinish">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.ReleaseFinishHandler">
          </class>
          <activeWhen>
             <iterate>
