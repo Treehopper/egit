@@ -17,24 +17,27 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.egit.gitflow.op.InitOperation;
+import org.eclipse.egit.gitflow.WrongGitFlowStateException;
+import org.eclipse.egit.gitflow.op.FeatureFinishOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-public class InitHandler extends AbstractHandler {
+public class FeatureFinishHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
 		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
 
-		Job job = new Job("Initializing...") {
+		Job job = new Job("Finishing feature...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new InitOperation(repository).execute(monitor);
+					new FeatureFinishOperation(repository).execute(monitor);
+				} catch (WrongGitFlowStateException e) {
+					return Activator.error(e.getMessage(), e);
 				} catch (CoreException e) {
 					return Activator.error(e.getMessage(), e);
 				}

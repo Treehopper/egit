@@ -18,6 +18,28 @@
                   </reference>
                </visibleWhen>
             </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.featureStart"
+                  label="%TeamGitFlowFeatureStart.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.featureFinish"
+                  label="%TeamGitFlowFeatureFinish.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -28,6 +50,14 @@
             id="org.eclipse.egit.gitflow.ui.command.init"
             name="%TeamGitFlowInit.name">
       </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.featureStart"
+            name="%TeamGitFlowFeatureStart.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.featureFinish"
+            name="%TeamGitFlowFeatureFinish.name">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -35,6 +65,36 @@
             commandId="org.eclipse.egit.gitflow.ui.command.init">
          <class
                class="org.eclipse.egit.gitflow.ui.internal.actions.InitHandler">
+         </class>
+         <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.featureStart">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.FeatureStartHandler">
+         </class>
+         <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.featureFinish">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.FeatureFinishHandler">
          </class>
          <activeWhen>
             <iterate>

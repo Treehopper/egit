@@ -13,16 +13,17 @@ import static org.junit.Assert.assertEquals;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 
-public class InitOperationTest extends AbstractGitFlowOperationTest {
-
+public class FeatureStartOperationTest extends AbstractFeatureOperationTest {
 	@Test
-	public void testInit() throws Exception {
-		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
+	public void testFeatureStart() throws Exception {
+		testRepository.createInitialCommit("testFeatureStart\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		InitOperation initOperation = new InitOperation(repository);
-		initOperation.execute(null);
-		assertEquals(GitFlowOperation.DEVELOP_FULL, repository
+		new InitOperation(repository).execute(null);
+
+		new FeatureStartOperation(repository, MY_FEATURE).execute(null);
+
+		assertEquals(getFullFeatureBranchName(MY_FEATURE), repository
 				.getFullBranch());
 	}
 }

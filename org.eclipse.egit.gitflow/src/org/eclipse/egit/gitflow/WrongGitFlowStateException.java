@@ -8,15 +8,18 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow;
 
-import org.eclipse.egit.gitflow.op.FeatureFinishOperationTest;
-import org.eclipse.egit.gitflow.op.FeatureStartOperationTest;
-import org.eclipse.egit.gitflow.op.InitOperationTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+public class WrongGitFlowStateException extends Exception {
 
-@RunWith(Suite.class)
-@SuiteClasses({ InitOperationTest.class, FeatureStartOperationTest.class, FeatureFinishOperationTest.class })
-public class AllTests {
+	/**
+	 * @generated
+	 */
+	private static final long serialVersionUID = 3091117695421525438L;
 
+	public WrongGitFlowStateException(Exception e) {
+		super(e);
+	}
+
+	public WrongGitFlowStateException(String string) {
+		super(string);
+	}
 }

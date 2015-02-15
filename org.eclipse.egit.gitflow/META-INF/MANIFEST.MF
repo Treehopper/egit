@@ -10,4 +10,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.egit.core,
  org.eclipse.jgit,
  org.eclipse.core.resources
-Export-Package: org.eclipse.egit.gitflow.op
+Export-Package: org.eclipse.egit.gitflow,
+ org.eclipse.egit.gitflow.op

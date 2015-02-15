@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -55,4 +57,7 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public static IStatus error(String message, Throwable throwable) {
+		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, throwable);
+	}
 }

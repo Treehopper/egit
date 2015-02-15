@@ -17,24 +17,36 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.egit.gitflow.op.InitOperation;
+import org.eclipse.egit.gitflow.op.FeatureStartOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
+import org.eclipse.egit.gitflow.ui.internal.validation.FeatureNameValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-public class InitHandler extends AbstractHandler {
+public class FeatureStartHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
 		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
 
-		Job job = new Job("Initializing...") {
+		InputDialog inputDialog = new InputDialog(HandlerUtil.getActiveShell(event), "Provide feature name",
+				"Please provide a name for the new feature.", "", new FeatureNameValidator(repository));
+
+		if (inputDialog.open() != Window.OK) {
+			return null;
+		}
+
+		final String featureName = inputDialog.getValue();
+
+		Job job = new Job("Starting new Feature...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new InitOperation(repository).execute(monitor);
+					new FeatureStartOperation(repository, featureName).execute(monitor);
 				} catch (CoreException e) {
 					return Activator.error(e.getMessage(), e);
 				}

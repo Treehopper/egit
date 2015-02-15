@@ -1,0 +1,40 @@
+/*******************************************************************************
+ * Copyright (C) 2015, Max Hohenegger <eclipse@hohenegger.eu>
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+package org.eclipse.egit.gitflow.op;
+
+import static org.junit.Assert.assertEquals;
+
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.junit.Test;
+
+public class FeatureFinishOperationTest extends AbstractFeatureOperationTest {
+	@Test
+	public void testFeatureFinish() throws Exception {
+		testRepository.createInitialCommit("testFeatureFinish\n\nfirst commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository).execute(null);
+
+		new FeatureStartOperation(repository, MY_FEATURE).execute(null);
+
+		new FeatureFinishOperation(repository, MY_FEATURE).execute(null);
+
+		assertEquals(DEVELOP_FULL, repository.getFullBranch());
+
+		String branchName = getFeatureBranchName(MY_FEATURE);
+
+		RevCommit branchCommit = testRepository.createInitialCommit("testFeatureFinish\n\nbranch commit\n");
+
+		assertEquals(findBranch(repository, branchName), null);
+
+		RevCommit developHead = findHead(repository);
+		assertEquals(branchCommit, developHead);
+	}
+}

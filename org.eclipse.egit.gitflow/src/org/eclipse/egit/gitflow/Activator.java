@@ -8,12 +8,17 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
+
+	// The plug-in ID
+	public static final String PLUGIN_ID = "org.eclipse.egit.gitflow"; //$NON-NLS-1$
 
 	static BundleContext getContext() {
 		return context;
@@ -35,4 +40,7 @@ public class Activator implements BundleActivator {
 		Activator.context = null;
 	}
 
+	public static IStatus error(String message, Throwable throwable) {
+		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, throwable);
+	}
 }

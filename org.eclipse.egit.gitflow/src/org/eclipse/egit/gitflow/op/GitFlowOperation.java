@@ -10,15 +10,23 @@ package org.eclipse.egit.gitflow.op;
 
 import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.egit.core.internal.job.RuleUtil;
+import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
+import org.eclipse.egit.core.op.DeleteBranchOperation;
 import org.eclipse.egit.core.op.IEGitOperation;
+import org.eclipse.egit.core.op.MergeOperation;
+import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -28,7 +36,6 @@ abstract public class GitFlowOperation implements IEGitOperation {
 	static final String SEP = "/";
 
 	static final String DEVELOP = "develop";
-	static final String FEATURE_PREFIX = "feature";
 	static final String RELEASE_PREFIX = "release";
 
 	static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
@@ -62,5 +69,75 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected void start(IProgressMonitor monitor, String branchName) throws WrongGitFlowStateException, CoreException {
+		try {
+			if (repository.getFullBranch().equals(DEVELOP)) {
+				throw new WrongGitFlowStateException("Not on " + DEVELOP);
+			}
+		} catch (IOException e) {
+			throw new CoreException(Activator.error(e.getMessage(), e));
+		}
+		try {
+			CreateLocalBranchOperation branchOperation = createBranchFromHead(repository, branchName);
+			branchOperation.execute(monitor);
+			BranchOperation checkoutOperation = new BranchOperation(repository, branchName);
+			checkoutOperation.execute(monitor);
+		} catch (CoreException e) {
+			throw e;
+		}
+	}
+
+	protected void finish(IProgressMonitor monitor, String branchName) {
+		try {
+			new BranchOperation(repository, DEVELOP).execute(monitor);
+			new MergeOperation(repository, branchName).execute(monitor);
+
+			Ref branch = findBranch(repository, branchName);
+			if (branch == null) {
+				throw new IllegalStateException(String.format("Branch %s missing", branchName));
+			}
+			new DeleteBranchOperation(repository, branch, false).execute(monitor);
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private Ref findBranch(Repository repository, String branchName) throws IOException {
+		return repository.getRef(Constants.R_HEADS + branchName);
+	}
+
+	protected static boolean hasTwoSegmentsWithPrefix(Repository repository, String prefix) throws CoreException {
+		String branch;
+		try {
+			branch = repository.getBranch();
+		} catch (IOException e) {
+			throw new CoreException(Activator.error(e.getMessage(), e));
+		}
+
+		String[] split = branch.split(SEP);
+		if (split.length != 2) {
+			return false;
+		}
+
+		return prefix.equals(split[0]);
+	}
+
+	protected static String[] getBranchNameTuple(Repository repository) throws WrongGitFlowStateException {
+		String branch;
+		try {
+			branch = repository.getBranch();
+		} catch (IOException e) {
+			throw new WrongGitFlowStateException(e);
+		}
+
+		String[] split = branch.split(SEP);
+		if (split.length != 2) {
+			throw new WrongGitFlowStateException("Not on a git flow branch. Current branch is " + branch);
+		}
+		return split;
 	}
 }
