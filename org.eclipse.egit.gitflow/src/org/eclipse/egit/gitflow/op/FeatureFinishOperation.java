@@ -19,7 +19,7 @@ public final class FeatureFinishOperation extends AbstractFeatureOperation {
 	}
 
 	public FeatureFinishOperation(Repository repository) throws CoreException, WrongGitFlowStateException {
-		super(repository, getFeatureName(repository));
+		this(repository, getFeatureName(repository));
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
