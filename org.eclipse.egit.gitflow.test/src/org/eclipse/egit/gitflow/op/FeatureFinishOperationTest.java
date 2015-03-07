@@ -10,6 +10,8 @@ package org.eclipse.egit.gitflow.op;
 
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.egit.core.op.BranchOperation;
+import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
@@ -36,5 +38,19 @@ public class FeatureFinishOperationTest extends AbstractFeatureOperationTest {
 
 		RevCommit developHead = findHead(repository);
 		assertEquals(branchCommit, developHead);
+	}
+
+	@Test(expected = WrongGitFlowStateException.class)
+	public void testFeatureFinishFail() throws Exception {
+		testRepository.createInitialCommit("testFeatureFinishFail\n\nfirst commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository).execute(null);
+
+		new FeatureStartOperation(repository, MY_FEATURE).execute(null);
+
+		new BranchOperation(repository, DEVELOP).execute(null);
+
+		new FeatureFinishOperation(repository).execute(null);
 	}
 }

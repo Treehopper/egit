@@ -8,8 +8,10 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import org.eclipse.egit.core.op.BranchOperation;
+import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
@@ -45,5 +47,19 @@ public class ReleaseFinishOperationTest extends AbstractReleaseOperationTest {
 		RevCommit masterHead = findHead(repository, "master");
 		assertEquals(branchCommit, masterHead);
 
+	}
+
+	@Test(expected = WrongGitFlowStateException.class)
+	public void testReleaseFinishFail() throws Exception {
+		testRepository.createInitialCommit("testReleaseFinishFail\n\nfirst commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository).execute(null);
+
+		new ReleaseStartOperation(repository, MY_RELEASE).execute(null);
+
+		new BranchOperation(repository, DEVELOP).execute(null);
+
+		new ReleaseFinishOperation(repository).execute(null);
 	}
 }
