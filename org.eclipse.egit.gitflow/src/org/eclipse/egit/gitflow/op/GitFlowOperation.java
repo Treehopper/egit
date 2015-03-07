@@ -111,7 +111,7 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		}
 	}
 
-	protected void finish(IProgressMonitor monitor, String branchName) {
+	protected void finish(IProgressMonitor monitor, String branchName) throws CoreException {
 		try {
 			mergeTo(monitor, branchName, DEVELOP);
 
@@ -120,22 +120,18 @@ abstract public class GitFlowOperation implements IEGitOperation {
 				throw new IllegalStateException(String.format("Branch %s missing", branchName));
 			}
 			new DeleteBranchOperation(repository, branch, false).execute(monitor);
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected void mergeTo(IProgressMonitor monitor, String branchName, String targetBranchName) {
+	protected void mergeTo(IProgressMonitor monitor, String branchName, String targetBranchName) throws CoreException {
 		try {
 			if (!hasBranch(targetBranchName)) {
 				throw new RuntimeException(String.format("No branch '%s' found.", targetBranchName));
 			}
 			new BranchOperation(repository, targetBranchName).execute(monitor);
 			new MergeOperation(repository, branchName).execute(monitor);
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
 		} catch (GitAPIException e) {
 			throw new RuntimeException(e);
 		}

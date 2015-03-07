@@ -26,13 +26,9 @@ public final class InitOperation extends GitFlowOperation {
 			new CommitOperation(repository, getUser(), getUser(), "Git Flow inital commit").execute(monitor);
 		}
 
-		try {
-			CreateLocalBranchOperation branchFromHead = createBranchFromHead(repository, DEVELOP);
-			branchFromHead.execute(monitor);
-			BranchOperation checkoutOperation = new BranchOperation(repository, DEVELOP);
-			checkoutOperation.execute(monitor);
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
-		}
+		CreateLocalBranchOperation branchFromHead = createBranchFromHead(repository, DEVELOP);
+		branchFromHead.execute(monitor);
+		BranchOperation checkoutOperation = new BranchOperation(repository, DEVELOP);
+		checkoutOperation.execute(monitor);
 	}
 }

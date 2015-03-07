@@ -34,10 +34,6 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 		tag.setMessage("Release of " + releaseName);
 		tag.setObjectId(findHead(repository));
 		TagOperation tagOperation = new TagOperation(repository, tag, false);
-		try {
-			tagOperation.execute(monitor);
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
-		}
+		tagOperation.execute(monitor);
 	}
 }
