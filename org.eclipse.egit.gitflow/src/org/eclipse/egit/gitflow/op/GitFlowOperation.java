@@ -74,7 +74,7 @@ abstract public class GitFlowOperation implements IEGitOperation {
 
 	protected void start(IProgressMonitor monitor, String branchName) throws WrongGitFlowStateException, CoreException {
 		try {
-			if (repository.getFullBranch().equals(DEVELOP)) {
+			if (!repository.getBranch().equals(DEVELOP)) {
 				throw new WrongGitFlowStateException("Not on " + DEVELOP);
 			}
 		} catch (IOException e) {

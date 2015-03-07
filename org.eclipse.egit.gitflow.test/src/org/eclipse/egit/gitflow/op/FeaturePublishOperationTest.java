@@ -74,7 +74,7 @@ public class FeaturePublishOperationTest extends DualRepositoryTestCase {
 		Repository repo2 = Activator.getDefault().getRepositoryCache()
 				.lookupRepository(new File(workdir2, Constants.DOT_GIT));
 		repository2 = new TestRepository(repo2);
-
+		new InitOperation(repo2).execute(null);
 	}
 
 	@Test
