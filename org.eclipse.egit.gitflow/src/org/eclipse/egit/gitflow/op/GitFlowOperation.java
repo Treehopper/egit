@@ -129,11 +129,28 @@ abstract public class GitFlowOperation implements IEGitOperation {
 
 	protected void mergeTo(IProgressMonitor monitor, String branchName, String targetBranchName) {
 		try {
+			if (!hasBranch(targetBranchName)) {
+				throw new RuntimeException(String.format("No branch '%s' found.", targetBranchName));
+			}
 			new BranchOperation(repository, targetBranchName).execute(monitor);
 			new MergeOperation(repository, branchName).execute(monitor);
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
+		} catch (GitAPIException e) {
+			throw new RuntimeException(e);
 		}
+	}
+
+	private boolean hasBranch(String branch) throws GitAPIException {
+		String fullBranchName = Constants.R_HEADS + branch;
+		List<Ref> branchList = Git.wrap(repository).branchList().call();
+		for (Ref ref : branchList) {
+			if (fullBranchName.equals(ref.getTarget().getName())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private Ref findBranch(Repository repository, String branchName) throws IOException {
