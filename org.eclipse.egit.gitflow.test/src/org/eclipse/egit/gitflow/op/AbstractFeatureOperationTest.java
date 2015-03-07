@@ -11,8 +11,6 @@ package org.eclipse.egit.gitflow.op;
 import org.eclipse.jgit.lib.Constants;
 
 abstract public class AbstractFeatureOperationTest extends AbstractGitFlowOperationTest {
-	protected static final String MY_FEATURE = "myFeature";
-
 	protected String getFullFeatureBranchName(String featureName) {
 		return Constants.R_HEADS + getFeatureBranchName(featureName);
 	}

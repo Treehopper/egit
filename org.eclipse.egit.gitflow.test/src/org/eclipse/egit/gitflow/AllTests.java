@@ -20,7 +20,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ InitOperationTest.class, FeatureStartOperationTest.class, FeatureFinishOperationTest.class,
-	ReleaseStartOperationTest.class, ReleaseFinishOperationTest.class, FeaturePublishOperationTest.class })
+		ReleaseStartOperationTest.class, ReleaseFinishOperationTest.class, FeaturePublishOperationTest.class,
+		BranchNameValidatorTest.class })
 public class AllTests {
 
 }

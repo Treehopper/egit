@@ -18,7 +18,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
 abstract public class AbstractReleaseOperationTest extends AbstractGitFlowOperationTest {
-	protected static final String MY_RELEASE = "myRelease";
 	protected static final String MY_MASTER = "master";
 
 	protected String getFullReleaseBranchName(String releaseName) {

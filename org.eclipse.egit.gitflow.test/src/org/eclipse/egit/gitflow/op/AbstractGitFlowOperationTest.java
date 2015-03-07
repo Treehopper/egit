@@ -26,11 +26,15 @@ import org.junit.After;
 import org.junit.Before;
 
 abstract public class AbstractGitFlowOperationTest extends GitTestCase {
-	TestRepository testRepository;
+	protected TestRepository testRepository;
 
 	static final String SEP = "/";
 	static final String DEVELOP = "develop";
 	static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
+
+	protected static final String MY_FEATURE = "myFeature";
+
+	protected static final String MY_RELEASE = "myRelease";
 
 	@Before
 	public void setUp() throws Exception {
