@@ -14,6 +14,7 @@ import org.eclipse.egit.core.op.TagOperation;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.TagBuilder;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 @SuppressWarnings("restriction")
 public final class ReleaseFinishOperation extends AbstractReleaseOperation {
@@ -29,11 +30,15 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 		String releaseBranchName = createReleaseBranchName(releaseName);
 		mergeTo(monitor, releaseBranchName, MASTER);
 		finish(monitor, releaseBranchName);
+		RevCommit head = findHead(repository);
+		createTag(monitor, head, "Release of " + releaseName);
+	}
+
+	private void createTag(IProgressMonitor monitor, RevCommit head, String message) throws CoreException {
 		TagBuilder tag = new TagBuilder();
 		tag.setTag(releaseName);
-		tag.setMessage("Release of " + releaseName);
-		tag.setObjectId(findHead(repository));
-		TagOperation tagOperation = new TagOperation(repository, tag, false);
-		tagOperation.execute(monitor);
+		tag.setMessage(message);
+		tag.setObjectId(head);
+		new TagOperation(repository, tag, false).execute(monitor);
 	}
 }
