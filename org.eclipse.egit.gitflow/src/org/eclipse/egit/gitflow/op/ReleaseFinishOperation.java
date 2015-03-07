@@ -26,7 +26,9 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		finish(monitor, createReleaseBranchName(releaseName));
+		String releaseBranchName = createReleaseBranchName(releaseName);
+		mergeTo(monitor, releaseBranchName, MASTER);
+		finish(monitor, releaseBranchName);
 		TagBuilder tag = new TagBuilder();
 		tag.setTag(releaseName);
 		tag.setMessage("Release of " + releaseName);

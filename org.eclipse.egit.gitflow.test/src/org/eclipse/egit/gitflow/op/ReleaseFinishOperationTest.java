@@ -41,5 +41,9 @@ public class ReleaseFinishOperationTest extends AbstractReleaseOperationTest {
 
 		RevCommit developHead = findHead(repository);
 		assertEquals(branchCommit, developHead);
+
+		RevCommit masterHead = findHead(repository, "master");
+		assertEquals(branchCommit, masterHead);
+
 	}
 }

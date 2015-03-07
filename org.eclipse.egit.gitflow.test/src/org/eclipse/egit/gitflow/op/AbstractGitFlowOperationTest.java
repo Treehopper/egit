@@ -67,4 +67,21 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 			throw new RuntimeException(e);
 		}
 	}
+
+	protected RevCommit findHead(Repository repo, String branch) {
+		RevWalk walk = new RevWalk(repo);
+
+		try {
+			ObjectId head = repo.resolve(Constants.R_HEADS + branch);
+			return walk.parseCommit(head);
+		} catch (RevisionSyntaxException e) {
+			throw new RuntimeException(e);
+		} catch (AmbiguousObjectException e) {
+			throw new RuntimeException(e);
+		} catch (IncorrectObjectTypeException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

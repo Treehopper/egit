@@ -36,6 +36,7 @@ abstract public class GitFlowOperation implements IEGitOperation {
 	static final String SEP = "/";
 
 	static final String DEVELOP = "develop";
+	static final String MASTER = "master";
 	static final String RELEASE_PREFIX = "release";
 
 	static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
@@ -91,8 +92,7 @@ abstract public class GitFlowOperation implements IEGitOperation {
 
 	protected void finish(IProgressMonitor monitor, String branchName) {
 		try {
-			new BranchOperation(repository, DEVELOP).execute(monitor);
-			new MergeOperation(repository, branchName).execute(monitor);
+			mergeTo(monitor, branchName, DEVELOP);
 
 			Ref branch = findBranch(repository, branchName);
 			if (branch == null) {
@@ -102,6 +102,15 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void mergeTo(IProgressMonitor monitor, String branchName, String targetBranchName) {
+		try {
+			new BranchOperation(repository, targetBranchName).execute(monitor);
+			new MergeOperation(repository, branchName).execute(monitor);
+		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		}
 	}
