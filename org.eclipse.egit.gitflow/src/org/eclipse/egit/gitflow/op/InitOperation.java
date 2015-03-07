@@ -11,11 +11,8 @@ package org.eclipse.egit.gitflow.op;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
+import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Repository;
 
 @SuppressWarnings("restriction")
@@ -25,15 +22,8 @@ public final class InitOperation extends GitFlowOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		try {
-			// provoke NoHeadException
-			Git.wrap(repository).log().addPath(".").call();
-		} catch (NoWorkTreeException e) {
-			throw new RuntimeException(e);
-		} catch (NoHeadException e) {
-			throw new RuntimeException(e);
-		} catch (GitAPIException e) {
-			throw new RuntimeException(e);
+		if (!hasBranches()) {
+			new CommitOperation(repository, getUser(), getUser(), "Git Flow inital commit").execute(monitor);
 		}
 
 		try {

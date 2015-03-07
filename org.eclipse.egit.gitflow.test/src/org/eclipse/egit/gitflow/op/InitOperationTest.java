@@ -25,4 +25,12 @@ public class InitOperationTest extends AbstractGitFlowOperationTest {
 		assertEquals(GitFlowOperation.DEVELOP_FULL, repository
 				.getFullBranch());
 	}
+
+	@Test
+	public void testInitEmptyRepository() throws Exception {
+		Repository repository = testRepository.getRepository();
+		InitOperation initOperation = new InitOperation(repository);
+		initOperation.execute(null);
+		assertEquals(GitFlowOperation.DEVELOP_FULL, repository.getFullBranch());
+	}
 }

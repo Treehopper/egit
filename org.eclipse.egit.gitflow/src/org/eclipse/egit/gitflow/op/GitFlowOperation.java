@@ -9,6 +9,7 @@
 package org.eclipse.egit.gitflow.op;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +22,8 @@ import org.eclipse.egit.core.op.IEGitOperation;
 import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
@@ -28,6 +31,7 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
@@ -70,6 +74,23 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected boolean hasBranches() {
+		List<Ref> branches;
+		try {
+			branches = Git.wrap(repository).branchList().call();
+			return !branches.isEmpty();
+		} catch (GitAPIException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String getUser() {
+		StoredConfig config = repository.getConfig();
+		String userName = config.getString("user", null, "name");
+		String email = config.getString("user", null, "email");
+		return String.format("%s <%s>", userName, email);
 	}
 
 	protected void start(IProgressMonitor monitor, String branchName) throws WrongGitFlowStateException, CoreException {
