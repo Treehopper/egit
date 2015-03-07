@@ -26,7 +26,7 @@ public class ReleaseFinishOperationTest extends AbstractReleaseOperationTest {
 
 		RevCommit branchCommit = testRepository.createInitialCommit("testReleaseFinish\n\nbranch commit\n");
 
-		new ReleaseFinishOperation(repository, MY_RELEASE).execute(null);
+		new ReleaseFinishOperation(repository).execute(null);
 
 		assertEquals(DEVELOP_FULL, repository.getFullBranch());
 

@@ -35,6 +35,7 @@ import org.junit.Test;
 @SuppressWarnings("restriction")
 public class FeaturePublishOperationTest extends DualRepositoryTestCase {
 	private static final String MY_FEATURE = "myFeature";
+	private static final String MY_MASTER = "master";
 	private static final String FEATURE_PREFIX = "feature";
 	private static final String SEP = "/";
 
@@ -68,7 +69,8 @@ public class FeaturePublishOperationTest extends DualRepositoryTestCase {
 
 		// let's clone repository1 to repository2
 		URIish uri = repository1.getUri();
-		CloneOperation clop = new CloneOperation(uri, true, null, workdir2, "refs/heads/master", "origin", 0);
+		CloneOperation clop = new CloneOperation(uri, true, null, workdir2, Constants.R_HEADS + MY_MASTER,
+				Constants.DEFAULT_REMOTE_NAME, 0);
 		clop.run(null);
 
 		Repository repo2 = Activator.getDefault().getRepositoryCache()
@@ -81,7 +83,7 @@ public class FeaturePublishOperationTest extends DualRepositoryTestCase {
 	public void testFeaturePublish() throws Exception {
 		new FeatureStartOperation(repository2.getRepository(), MY_FEATURE).execute(null);
 		RevCommit branchCommit = repository2.createInitialCommit("testFeaturePublish");
-		new FeaturePublishOperation(repository2.getRepository(), MY_FEATURE).execute(null);
+		new FeaturePublishOperation(repository2.getRepository()).execute(null);
 		assertCommitArrivedAtRemote(branchCommit, repository1.getRepository());
 
 		new FeatureFinishOperation(repository1.getRepository(), MY_FEATURE);

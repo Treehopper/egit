@@ -33,14 +33,15 @@ import org.eclipse.jgit.transport.URIish;
 
 @SuppressWarnings("restriction")
 public final class FeaturePublishOperation extends AbstractFeatureOperation {
-	private static final String REFS_HEADS_REFS_REMOTES_ORIGIN = "+refs/heads/*:refs/remotes/origin/*";
+	// "+refs/heads/*:refs/remotes/origin/*"
+	private static final String REFS_HEADS_REFS_REMOTES_ORIGIN = String.format("+%s*:%s%s/*", Constants.R_HEADS, Constants.R_REMOTES, Constants.DEFAULT_REMOTE_NAME);;
 	private URIish uri;
 
 	public FeaturePublishOperation(Repository repository, String featureName) throws CoreException {
 		super(repository, featureName);
 
 		StoredConfig config = repository.getConfig();
-		String url = config.getString("remote", "origin", "url");
+		String url = config.getString("remote", Constants.DEFAULT_REMOTE_NAME, "url");
 		if (url == null) {
 			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "No remote URI."));
 		}
@@ -61,8 +62,9 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 
 	static Collection<RemoteRefUpdate> copyUpdates(final Collection<RemoteRefUpdate> refUpdates) throws IOException {
 		final Collection<RemoteRefUpdate> copy = new ArrayList<RemoteRefUpdate>(refUpdates.size());
-		for (final RemoteRefUpdate rru : refUpdates)
+		for (final RemoteRefUpdate rru : refUpdates) {
 			copy.add(new RemoteRefUpdate(rru, null));
+		}
 		return copy;
 	}
 

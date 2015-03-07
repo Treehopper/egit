@@ -24,7 +24,7 @@ public class FeatureFinishOperationTest extends AbstractFeatureOperationTest {
 
 		new FeatureStartOperation(repository, MY_FEATURE).execute(null);
 
-		new FeatureFinishOperation(repository, MY_FEATURE).execute(null);
+		new FeatureFinishOperation(repository).execute(null);
 
 		assertEquals(DEVELOP_FULL, repository.getFullBranch());
 
