@@ -73,6 +73,17 @@
                   </reference>
                </visibleWhen>
             </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.featureTrack"
+                  label="%TeamGitFlowFeatureTrack.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -102,6 +113,14 @@
       <command
             id="org.eclipse.egit.gitflow.ui.command.featurePublish"
             name="%TeamGitFlowFeaturePublish.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.featureTrack"
+            name="%TeamGitFlowFeatureStart.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.featureTrack"
+            name="%TeamGitFlowFeatureTrack.name">
       </command>
    </extension>
    <extension
@@ -185,6 +204,21 @@
             commandId="org.eclipse.egit.gitflow.ui.command.featurePublish">
          <class
                class="org.eclipse.egit.gitflow.ui.internal.actions.FeaturePublishHandler">
+         </class>
+         <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.featureTrack">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.FeatureTrackHandler">
          </class>
          <activeWhen>
             <iterate>

@@ -143,7 +143,7 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		}
 	}
 
-	private boolean hasBranch(String branch) throws GitAPIException {
+	protected boolean hasBranch(String branch) throws GitAPIException {
 		String fullBranchName = Constants.R_HEADS + branch;
 		List<Ref> branchList = Git.wrap(repository).branchList().call();
 		for (Ref ref : branchList) {

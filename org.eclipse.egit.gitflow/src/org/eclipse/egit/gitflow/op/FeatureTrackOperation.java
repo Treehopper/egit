@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
@@ -18,33 +17,42 @@ import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig;
 import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
 @SuppressWarnings("restriction")
 public final class FeatureTrackOperation extends AbstractFeatureOperation {
-	public FeatureTrackOperation(Repository repository, String remoteFeatureName) {
-		super(repository, remoteFeatureName);
+	public static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP
+			+ FEATURE_PREFIX + SEP;
+	private Ref remoteFeature;
+
+	public FeatureTrackOperation(Repository repository, Ref ref) {
+		this(repository, ref, ref.getName().substring(REMOTE_ORIGIN_FEATURE_PREFIX.length()));
+	}
+
+	public FeatureTrackOperation(Repository repository, Ref ref, String newLocalBranch) {
+		super(repository, getFeatureBranchName(newLocalBranch));
+		this.remoteFeature = ref;
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
-			String newLocalBranch = getFeatureBranchName(featureName);
-			String remoteBranchName = newLocalBranch;
+			String newLocalBranch = featureName;
 			fetch(monitor);
 
-			Ref remoteFeature = repository.getRef(Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + "/"
-					+ remoteBranchName);
-			new CreateLocalBranchOperation(repository, newLocalBranch, remoteFeature, UpstreamConfig.REBASE)
-			.execute(monitor);
+			if (!hasBranch(newLocalBranch)) {
+				new CreateLocalBranchOperation(repository, newLocalBranch, remoteFeature, UpstreamConfig.REBASE)
+				.execute(monitor);
+			}
 
 			new BranchOperation(repository, newLocalBranch).execute(monitor);
 		} catch (URISyntaxException e) {
 			new CoreException(Activator.error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {
 			new CoreException(Activator.error(e.getMessage(), e));
-		} catch (IOException e) {
+		} catch (GitAPIException e) {
 			new CoreException(Activator.error(e.getMessage(), e));
 		}
 
