@@ -42,7 +42,7 @@ abstract public class AbstractFeatureOperation extends GitFlowOperation {
 		return Constants.R_HEADS + getFeatureBranchName(featureName);
 	}
 
-	private static String getFeatureBranchName(String featureName) {
+	protected static String getFeatureBranchName(String featureName) {
 		return FEATURE_PREFIX + SEP + featureName;
 	}
 }
