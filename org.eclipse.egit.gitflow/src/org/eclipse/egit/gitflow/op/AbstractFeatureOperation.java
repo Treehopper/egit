@@ -14,8 +14,6 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 
 abstract public class AbstractFeatureOperation extends GitFlowOperation {
-	public static final String FEATURE_PREFIX = "feature";
-
 	protected String featureName;
 
 	public AbstractFeatureOperation(Repository repository, String featureName) {

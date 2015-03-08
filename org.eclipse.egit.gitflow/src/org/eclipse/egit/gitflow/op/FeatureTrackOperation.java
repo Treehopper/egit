@@ -17,13 +17,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig;
-import org.eclipse.egit.core.op.FetchOperation;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.StoredConfig;
-import org.eclipse.jgit.transport.RemoteConfig;
 
 @SuppressWarnings("restriction")
 public final class FeatureTrackOperation extends AbstractFeatureOperation {
@@ -35,9 +32,7 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 		try {
 			String newLocalBranch = getFeatureBranchName(featureName);
 			String remoteBranchName = newLocalBranch;
-			StoredConfig rc = repository.getConfig();
-			RemoteConfig config = new RemoteConfig(rc, Constants.DEFAULT_REMOTE_NAME);
-			new FetchOperation(repository, config, 0, false).run(monitor);
+			fetch(monitor);
 
 			Ref remoteFeature = repository.getRef(Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + "/"
 					+ remoteBranchName);

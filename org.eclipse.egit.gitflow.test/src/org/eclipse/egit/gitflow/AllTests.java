@@ -9,6 +9,7 @@
 package org.eclipse.egit.gitflow;
 
 import org.eclipse.egit.gitflow.op.FeatureFinishOperationTest;
+import org.eclipse.egit.gitflow.op.FeatureListOperationTest;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureStartOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureTrackOperationTest;
@@ -22,7 +23,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ InitOperationTest.class, FeatureStartOperationTest.class, FeatureFinishOperationTest.class,
 	ReleaseStartOperationTest.class, ReleaseFinishOperationTest.class, FeaturePublishOperationTest.class,
-	BranchNameValidatorTest.class, FeatureTrackOperationTest.class })
+	BranchNameValidatorTest.class, FeatureTrackOperationTest.class, FeatureListOperationTest.class })
 public class AllTests {
 
 }

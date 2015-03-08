@@ -9,6 +9,8 @@
 package org.eclipse.egit.gitflow.op;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -18,6 +20,7 @@ import org.eclipse.egit.core.internal.job.RuleUtil;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.core.op.DeleteBranchOperation;
+import org.eclipse.egit.core.op.FetchOperation;
 import org.eclipse.egit.core.op.IEGitOperation;
 import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.gitflow.Activator;
@@ -34,6 +37,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.RemoteConfig;
 
 @SuppressWarnings("restriction")
 abstract public class GitFlowOperation implements IEGitOperation {
@@ -44,6 +48,8 @@ abstract public class GitFlowOperation implements IEGitOperation {
 	static final String RELEASE_PREFIX = "release";
 
 	static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
+
+	public static final String FEATURE_PREFIX = "feature";
 
 	protected Repository repository;
 
@@ -151,6 +157,12 @@ abstract public class GitFlowOperation implements IEGitOperation {
 
 	private Ref findBranch(Repository repository, String branchName) throws IOException {
 		return repository.getRef(Constants.R_HEADS + branchName);
+	}
+
+	protected void fetch(IProgressMonitor monitor) throws URISyntaxException, InvocationTargetException {
+		StoredConfig rc = repository.getConfig();
+		RemoteConfig config = new RemoteConfig(rc, Constants.DEFAULT_REMOTE_NAME);
+		new FetchOperation(repository, config, 0, false).run(monitor);
 	}
 
 	protected static boolean hasTwoSegmentsWithPrefix(Repository repository, String prefix) throws CoreException {

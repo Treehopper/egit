@@ -16,6 +16,6 @@ abstract public class AbstractFeatureOperationTest extends AbstractGitFlowOperat
 	}
 
 	protected String getFeatureBranchName(String featureName) {
-		return AbstractFeatureOperation.FEATURE_PREFIX + SEP + featureName;
+		return GitFlowOperation.FEATURE_PREFIX + SEP + featureName;
 	}
 }
