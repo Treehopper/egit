@@ -16,7 +16,7 @@ public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase 
 	public void testFeaturePublish() throws Exception {
 		new FeatureStartOperation(repository2.getRepository(), MY_FEATURE).execute(null);
 		RevCommit branchCommit = repository2.createInitialCommit("testFeaturePublish");
-		new FeaturePublishOperation(repository2.getRepository()).execute(null);
+		new FeaturePublishOperation(repository2.getRepository(), 0).execute(null);
 		assertCommitArrivedAtRemote(branchCommit, repository1.getRepository());
 
 		new FeatureFinishOperation(repository1.getRepository(), MY_FEATURE);

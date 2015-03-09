@@ -21,7 +21,7 @@ public class FeatureListOperationTest extends AbstractDualRepositoryTestCase {
 	public void testFeatureList() throws Exception {
 		new FeatureStartOperation(repository1.getRepository(), MY_FEATURE).execute(null);
 
-		FeatureListOperation featureListOperation = new FeatureListOperation(repository2.getRepository());
+		FeatureListOperation featureListOperation = new FeatureListOperation(repository2.getRepository(), 0);
 		featureListOperation.execute(null);
 		List<Ref> result = featureListOperation.getResult();
 		assertEquals(1, result.size());

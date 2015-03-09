@@ -21,17 +21,20 @@ import org.eclipse.jgit.lib.Repository;
 @SuppressWarnings("restriction")
 public final class FeaturePublishOperation extends AbstractFeatureOperation {
 
-	public FeaturePublishOperation(Repository repository, String featureName) throws CoreException {
+	private int timeout;
+
+	public FeaturePublishOperation(Repository repository, String featureName, int timeout) throws CoreException {
 		super(repository, featureName);
+		this.timeout = timeout;
 	}
 
-	public FeaturePublishOperation(Repository repository) throws WrongGitFlowStateException, CoreException {
-		this(repository, getFeatureName(repository));
+	public FeaturePublishOperation(Repository repository, int timeout) throws WrongGitFlowStateException, CoreException {
+		this(repository, getFeatureName(repository), timeout);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
-			new PushOperation(repository, Constants.DEFAULT_REMOTE_NAME, false, 0).run(monitor);
+			new PushOperation(repository, Constants.DEFAULT_REMOTE_NAME, false, timeout).run(monitor);
 		} catch (InvocationTargetException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (Exception e) {

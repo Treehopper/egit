@@ -26,12 +26,12 @@ public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
 		assertEquals(branchCommit, findHead(repository2.getRepository()));
 
 		RevCommit localCommit = repository2.createInitialCommit("testFeatureTrack2");
-		new FeaturePublishOperation(repository2.getRepository()).execute(null);
+		new FeaturePublishOperation(repository2.getRepository(), 0).execute(null);
 		assertEquals(localCommit, findHead(repository2.getRepository()));
 	}
 
 	private Ref getFirstRemoteFeatureRef() throws CoreException {
-		FeatureListOperation featureListOperation = new FeatureListOperation(repository2.getRepository());
+		FeatureListOperation featureListOperation = new FeatureListOperation(repository2.getRepository(), 0);
 		featureListOperation.execute(null);
 		return featureListOperation.getResult().get(0);
 	}

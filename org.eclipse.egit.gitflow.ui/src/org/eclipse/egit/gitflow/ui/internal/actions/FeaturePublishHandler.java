@@ -20,10 +20,12 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
+import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+@SuppressWarnings("restriction")
 public class FeaturePublishHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -35,7 +37,9 @@ public class FeaturePublishHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new FeaturePublishOperation(repository).execute(monitor);
+					int timeout = Activator.getDefault().getPreferenceStore()
+							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
+					new FeaturePublishOperation(repository, timeout).execute(monitor);
 				} catch (WrongGitFlowStateException e) {
 					return Activator.error(e.getMessage(), e);
 				} catch (CoreException e) {

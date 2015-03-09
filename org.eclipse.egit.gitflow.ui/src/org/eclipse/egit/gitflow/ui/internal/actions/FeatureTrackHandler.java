@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.op.FeatureListOperation;
 import org.eclipse.egit.gitflow.op.FeatureTrackOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
+import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.egit.ui.internal.dialogs.BranchSelectionDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -45,7 +46,9 @@ public class FeatureTrackHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					FeatureListOperation featureListOperation = new FeatureListOperation(repository);
+					int timeout = Activator.getDefault().getPreferenceStore()
+							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
+					FeatureListOperation featureListOperation = new FeatureListOperation(repository, timeout);
 					featureListOperation.execute(monitor);
 					refs.addAll(featureListOperation.getResult());
 				} catch (CoreException e) {

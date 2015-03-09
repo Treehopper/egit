@@ -29,9 +29,11 @@ public final class FeatureListOperation extends GitFlowOperation {
 	private static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP
 			+ FEATURE_PREFIX + SEP;
 	private List<Ref> result = new ArrayList<Ref>();
+	private int timeout;
 
-	public FeatureListOperation(Repository repository) {
+	public FeatureListOperation(Repository repository, int timeout) {
 		super(repository);
+		this.timeout = timeout;
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
@@ -40,7 +42,7 @@ public final class FeatureListOperation extends GitFlowOperation {
 			fetch(monitor);
 
 			URIish uri = new URIish(uriString);
-			ListRemoteOperation listRemoteOperation = new ListRemoteOperation(repository, uri, 0);
+			ListRemoteOperation listRemoteOperation = new ListRemoteOperation(repository, uri, timeout);
 			listRemoteOperation.run(monitor);
 			Collection<Ref> remoteRefs = listRemoteOperation.getRemoteRefs();
 			for (Ref ref : remoteRefs) {
