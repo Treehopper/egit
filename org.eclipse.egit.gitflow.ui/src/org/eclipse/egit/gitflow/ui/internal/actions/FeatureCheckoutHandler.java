@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
-import org.eclipse.egit.ui.internal.dialogs.BranchSelectionDialog;
+import org.eclipse.egit.gitflow.ui.internal.dialog.AbstractSelectionDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.api.Git;
@@ -30,7 +30,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 @SuppressWarnings("restriction")
@@ -58,8 +57,14 @@ public class FeatureCheckoutHandler extends AbstractHandler {
 
 		final List<Ref> refs = getFeatureBranches(repository);
 
-		BranchSelectionDialog<Ref> dialog = new BranchSelectionDialog<Ref>(HandlerUtil.getActiveShell(event), refs,
-				"Select Feature", "Local features:", SWT.NONE);
+
+		AbstractSelectionDialog<Ref> dialog = new AbstractSelectionDialog<Ref>(HandlerUtil.getActiveShell(event), refs,
+				"Select Feature", "Local features:") {
+			@Override
+			protected String getPrefix() {
+				return Constants.R_HEADS + "feature/";
+			}
+		};
 		if (dialog.open() != Window.OK) {
 			return null;
 		}
