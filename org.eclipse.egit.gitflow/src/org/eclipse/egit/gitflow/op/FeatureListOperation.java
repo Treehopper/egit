@@ -21,6 +21,7 @@ import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.URIish;
 
 @SuppressWarnings("restriction")
@@ -30,6 +31,7 @@ public final class FeatureListOperation extends GitFlowOperation {
 			+ FEATURE_PREFIX + SEP;
 	private List<Ref> result = new ArrayList<Ref>();
 	private int timeout;
+	private FetchResult operationResult;
 
 	public FeatureListOperation(Repository repository, int timeout) {
 		super(repository);
@@ -39,7 +41,7 @@ public final class FeatureListOperation extends GitFlowOperation {
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String uriString = FILE + repository.getDirectory().getPath();
 		try {
-			fetch(monitor);
+			operationResult = fetch(monitor);
 
 			URIish uri = new URIish(uriString);
 			ListRemoteOperation listRemoteOperation = new ListRemoteOperation(repository, uri, timeout);
@@ -57,6 +59,10 @@ public final class FeatureListOperation extends GitFlowOperation {
 		} catch (InterruptedException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		}
+	}
+
+	public FetchResult getOperationResult() {
+		return operationResult;
 	}
 
 	public List<Ref> getResult() {

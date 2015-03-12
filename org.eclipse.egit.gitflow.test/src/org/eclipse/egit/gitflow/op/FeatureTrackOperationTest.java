@@ -9,10 +9,13 @@
 package org.eclipse.egit.gitflow.op;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.FetchResult;
 import org.junit.Test;
 
 public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
@@ -21,7 +24,11 @@ public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
 		new FeatureStartOperation(repository1.getRepository(), MY_FEATURE).execute(null);
 		RevCommit branchCommit = repository1.createInitialCommit("testFeatureTrack");
 
-		new FeatureTrackOperation(repository2.getRepository(), getFirstRemoteFeatureRef()).execute(null);
+		FeatureTrackOperation featureTrackOperation = new FeatureTrackOperation(repository2.getRepository(), getFirstRemoteFeatureRef());
+		featureTrackOperation.execute(null);
+		FetchResult operationResult = featureTrackOperation.getOperationResult();
+		assertNotNull(operationResult.getAdvertisedRef(Constants.R_HEADS + GitFlowOperation.FEATURE_PREFIX + SEP
+				+ MY_FEATURE));
 		assertEquals(getFeatureBranchName(MY_FEATURE), repository2.getRepository().getBranch());
 		assertEquals(branchCommit, findHead(repository2.getRepository()));
 

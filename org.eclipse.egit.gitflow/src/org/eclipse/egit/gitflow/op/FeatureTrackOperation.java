@@ -21,12 +21,14 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.FetchResult;
 
 @SuppressWarnings("restriction")
 public final class FeatureTrackOperation extends AbstractFeatureOperation {
 	public static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP
 			+ FEATURE_PREFIX + SEP;
 	private Ref remoteFeature;
+	private FetchResult operationResult;
 
 	public FeatureTrackOperation(Repository repository, Ref ref) {
 		this(repository, ref, ref.getName().substring(REMOTE_ORIGIN_FEATURE_PREFIX.length()));
@@ -40,7 +42,7 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
 			String newLocalBranch = featureName;
-			fetch(monitor);
+			operationResult = fetch(monitor);
 
 			if (!hasBranch(newLocalBranch)) {
 				new CreateLocalBranchOperation(repository, newLocalBranch, remoteFeature, UpstreamConfig.REBASE)
@@ -56,5 +58,9 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 			new CoreException(Activator.error(e.getMessage(), e));
 		}
 
+	}
+
+	public FetchResult getOperationResult() {
+		return operationResult;
 	}
 }

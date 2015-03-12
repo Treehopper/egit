@@ -9,6 +9,7 @@
 package org.eclipse.egit.gitflow.op;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class FeatureListOperationTest extends AbstractDualRepositoryTestCase {
 
 		FeatureListOperation featureListOperation = new FeatureListOperation(repository2.getRepository(), 0);
 		featureListOperation.execute(null);
+		assertNotNull(featureListOperation.getOperationResult().getAdvertisedRef(
+				Constants.R_HEADS + GitFlowOperation.FEATURE_PREFIX + SEP + MY_FEATURE));
 		List<Ref> result = featureListOperation.getResult();
 		assertEquals(1, result.size());
 		assertEquals(Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP + GitFlowOperation.FEATURE_PREFIX + SEP

@@ -37,6 +37,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
 
 @SuppressWarnings("restriction")
@@ -159,10 +160,12 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		return repository.getRef(Constants.R_HEADS + branchName);
 	}
 
-	protected void fetch(IProgressMonitor monitor) throws URISyntaxException, InvocationTargetException {
+	protected FetchResult fetch(IProgressMonitor monitor) throws URISyntaxException, InvocationTargetException {
 		StoredConfig rc = repository.getConfig();
 		RemoteConfig config = new RemoteConfig(rc, Constants.DEFAULT_REMOTE_NAME);
-		new FetchOperation(repository, config, 0, false).run(monitor);
+		FetchOperation fetchOperation = new FetchOperation(repository, config, 0, false);
+		fetchOperation.run(monitor);
+		return fetchOperation.getOperationResult();
 	}
 
 	protected static boolean hasTwoSegmentsWithPrefix(Repository repository, String prefix) throws CoreException {
