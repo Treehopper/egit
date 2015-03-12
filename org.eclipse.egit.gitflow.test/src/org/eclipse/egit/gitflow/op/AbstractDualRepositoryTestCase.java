@@ -30,13 +30,12 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
 import org.junit.Before;
+import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 
 @SuppressWarnings("restriction")
 public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 	protected static final String MY_FEATURE = "myFeature";
 	protected static final String MY_MASTER = "master";
-	protected static final String FEATURE_PREFIX = "feature";
-	protected static final String SEP = "/";
 
 	private File workdir;
 	private File workdir2;

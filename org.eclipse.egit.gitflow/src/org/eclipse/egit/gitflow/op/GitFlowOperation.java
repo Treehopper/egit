@@ -42,13 +42,13 @@ import org.eclipse.jgit.transport.RemoteConfig;
 
 @SuppressWarnings("restriction")
 abstract public class GitFlowOperation implements IEGitOperation {
-	static final String SEP = "/";
+	public static final String SEP = "/";
 
-	static final String DEVELOP = "develop";
-	static final String MASTER = "master";
-	static final String RELEASE_PREFIX = "release";
+	public static final String DEVELOP = "develop";
+	public static final String MASTER = "master";
+	public static final String RELEASE_PREFIX = "release";
 
-	static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
+	public static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
 
 	public static final String FEATURE_PREFIX = "feature";
 

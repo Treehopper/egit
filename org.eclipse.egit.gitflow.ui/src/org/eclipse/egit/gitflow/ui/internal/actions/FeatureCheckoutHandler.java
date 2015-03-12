@@ -9,6 +9,7 @@
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
 import java.util.ArrayList;
+import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -39,7 +40,7 @@ public class FeatureCheckoutHandler extends AbstractHandler {
 			List<Ref> branches = Git.wrap(repository).branchList().call();
 			List<Ref> featureBranches = new ArrayList<Ref>();
 			for (Ref ref : branches) {
-				if (ref.getName().startsWith(Constants.R_HEADS + "feature")) {
+				if (ref.getName().startsWith(Constants.R_HEADS + FEATURE_PREFIX)) {
 					featureBranches.add(ref);
 				}
 			}
@@ -62,7 +63,7 @@ public class FeatureCheckoutHandler extends AbstractHandler {
 				"Select Feature", "Local features:") {
 			@Override
 			protected String getPrefix() {
-				return Constants.R_HEADS + "feature/";
+				return Constants.R_HEADS + FEATURE_PREFIX + SEP;
 			}
 		};
 		if (dialog.open() != Window.OK) {

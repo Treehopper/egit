@@ -17,7 +17,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
 import org.junit.Test;
-
+import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
 	@Test
 	public void testFeatureTrack() throws Exception {
@@ -27,7 +27,7 @@ public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
 		FeatureTrackOperation featureTrackOperation = new FeatureTrackOperation(repository2.getRepository(), getFirstRemoteFeatureRef());
 		featureTrackOperation.execute(null);
 		FetchResult operationResult = featureTrackOperation.getOperationResult();
-		assertNotNull(operationResult.getAdvertisedRef(Constants.R_HEADS + GitFlowOperation.FEATURE_PREFIX + SEP
+		assertNotNull(operationResult.getAdvertisedRef(Constants.R_HEADS + FEATURE_PREFIX + SEP
 				+ MY_FEATURE));
 		assertEquals(getFeatureBranchName(MY_FEATURE), repository2.getRepository().getBranch());
 		assertEquals(branchCommit, findHead(repository2.getRepository()));

@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
+import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 import org.eclipse.egit.gitflow.op.FeatureListOperation;
 import org.eclipse.egit.gitflow.op.FeatureTrackOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
@@ -59,7 +60,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 						refs, "Select Feature", "Remote features:") {
 					@Override
 					protected String getPrefix() {
-						return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + "/feature/";
+						return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP + FEATURE_PREFIX + SEP;
 					}
 				};
 				if (dialog.open() != Window.OK) {
