@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.egit.core.op.PushOperationResult;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
@@ -39,7 +40,12 @@ public class FeaturePublishHandler extends AbstractHandler {
 				try {
 					int timeout = Activator.getDefault().getPreferenceStore()
 							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
-					new FeaturePublishOperation(repository, timeout).execute(monitor);
+					FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(repository, timeout);
+					featurePublishOperation.execute(monitor);
+					PushOperationResult operationResult = featurePublishOperation.getOperationResult();
+					if (!operationResult.isSuccessfulConnectionForAnyURI()) {
+						return Activator.error(operationResult.getErrorStringForAllURis());
+					}
 				} catch (WrongGitFlowStateException e) {
 					return Activator.error(e.getMessage(), e);
 				} catch (CoreException e) {
