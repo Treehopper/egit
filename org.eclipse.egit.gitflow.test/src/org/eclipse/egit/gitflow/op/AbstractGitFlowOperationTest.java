@@ -15,6 +15,7 @@ import org.eclipse.egit.core.test.GitTestCase;
 import org.eclipse.egit.core.test.TestRepository;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -58,11 +59,9 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	}
 
 	protected RevCommit findHead(Repository repo) {
-		RevWalk walk = new RevWalk(repo);
-
 		try {
 			ObjectId head = repo.resolve(Constants.HEAD);
-			return walk.parseCommit(head);
+			return findCommit(repo, head);
 		} catch (RevisionSyntaxException e) {
 			throw new RuntimeException(e);
 		} catch (AmbiguousObjectException e) {
@@ -72,6 +71,11 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected RevCommit findCommit(Repository repo, ObjectId head) throws MissingObjectException,
+			IncorrectObjectTypeException, IOException {
+		return new RevWalk(repo).parseCommit(head);
 	}
 
 	protected RevCommit findHead(Repository repo, String branch) {

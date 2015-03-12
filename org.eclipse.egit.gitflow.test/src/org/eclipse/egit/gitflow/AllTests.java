@@ -12,6 +12,7 @@ import org.eclipse.egit.gitflow.op.FeatureCheckoutOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureFinishOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureListOperationTest;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperationTest;
+import org.eclipse.egit.gitflow.op.FeatureRebaseOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureStartOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureTrackOperationTest;
 import org.eclipse.egit.gitflow.op.InitOperationTest;
@@ -25,7 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ InitOperationTest.class, FeatureStartOperationTest.class, FeatureFinishOperationTest.class,
 	ReleaseStartOperationTest.class, ReleaseFinishOperationTest.class, FeaturePublishOperationTest.class,
 	BranchNameValidatorTest.class, FeatureTrackOperationTest.class, FeatureListOperationTest.class,
-	FeatureCheckoutOperationTest.class })
+	FeatureCheckoutOperationTest.class, FeatureRebaseOperationTest.class })
 public class AllTests {
 
 }
