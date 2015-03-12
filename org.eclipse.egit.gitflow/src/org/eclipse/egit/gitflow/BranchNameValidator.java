@@ -19,7 +19,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
 public class BranchNameValidator {
-	public static final String ILLEGAL_CHARS = "/";
+	public static final String ILLEGAL_CHARS = "/ ";
 
 	public static boolean featureExists(Repository repository, String featureName) throws CoreException {
 		return branchExists(repository, AbstractFeatureOperation.getFullFeatureBranchName(featureName));
