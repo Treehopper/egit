@@ -51,11 +51,11 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 
 			new BranchOperation(repository, newLocalBranch).execute(monitor);
 		} catch (URISyntaxException e) {
-			new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {
-			new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (GitAPIException e) {
-			new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(Activator.error(e.getMessage(), e));
 		}
 
 	}
