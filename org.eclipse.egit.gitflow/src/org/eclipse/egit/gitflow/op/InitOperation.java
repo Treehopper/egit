@@ -8,11 +8,14 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
+import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.jgit.lib.Repository;
 
 @SuppressWarnings("restriction")
@@ -30,5 +33,25 @@ public final class InitOperation extends GitFlowOperation {
 		branchFromHead.execute(monitor);
 		BranchOperation checkoutOperation = new BranchOperation(repository, DEVELOP);
 		checkoutOperation.execute(monitor);
+
+		try {
+			// TODO: this must be configurable
+			setPrefixes(FEATURE_PREFIX + SEP, RELEASE_PREFIX + SEP, DEVELOP + SEP);
+			setBranches(DEVELOP, MASTER);
+			repository.getConfig().save();
+		} catch (IOException e) {
+			throw new CoreException(Activator.error(e.getMessage(), e));
+		}
+	}
+
+	private void setPrefixes(String feature, String release, String hotfix) {
+		setPrefix("feature", feature);
+		setPrefix("release", release);
+		setPrefix("hotfix", hotfix);
+	}
+
+	private void setBranches(String develop, String master) {
+		setBranch("develop", develop);
+		setBranch("master", master);
 	}
 }

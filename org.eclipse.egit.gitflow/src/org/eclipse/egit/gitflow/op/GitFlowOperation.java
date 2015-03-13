@@ -47,10 +47,11 @@ abstract public class GitFlowOperation implements IEGitOperation {
 	public static final String DEVELOP = "develop";
 	public static final String MASTER = "master";
 	public static final String RELEASE_PREFIX = "release";
-
-	public static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
-
 	public static final String FEATURE_PREFIX = "feature";
+	public static final String HOTFIX_PREFIX = "hotfix";
+
+	public static final String DEVELOP_FULL = Constants.R_HEADS + DEVELOP;
+
 
 	protected Repository repository;
 
@@ -98,6 +99,33 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		String userName = config.getString("user", null, "name");
 		String email = config.getString("user", null, "email");
 		return String.format("%s <%s>", userName, email);
+	}
+
+	protected String getFeaturePrefix() {
+		return getPrefix("feature");
+	}
+
+	protected String getReleasePrefix() {
+		return getPrefix("releae");
+	}
+
+	protected String getHotfixPrefix() {
+		return getPrefix("hotfix");
+	}
+
+	private String getPrefix(String prefixName) {
+		StoredConfig config = repository.getConfig();
+		return config.getString("gitflow", "prefix", prefixName);
+	}
+
+	protected void setPrefix(String prefixName, String value) {
+		StoredConfig config = repository.getConfig();
+		config.setString("gitflow", "prefix", prefixName, value);
+	}
+
+	protected void setBranch(String branchName, String value) {
+		StoredConfig config = repository.getConfig();
+		config.setString("gitflow", "branch", branchName, value);
 	}
 
 	protected void start(IProgressMonitor monitor, String branchName) throws WrongGitFlowStateException, CoreException {
