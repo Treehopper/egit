@@ -37,9 +37,8 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 		try {
 			pushOperation.run(monitor);
 		} catch (InvocationTargetException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
-		} catch (Exception e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			Throwable targetException = e.getTargetException();
+			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
 		}
 	}
 

@@ -53,7 +53,8 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 		} catch (URISyntaxException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			Throwable targetException = e.getTargetException();
+			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
 		} catch (GitAPIException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		}

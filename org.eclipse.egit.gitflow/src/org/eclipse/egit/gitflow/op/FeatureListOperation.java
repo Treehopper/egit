@@ -55,7 +55,8 @@ public final class FeatureListOperation extends GitFlowOperation {
 		} catch (URISyntaxException e) {
 			throw new CoreException(Activator.error("Unable to parse: " + uriString, e));
 		} catch (InvocationTargetException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			Throwable targetException = e.getTargetException();
+			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
 		} catch (InterruptedException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		}
