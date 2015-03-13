@@ -19,27 +19,39 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.op.FeatureRebaseOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.api.RebaseResult;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.progress.UIJob;
 
 public class FeatureRebaseHandler extends AbstractHandler {
+	private static final String INTERACTIVE_REBASE_VIEW_ID = "org.eclipse.egit.ui.InteractiveRebaseView";
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
 		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
 
-		Job job = new Job("Rebasing feature...") {
+		Job job = new UIJob(HandlerUtil.getActiveShell(event).getDisplay(), "Rebasing feature...") {
 			@Override
-			protected IStatus run(IProgressMonitor monitor) {
+			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
 					FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(repository);
 					featureRebaseOperation.execute(monitor);
 					RebaseResult.Status status = featureRebaseOperation.getOperationResult().getStatus();
 					if (RebaseResult.Status.FAILED.equals(status)) {
 						return Activator.error("Rebase failed.");
+					}
+					if (RebaseResult.Status.CONFLICTS.equals(status)) {
+						MessageDialog
+						.openInformation(getDisplay().getActiveShell(), "Conflicts",
+								"There are conflicts that need to be resolve manually. Add your changes and continue rebase when you are finished.");
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.showView(INTERACTIVE_REBASE_VIEW_ID);
+						return Status.OK_STATUS;
 					}
 				} catch (CoreException e) {
 					return Activator.error(e.getMessage(), e);
