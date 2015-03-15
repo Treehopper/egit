@@ -12,33 +12,34 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jgit.lib.Constants;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
 import org.junit.Test;
-import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
 	@Test
 	public void testFeatureTrack() throws Exception {
-		new FeatureStartOperation(repository1.getRepository(), MY_FEATURE).execute(null);
+		GitFlowRepository gfRepo1 = new GitFlowRepository(repository1.getRepository());
+		GitFlowRepository gfRepo2 = new GitFlowRepository(repository2.getRepository());
+		new FeatureStartOperation(gfRepo1, MY_FEATURE).execute(null);
 		RevCommit branchCommit = repository1.createInitialCommit("testFeatureTrack");
 
-		FeatureTrackOperation featureTrackOperation = new FeatureTrackOperation(repository2.getRepository(), getFirstRemoteFeatureRef());
+		FeatureTrackOperation featureTrackOperation = new FeatureTrackOperation(gfRepo2,
+				getFirstRemoteFeatureRef(gfRepo2));
 		featureTrackOperation.execute(null);
 		FetchResult operationResult = featureTrackOperation.getOperationResult();
-		assertNotNull(operationResult.getAdvertisedRef(Constants.R_HEADS + FEATURE_PREFIX + SEP
-				+ MY_FEATURE));
-		assertEquals(getFeatureBranchName(MY_FEATURE), repository2.getRepository().getBranch());
+		assertNotNull(operationResult.getAdvertisedRef(gfRepo2.getFullFeatureBranchName(MY_FEATURE)));
+		assertEquals(gfRepo2.getFeatureBranchName(MY_FEATURE), repository2.getRepository().getBranch());
 		assertEquals(branchCommit, findHead(repository2.getRepository()));
 
 		RevCommit localCommit = repository2.createInitialCommit("testFeatureTrack2");
-		new FeaturePublishOperation(repository2.getRepository(), 0).execute(null);
+		new FeaturePublishOperation(gfRepo2, 0).execute(null);
 		assertEquals(localCommit, findHead(repository2.getRepository()));
 	}
 
-	private Ref getFirstRemoteFeatureRef() throws CoreException {
-		FeatureListOperation featureListOperation = new FeatureListOperation(repository2.getRepository(), 0);
+	private Ref getFirstRemoteFeatureRef(GitFlowRepository gfRepo2) throws CoreException {
+		FeatureListOperation featureListOperation = new FeatureListOperation(gfRepo2, 0);
 		featureListOperation.execute(null);
 		return featureListOperation.getResult().get(0);
 	}

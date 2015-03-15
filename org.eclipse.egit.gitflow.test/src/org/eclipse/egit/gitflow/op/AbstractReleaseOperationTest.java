@@ -18,16 +18,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
 abstract public class AbstractReleaseOperationTest extends AbstractGitFlowOperationTest {
-	protected String getFullReleaseBranchName(String releaseName) {
-		return Constants.R_HEADS + getReleaseBranchName(releaseName);
-	}
-
-	protected String getReleaseBranchName(String releaseName) {
-		return AbstractReleaseOperation.RELEASE_PREFIX + SEP + releaseName;
-	}
-
 	protected RevCommit findCommitForTag(Repository repository, String tagName) throws MissingObjectException,
-			IncorrectObjectTypeException, IOException {
+	IncorrectObjectTypeException, IOException {
 		return new RevWalk(repository).parseCommit(repository.getRef(Constants.R_TAGS + tagName).getObjectId());
 	}
 }

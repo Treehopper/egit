@@ -11,28 +11,25 @@ package org.eclipse.egit.gitflow;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.egit.gitflow.op.AbstractFeatureOperation;
-import org.eclipse.egit.gitflow.op.AbstractReleaseOperation;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 
 public class BranchNameValidator {
 	public static final String ILLEGAL_CHARS = "/ ";
 
-	public static boolean featureExists(Repository repository, String featureName) throws CoreException {
-		return branchExists(repository, AbstractFeatureOperation.getFullFeatureBranchName(featureName));
+	public static boolean featureExists(GitFlowRepository repository, String featureName) throws CoreException {
+		return branchExists(repository, repository.getFullFeatureBranchName(featureName));
 	}
 
-	public static boolean releaseExists(Repository repository, String releaseName) throws CoreException {
-		return branchExists(repository, AbstractReleaseOperation.getFullReleaseBranchName(releaseName));
+	public static boolean releaseExists(GitFlowRepository repository, String releaseName) throws CoreException {
+		return branchExists(repository, repository.getFullReleaseBranchName(releaseName));
 	}
 
-	private static boolean branchExists(Repository repository, String fullBranchName) throws CoreException {
+	private static boolean branchExists(GitFlowRepository repository, String fullBranchName) throws CoreException {
 		List<Ref> branches;
 		try {
-			branches = Git.wrap(repository).branchList().call();
+			branches = Git.wrap(repository.getRepository()).branchList().call();
 		} catch (GitAPIException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		}

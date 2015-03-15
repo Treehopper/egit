@@ -29,9 +29,14 @@ import org.junit.Before;
 abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	protected TestRepository testRepository;
 
-	static final String SEP = "/";
-	static final String DEVELOP = "develop";
-	static final String DEVELOP_FULL = Constants.R_HEADS + "develop";
+	// static final String SEP = "/";
+	// public static final String DEVELOP = "develop";
+	// public static final String MASTER = "master";
+	// public static final String RELEASE_PREFIX = "release";
+	// public static final String FEATURE_PREFIX = "feature";
+	// public static final String HOTFIX_PREFIX = "hotfix";
+
+	// public static final String DEVELOP_FULL = Constants.R_HEADS + DEVELOP;
 
 	protected static final String MY_FEATURE = "myFeature";
 
@@ -74,7 +79,7 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	}
 
 	protected RevCommit findCommit(Repository repo, ObjectId head) throws MissingObjectException,
-			IncorrectObjectTypeException, IOException {
+	IncorrectObjectTypeException, IOException {
 		return new RevWalk(repo).parseCommit(head);
 	}
 

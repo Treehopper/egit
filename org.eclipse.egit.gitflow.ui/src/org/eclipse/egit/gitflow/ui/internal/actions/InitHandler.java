@@ -8,6 +8,12 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
+import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -34,7 +40,8 @@ public class InitHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new InitOperation(repository).execute(monitor);
+					new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX)
+							.execute(monitor);
 				} catch (CoreException e) {
 					return Activator.error(e.getMessage(), e);
 				}

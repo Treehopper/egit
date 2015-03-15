@@ -14,25 +14,26 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.RebaseOperation;
 import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.api.RebaseResult;
-import org.eclipse.jgit.lib.Repository;
 
 @SuppressWarnings("restriction")
 public final class FeatureRebaseOperation extends GitFlowOperation {
 	private RebaseResult operationResult;
 
-	public FeatureRebaseOperation(Repository repository) {
+	public FeatureRebaseOperation(GitFlowRepository repository) {
 		super(repository);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
-			if (!repository.getBranch().startsWith(FEATURE_PREFIX)) {
+			if (!repository.isFeature()) {
 				throw new WrongGitFlowStateException("Not on a feature branch.");
 			}
 
-			RebaseOperation op = new RebaseOperation(repository, repository.getRef(DEVELOP_FULL));
+			RebaseOperation op = new RebaseOperation(repository.getRepository(), repository.getRepository().getRef(
+					repository.getDevelopFull()));
 			op.execute(null);
 
 			operationResult = op.getResult();

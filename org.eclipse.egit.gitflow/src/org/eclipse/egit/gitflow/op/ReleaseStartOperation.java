@@ -11,11 +11,11 @@ package org.eclipse.egit.gitflow.op;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
-import org.eclipse.jgit.lib.Repository;
 
 public final class ReleaseStartOperation extends AbstractReleaseOperation {
-	public ReleaseStartOperation(Repository repository, String releaseName) {
+	public ReleaseStartOperation(GitFlowRepository repository, String releaseName) {
 		super(repository, releaseName);
 	}
 

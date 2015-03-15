@@ -11,17 +11,17 @@ package org.eclipse.egit.gitflow.op;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 
 @SuppressWarnings("restriction")
 public final class FeatureCheckoutOperation extends AbstractFeatureOperation {
-	public FeatureCheckoutOperation(Repository repository, String featureName) {
+	public FeatureCheckoutOperation(GitFlowRepository repository, String featureName) {
 		super(repository, featureName);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String branchName = createFeatureBranchName(featureName);
+		String branchName = repository.getFeatureBranchName(featureName);
 
-		new BranchOperation(repository, branchName).execute(null);
+		new BranchOperation(repository.getRepository(), branchName).execute(null);
 	}
 }

@@ -8,39 +8,26 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.Repository;
 
 abstract public class AbstractFeatureOperation extends GitFlowOperation {
 	protected String featureName;
 
-	public AbstractFeatureOperation(Repository repository, String featureName) {
+	public AbstractFeatureOperation(GitFlowRepository repository, String featureName) {
 		super(repository);
 		this.featureName = featureName;
 	}
 
-	protected static String createFeatureBranchName(String featureName) {
-		return FEATURE_PREFIX + SEP + featureName;
-	}
-
-	protected static String getFeatureName(Repository repository) throws WrongGitFlowStateException, CoreException {
-		if (!isFeature(repository)) {
+	protected static String getFeatureName(GitFlowRepository repository) throws WrongGitFlowStateException,
+	CoreException, IOException {
+		if (!repository.isFeature()) {
 			throw new WrongGitFlowStateException("Not on a feature branch.");
 		}
-		return getBranchNameTuple(repository)[1];
-	}
-
-	protected static boolean isFeature(Repository repository) throws CoreException {
-		return hasTwoSegmentsWithPrefix(repository, FEATURE_PREFIX);
-	}
-
-	public static String getFullFeatureBranchName(String featureName) {
-		return Constants.R_HEADS + getFeatureBranchName(featureName);
-	}
-
-	protected static String getFeatureBranchName(String featureName) {
-		return FEATURE_PREFIX + SEP + featureName;
+		String currentBranch = repository.getRepository().getBranch();
+		return currentBranch.substring(repository.getFeaturePrefix().length());
 	}
 }

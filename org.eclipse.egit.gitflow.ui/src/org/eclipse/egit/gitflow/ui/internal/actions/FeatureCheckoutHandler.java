@@ -8,8 +8,6 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
-import java.util.ArrayList;
-import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -22,12 +20,11 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.BranchOperation;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.ui.Activator;
 import org.eclipse.egit.gitflow.ui.internal.dialog.AbstractSelectionDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -35,35 +32,20 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 @SuppressWarnings("restriction")
 public class FeatureCheckoutHandler extends AbstractHandler {
-	protected List<Ref> getFeatureBranches(Repository repository) {
-		try {
-			List<Ref> branches = Git.wrap(repository).branchList().call();
-			List<Ref> featureBranches = new ArrayList<Ref>();
-			for (Ref ref : branches) {
-				if (ref.getName().startsWith(Constants.R_HEADS + FEATURE_PREFIX)) {
-					featureBranches.add(ref);
-				}
-			}
-
-			return featureBranches;
-		} catch (GitAPIException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
 		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		final List<Ref> refs = getFeatureBranches(repository);
+		final List<Ref> refs = gfRepo.getFeatureBranches();
 
 
 		AbstractSelectionDialog<Ref> dialog = new AbstractSelectionDialog<Ref>(HandlerUtil.getActiveShell(event), refs,
 				"Select Feature", "Local features:") {
 			@Override
 			protected String getPrefix() {
-				return Constants.R_HEADS + FEATURE_PREFIX + SEP;
+				return Constants.R_HEADS + gfRepo.getFeaturePrefix();
 			}
 		};
 		if (dialog.open() != Window.OK) {

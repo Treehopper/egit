@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
+import java.io.IOException;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -18,6 +20,7 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.core.op.PushOperationResult;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
@@ -32,7 +35,8 @@ public class FeaturePublishHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		Job job = new Job("Publishing feature...") {
 			@Override
@@ -40,7 +44,7 @@ public class FeaturePublishHandler extends AbstractHandler {
 				try {
 					int timeout = Activator.getDefault().getPreferenceStore()
 							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
-					FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(repository, timeout);
+					FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(gfRepo, timeout);
 					featurePublishOperation.execute(monitor);
 					PushOperationResult operationResult = featurePublishOperation.getOperationResult();
 					if (!operationResult.isSuccessfulConnectionForAnyURI()) {
@@ -49,6 +53,8 @@ public class FeaturePublishHandler extends AbstractHandler {
 				} catch (WrongGitFlowStateException e) {
 					return Activator.error(e.getMessage(), e);
 				} catch (CoreException e) {
+					return Activator.error(e.getMessage(), e);
+				} catch (IOException e) {
 					return Activator.error(e.getMessage(), e);
 				}
 				return Status.OK_STATUS;

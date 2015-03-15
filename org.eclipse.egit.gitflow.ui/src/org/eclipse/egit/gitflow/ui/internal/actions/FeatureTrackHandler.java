@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
+
 import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
+
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureListOperation;
 import org.eclipse.egit.gitflow.op.FeatureTrackOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
@@ -39,7 +42,8 @@ public class FeatureTrackHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		final List<Ref> refs = new ArrayList<Ref>();
 
@@ -49,7 +53,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 				try {
 					int timeout = Activator.getDefault().getPreferenceStore()
 							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
-					FeatureListOperation featureListOperation = new FeatureListOperation(repository, timeout);
+					FeatureListOperation featureListOperation = new FeatureListOperation(gfRepo, timeout);
 					featureListOperation.execute(monitor);
 					refs.addAll(featureListOperation.getResult());
 				} catch (CoreException e) {
@@ -60,7 +64,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 						refs, "Select Feature", "Remote features:") {
 					@Override
 					protected String getPrefix() {
-						return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP + FEATURE_PREFIX + SEP;
+						return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP + gfRepo.getFeaturePrefix();
 					}
 				};
 				if (dialog.open() != Window.OK) {
@@ -70,7 +74,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 				setName("Tracking feature...");
 				Ref ref = dialog.getSelectedNode();
 				try {
-					new FeatureTrackOperation(repository, ref).execute(monitor);
+					new FeatureTrackOperation(gfRepo, ref).execute(monitor);
 				} catch (CoreException e) {
 					return Activator.error(e.getMessage(), e);
 				}

@@ -9,12 +9,18 @@
 package org.eclipse.egit.gitflow.op;
 
 
+import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.api.RebaseResult;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -27,18 +33,19 @@ public class FeatureRebaseOperationTest extends AbstractFeatureOperationTest {
 		RevCommit initialCommit = testRepository.createInitialCommit("testFeatureRebase\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository).execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		new FeatureStartOperation(repository, MY_FEATURE).execute(null);
+		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);
 		String branchCommitMessage = "adding first file on feature branch";
 		addFileAndCommit("theFile.txt", branchCommitMessage);
 
-		testRepository.checkoutBranch(DEVELOP);
+		testRepository.checkoutBranch(gfRepo.getDevelop());
 		RevCommit developCommit = addFileAndCommit("theOtherFile.txt", "adding second file on develop branch");
 
-		new FeatureCheckoutOperation(repository, MY_FEATURE).execute(null);
+		new FeatureCheckoutOperation(gfRepo, MY_FEATURE).execute(null);
 		assertEquals(initialCommit, findHead(repository).getParent(0));
-		FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(repository);
+		FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(gfRepo);
 		featureRebaseOperation.execute(null);
 
 		RebaseResult res = featureRebaseOperation.getOperationResult();

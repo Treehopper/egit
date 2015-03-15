@@ -8,41 +8,30 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.Repository;
 
 abstract public class AbstractReleaseOperation extends GitFlowOperation {
-	public static final String RELEASE_PREFIX = "release";
-
 	protected String releaseName;
 
-	public AbstractReleaseOperation(Repository repository, String releaseName) {
+	public AbstractReleaseOperation(GitFlowRepository repository, String releaseName) {
 		super(repository);
 		this.releaseName = releaseName;
 	}
 
-	protected static String createReleaseBranchName(String releaseName) {
-		return RELEASE_PREFIX + SEP + releaseName;
+	protected String createReleaseBranchName(String releaseName) {
+		return repository.getReleasePrefix() + releaseName;
 	}
 
-	public static String getFullReleaseBranchName(String releaseName) {
-		return Constants.R_HEADS + getReleaseBranchName(releaseName);
-	}
-
-	protected static String getReleaseName(Repository repository) throws WrongGitFlowStateException, CoreException {
-		if (!isRelease(repository)) {
+	protected static String getReleaseName(GitFlowRepository repository) throws WrongGitFlowStateException,
+	CoreException, IOException {
+		if (!repository.isRelease()) {
 			throw new WrongGitFlowStateException("Not on a feature branch.");
 		}
-		return getBranchNameTuple(repository)[1];
-	}
-
-	protected static boolean isRelease(Repository repository) throws CoreException {
-		return hasTwoSegmentsWithPrefix(repository, RELEASE_PREFIX);
-	}
-
-	private static String getReleaseBranchName(String featureName) {
-		return RELEASE_PREFIX + SEP + featureName;
+		String currentBranch = repository.getRepository().getBranch();
+		return currentBranch.substring(repository.getReleasePrefix().length());
 	}
 }

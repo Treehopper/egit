@@ -17,25 +17,25 @@ import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig;
 import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
 
 @SuppressWarnings("restriction")
 public final class FeatureTrackOperation extends AbstractFeatureOperation {
-	public static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP
-			+ FEATURE_PREFIX + SEP;
+	public static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP;
 	private Ref remoteFeature;
 	private FetchResult operationResult;
 
-	public FeatureTrackOperation(Repository repository, Ref ref) {
-		this(repository, ref, ref.getName().substring(REMOTE_ORIGIN_FEATURE_PREFIX.length()));
+	public FeatureTrackOperation(GitFlowRepository repository, Ref ref) {
+		this(repository, ref, ref.getName().substring(
+				(REMOTE_ORIGIN_FEATURE_PREFIX + repository.getFeaturePrefix()).length()));
 	}
 
-	public FeatureTrackOperation(Repository repository, Ref ref, String newLocalBranch) {
-		super(repository, getFeatureBranchName(newLocalBranch));
+	public FeatureTrackOperation(GitFlowRepository repository, Ref ref, String newLocalBranch) {
+		super(repository, repository.getFeaturePrefix() + newLocalBranch);
 		this.remoteFeature = ref;
 	}
 
@@ -44,12 +44,13 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 			String newLocalBranch = featureName;
 			operationResult = fetch(monitor);
 
-			if (!hasBranch(newLocalBranch)) {
-				new CreateLocalBranchOperation(repository, newLocalBranch, remoteFeature, UpstreamConfig.REBASE)
+			if (!repository.hasBranch(newLocalBranch)) {
+				new CreateLocalBranchOperation(repository.getRepository(), newLocalBranch, remoteFeature,
+						UpstreamConfig.REBASE)
 				.execute(monitor);
 			}
 
-			new BranchOperation(repository, newLocalBranch).execute(monitor);
+			new BranchOperation(repository.getRepository(), newLocalBranch).execute(monitor);
 		} catch (URISyntaxException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {

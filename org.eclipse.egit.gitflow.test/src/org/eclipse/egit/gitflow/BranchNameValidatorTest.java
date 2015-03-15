@@ -11,6 +11,11 @@ package org.eclipse.egit.gitflow;
 import static org.eclipse.egit.gitflow.BranchNameValidator.featureExists;
 import static org.eclipse.egit.gitflow.BranchNameValidator.isBranchNameValid;
 import static org.eclipse.egit.gitflow.BranchNameValidator.releaseExists;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -27,10 +32,11 @@ public class BranchNameValidatorTest extends AbstractGitFlowOperationTest {
 		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository).execute(null);
-		new FeatureStartOperation(repository, MY_FEATURE).execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);
 
-		assertTrue(featureExists(repository, MY_FEATURE));
+		assertTrue(featureExists(gfRepo, MY_FEATURE));
 	}
 
 	@Test
@@ -38,10 +44,11 @@ public class BranchNameValidatorTest extends AbstractGitFlowOperationTest {
 		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository).execute(null);
-		new ReleaseStartOperation(repository, MY_RELEASE).execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
 
-		assertTrue(releaseExists(repository, MY_RELEASE));
+		assertTrue(releaseExists(gfRepo, MY_RELEASE));
 	}
 
 	@Test
@@ -49,10 +56,11 @@ public class BranchNameValidatorTest extends AbstractGitFlowOperationTest {
 		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository).execute(null);
-		new ReleaseStartOperation(repository, MY_RELEASE).execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
 
-		assertFalse(releaseExists(repository, "notThere"));
+		assertFalse(releaseExists(gfRepo, "notThere"));
 	}
 
 	@Test

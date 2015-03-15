@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureStartOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
 import org.eclipse.egit.gitflow.ui.internal.validation.FeatureNameValidator;
@@ -31,10 +32,11 @@ public class FeatureStartHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		InputDialog inputDialog = new InputDialog(HandlerUtil.getActiveShell(event), "Provide feature name",
-				"Please provide a name for the new feature.", "", new FeatureNameValidator(repository));
+				"Please provide a name for the new feature.", "", new FeatureNameValidator(gfRepo));
 
 		if (inputDialog.open() != Window.OK) {
 			return null;
@@ -46,7 +48,7 @@ public class FeatureStartHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new FeatureStartOperation(repository, featureName).execute(monitor);
+					new FeatureStartOperation(gfRepo, featureName).execute(monitor);
 				} catch (CoreException e) {
 					return Activator.error(e.getMessage(), e);
 				}

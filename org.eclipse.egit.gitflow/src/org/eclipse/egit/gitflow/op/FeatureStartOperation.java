@@ -11,16 +11,16 @@ package org.eclipse.egit.gitflow.op;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
-import org.eclipse.jgit.lib.Repository;
 
 public final class FeatureStartOperation extends AbstractFeatureOperation {
-	public FeatureStartOperation(Repository repository, String featureName) {
+	public FeatureStartOperation(GitFlowRepository repository, String featureName) {
 		super(repository, featureName);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String branchName = createFeatureBranchName(featureName);
+		String branchName = repository.getFeatureBranchName(featureName);
 
 		try {
 			start(monitor, branchName);

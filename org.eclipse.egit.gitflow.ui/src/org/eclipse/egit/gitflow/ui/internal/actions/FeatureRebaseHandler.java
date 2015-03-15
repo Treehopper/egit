@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureRebaseOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -34,12 +35,13 @@ public class FeatureRebaseHandler extends AbstractHandler {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
 		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
 		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		Job job = new UIJob(HandlerUtil.getActiveShell(event).getDisplay(), "Rebasing feature...") {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
-					FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(repository);
+					FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(gfRepo);
 					featureRebaseOperation.execute(monitor);
 					RebaseResult.Status status = featureRebaseOperation.getOperationResult().getStatus();
 					if (RebaseResult.Status.FAILED.equals(status)) {

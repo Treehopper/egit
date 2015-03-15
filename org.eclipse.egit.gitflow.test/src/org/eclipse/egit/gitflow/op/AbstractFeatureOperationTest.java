@@ -8,14 +8,6 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import org.eclipse.jgit.lib.Constants;
-
 abstract public class AbstractFeatureOperationTest extends AbstractGitFlowOperationTest {
-	protected String getFullFeatureBranchName(String featureName) {
-		return Constants.R_HEADS + getFeatureBranchName(featureName);
-	}
-
-	protected String getFeatureBranchName(String featureName) {
-		return GitFlowOperation.FEATURE_PREFIX + SEP + featureName;
-	}
+	// TODO: remove this if it's not necessary
 }

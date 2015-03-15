@@ -8,29 +8,31 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.TagOperation;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.TagBuilder;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 @SuppressWarnings("restriction")
 public final class ReleaseFinishOperation extends AbstractReleaseOperation {
-	public ReleaseFinishOperation(Repository repository, String releaseName) {
+	public ReleaseFinishOperation(GitFlowRepository repository, String releaseName) {
 		super(repository, releaseName);
 	}
 
-	public ReleaseFinishOperation(Repository repository) throws WrongGitFlowStateException, CoreException {
+	public ReleaseFinishOperation(GitFlowRepository repository) throws WrongGitFlowStateException, CoreException, IOException {
 		this(repository, getReleaseName(repository));
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String releaseBranchName = createReleaseBranchName(releaseName);
-		mergeTo(monitor, releaseBranchName, MASTER);
+		mergeTo(monitor, releaseBranchName, repository.getMaster());
 		finish(monitor, releaseBranchName);
-		RevCommit head = findHead(repository);
+		RevCommit head = repository.findHead();
 		createTag(monitor, head, "Release of " + releaseName);
 	}
 
@@ -39,6 +41,6 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 		tag.setTag(releaseName);
 		tag.setMessage(message);
 		tag.setObjectId(head);
-		new TagOperation(repository, tag, false).execute(monitor);
+		new TagOperation(repository.getRepository(), tag, false).execute(monitor);
 	}
 }

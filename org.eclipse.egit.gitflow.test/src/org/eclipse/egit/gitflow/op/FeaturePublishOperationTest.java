@@ -12,17 +12,22 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.egit.core.op.PushOperationResult;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.junit.Test;
 
+@SuppressWarnings("restriction")
 public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase {
 	@Test
 	public void testFeaturePublish() throws Exception {
-		new FeatureStartOperation(repository2.getRepository(), MY_FEATURE).execute(null);
+		GitFlowRepository gfRepo1 = new GitFlowRepository(repository1.getRepository());
+		GitFlowRepository gfRepo2 = new GitFlowRepository(repository2.getRepository());
+
+		new FeatureStartOperation(gfRepo2, MY_FEATURE).execute(null);
 		RevCommit branchCommit = repository2.createInitialCommit("testFeaturePublish");
-		FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(repository2.getRepository(), 0);
+		FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(gfRepo2, 0);
 		featurePublishOperation.execute(null);
 		PushOperationResult result = featurePublishOperation.getOperationResult();
 
@@ -32,6 +37,6 @@ public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase 
 
 		assertCommitArrivedAtRemote(branchCommit, repository1.getRepository());
 
-		new FeatureFinishOperation(repository1.getRepository(), MY_FEATURE);
+		new FeatureFinishOperation(gfRepo1, MY_FEATURE);
 	}
 }

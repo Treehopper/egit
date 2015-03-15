@@ -8,6 +8,11 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -20,6 +25,7 @@ import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CloneOperation;
 import org.eclipse.egit.core.test.DualRepositoryTestCase;
 import org.eclipse.egit.core.test.TestRepository;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
@@ -30,7 +36,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
 import org.junit.Before;
-import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 
 @SuppressWarnings("restriction")
 public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
@@ -52,7 +57,7 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		repository1.createInitialCommit("setUp");
 
 		Repository repository = repository1.getRepository();
-		new InitOperation(repository).execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
 
 		// now we create a project in repo1
 		IProject project = testUtils.createProjectInLocalFileSystem(workdir, projectName);
@@ -74,12 +79,12 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		Repository repo2 = Activator.getDefault().getRepositoryCache()
 				.lookupRepository(new File(workdir2, Constants.DOT_GIT));
 		repository2 = new TestRepository(repo2);
-		new InitOperation(repo2).execute(null);
+		new InitOperation(repo2, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
 	}
 
 	protected void assertCommitArrivedAtRemote(RevCommit branchCommit, Repository remote) throws CoreException {
-		BranchOperation checkoutOperation = new BranchOperation(remote,
-				getFullFeatureBranchName(MY_FEATURE));
+		GitFlowRepository gfRepo = new GitFlowRepository(remote);
+		BranchOperation checkoutOperation = new BranchOperation(remote, gfRepo.getFullFeatureBranchName(MY_FEATURE));
 		checkoutOperation.execute(null);
 		RevCommit developHead = findHead(remote);
 		assertEquals(branchCommit, developHead);
@@ -100,13 +105,5 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public static String getFullFeatureBranchName(String featureName) {
-		return Constants.R_HEADS + getFeatureBranchName(featureName);
-	}
-
-	public static String getFeatureBranchName(String featureName) {
-		return FEATURE_PREFIX + SEP + featureName;
 	}
 }

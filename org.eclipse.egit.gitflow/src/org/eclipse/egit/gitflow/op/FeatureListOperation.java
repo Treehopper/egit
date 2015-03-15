@@ -18,37 +18,36 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.ListRemoteOperation;
 import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.URIish;
 
 @SuppressWarnings("restriction")
 public final class FeatureListOperation extends GitFlowOperation {
 	private static final String FILE = "file:///";
-	private static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP
-			+ FEATURE_PREFIX + SEP;
+	private static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP;
 	private List<Ref> result = new ArrayList<Ref>();
 	private int timeout;
 	private FetchResult operationResult;
 
-	public FeatureListOperation(Repository repository, int timeout) {
+	public FeatureListOperation(GitFlowRepository repository, int timeout) {
 		super(repository);
 		this.timeout = timeout;
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String uriString = FILE + repository.getDirectory().getPath();
+		String uriString = FILE + repository.getRepository().getDirectory().getPath();
 		try {
 			operationResult = fetch(monitor);
 
 			URIish uri = new URIish(uriString);
-			ListRemoteOperation listRemoteOperation = new ListRemoteOperation(repository, uri, timeout);
+			ListRemoteOperation listRemoteOperation = new ListRemoteOperation(repository.getRepository(), uri, timeout);
 			listRemoteOperation.run(monitor);
 			Collection<Ref> remoteRefs = listRemoteOperation.getRemoteRefs();
 			for (Ref ref : remoteRefs) {
-				if (ref.getName().startsWith(REMOTE_ORIGIN_FEATURE_PREFIX)) {
+				if (ref.getName().startsWith(REMOTE_ORIGIN_FEATURE_PREFIX + repository.getFeaturePrefix())) {
 					result.add(ref);
 				}
 			}
