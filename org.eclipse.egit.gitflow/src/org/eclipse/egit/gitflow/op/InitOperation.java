@@ -17,6 +17,7 @@ import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 
 @SuppressWarnings("restriction")
@@ -58,10 +59,16 @@ public final class InitOperation extends GitFlowOperation {
 					"Git Flow inital commit").execute(monitor);
 		}
 
-		CreateLocalBranchOperation branchFromHead = createBranchFromHead(develop);
-		branchFromHead.execute(monitor);
-		BranchOperation checkoutOperation = new BranchOperation(repository.getRepository(), develop);
-		checkoutOperation.execute(monitor);
+		try {
+			if (!repository.hasBranch(DEVELOP)) {
+				CreateLocalBranchOperation branchFromHead = createBranchFromHead(develop);
+				branchFromHead.execute(monitor);
+				BranchOperation checkoutOperation = new BranchOperation(repository.getRepository(), develop);
+				checkoutOperation.execute(monitor);
+			}
+		} catch (GitAPIException e) {
+			throw new CoreException(Activator.error(e.getMessage(), e));
+		}
 	}
 
 	private void setPrefixes(String feature, String release, String hotfix) {
