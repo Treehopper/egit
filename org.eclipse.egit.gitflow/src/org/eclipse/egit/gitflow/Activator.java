@@ -9,11 +9,13 @@
 package org.eclipse.egit.gitflow;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class Activator implements BundleActivator {
+public class Activator extends Plugin {
+
+	private static Plugin instance;
 
 	private static BundleContext context;
 
@@ -24,12 +26,14 @@ public class Activator implements BundleActivator {
 		return context;
 	}
 
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+		instance = this;
 	}
 
 	/*
@@ -42,5 +46,9 @@ public class Activator implements BundleActivator {
 
 	public static IStatus error(String message, Throwable throwable) {
 		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, throwable);
+	}
+
+	public static Plugin getDefault() {
+		return instance;
 	}
 }

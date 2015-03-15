@@ -3,6 +3,7 @@ package org.eclipse.egit.gitflow;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -59,6 +60,12 @@ public class GitFlowRepository {
 		return repository.getRef(Constants.R_HEADS + branchName);
 	}
 
+	public boolean isInitialized() throws IOException {
+		StoredConfig config = repository.getConfig();
+		Set<String> sections = config.getSections();
+		return sections.contains(GITFLOW_SECTION);
+	}
+
 	public boolean isFeature() throws IOException {
 		return repository.getBranch().startsWith(getFeaturePrefix());
 	}
@@ -67,8 +74,16 @@ public class GitFlowRepository {
 		return repository.getBranch().equals(getDevelop());
 	}
 
+	public boolean isMaster() throws IOException {
+		return repository.getBranch().equals(getMaster());
+	}
+
 	public boolean isRelease() throws IOException {
 		return repository.getBranch().startsWith(getReleasePrefix());
+	}
+
+	public boolean isHotfix() throws IOException {
+		return repository.getBranch().startsWith(getHotfixPrefix());
 	}
 
 	public String getUser() {
@@ -79,37 +94,39 @@ public class GitFlowRepository {
 	}
 
 	public String getFeaturePrefix() {
-		return getPrefix(FEATURE_KEY);
+		return getPrefix(FEATURE_KEY, GitFlowDefaults.FEATURE_PREFIX);
 	}
 
 	public String getReleasePrefix() {
-		return getPrefix(RELEASE_KEY);
+		return getPrefix(RELEASE_KEY, GitFlowDefaults.RELEASE_PREFIX);
 	}
 
 	public String getHotfixPrefix() {
-		return getPrefix(HOTFIX_KEY);
+		return getPrefix(HOTFIX_KEY, GitFlowDefaults.HOTFIX_PREFIX);
 	}
 
 	public String getDevelop() {
-		return getBranch(DEVELOP_KEY);
+		return getBranch(DEVELOP_KEY, GitFlowDefaults.DEVELOP);
 	}
 
 	public String getMaster() {
-		return getBranch(MASTER_KEY);
+		return getBranch(MASTER_KEY, GitFlowDefaults.MASTER);
 	}
 
 	public String getDevelopFull() {
 		return Constants.R_HEADS + getDevelop();
 	}
 
-	public String getPrefix(String prefixName) {
+	public String getPrefix(String prefixName, String defaultPrefix) {
 		StoredConfig config = repository.getConfig();
-		return config.getString(GITFLOW_SECTION, PREFIX_SECTION, prefixName);
+		String result = config.getString(GITFLOW_SECTION, PREFIX_SECTION, prefixName);
+		return (result == null) ? defaultPrefix : result;
 	}
 
-	public String getBranch(String branch) {
+	public String getBranch(String branch, String defaultBranch) {
 		StoredConfig config = repository.getConfig();
-		return config.getString(GITFLOW_SECTION, BRANCH_SECTION, branch);
+		String result = config.getString(GITFLOW_SECTION, BRANCH_SECTION, branch);
+		return (result == null) ? defaultBranch : result;
 	}
 
 	public void setPrefix(String prefixName, String value) {

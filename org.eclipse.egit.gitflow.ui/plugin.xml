@@ -169,6 +169,20 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <not>
+                     <test
+                           forcePluginActivation="true"
+                           property="GitFlowRepository.isInitialized">
+                     </test>
+                  </not>
+               </and>
+            </iterate>
+         </enabledWhen>
       </handler>
       <handler
             commandId="org.eclipse.egit.gitflow.ui.command.featureStart">
@@ -184,6 +198,18 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isDevelop">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
       </handler>
       <handler
             commandId="org.eclipse.egit.gitflow.ui.command.featureFinish">
@@ -199,6 +225,18 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+       
+         <and>
+            <test
+                  forcePluginActivation="true"
+                  property="GitFlowRepository.isFeature">
+            </test>
+         </and>
+            </iterate></enabledWhen>
       </handler>
       <handler
             commandId="org.eclipse.egit.gitflow.ui.command.releaseStart">
@@ -214,6 +252,18 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isDevelop">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
       </handler>
       <handler
             commandId="org.eclipse.egit.gitflow.ui.command.releaseFinish">
@@ -229,13 +279,37 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isRelease">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
       </handler>
       <handler
             commandId="org.eclipse.egit.gitflow.ui.command.featurePublish">
          <class
                class="org.eclipse.egit.gitflow.ui.internal.actions.FeaturePublishHandler">
          </class>
-         <activeWhen>
+  
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isFeature">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen> <activeWhen>
             <iterate>
                <or>
                   <instanceof
@@ -289,7 +363,39 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isFeature">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode"
+            class="org.eclipse.egit.gitflow.ui.internal.adapter.GitFlowAdapterFactory">
+         <adapter
+               type="org.eclipse.egit.gitflow.GitFlowRepository">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.egit.gitflow.ui.internal.adapter.PropertyTester"
+            id="org.eclipse.egit.gitflow.ui.propertyTester"
+            namespace="GitFlowRepository"
+            properties="isFeature,isRelease,isHotfix,isDevelop,isMaster,isInitialized"
+            type="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+      </propertyTester>
    </extension>
 
 
