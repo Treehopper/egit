@@ -60,14 +60,10 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		} catch (IOException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		}
-		try {
-			CreateLocalBranchOperation branchOperation = createBranchFromHead(branchName);
-			branchOperation.execute(monitor);
-			BranchOperation checkoutOperation = new BranchOperation(repository.getRepository(), branchName);
-			checkoutOperation.execute(monitor);
-		} catch (CoreException e) {
-			throw e;
-		}
+		CreateLocalBranchOperation branchOperation = createBranchFromHead(branchName);
+		branchOperation.execute(monitor);
+		BranchOperation checkoutOperation = new BranchOperation(repository.getRepository(), branchName);
+		checkoutOperation.execute(monitor);
 	}
 
 	protected void finish(IProgressMonitor monitor, String branchName) throws CoreException {
