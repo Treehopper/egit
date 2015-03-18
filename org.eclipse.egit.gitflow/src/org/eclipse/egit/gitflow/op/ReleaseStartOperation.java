@@ -8,11 +8,12 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
-import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 
 public final class ReleaseStartOperation extends AbstractReleaseOperation {
 	public ReleaseStartOperation(GitFlowRepository repository, String releaseName) {
@@ -22,10 +23,15 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String branchName = createReleaseBranchName(releaseName);
 
+
 		try {
-			start(monitor, branchName);
-		} catch (WrongGitFlowStateException e) {
+			if (!repository.isDevelop()) {
+				throw new CoreException(Activator.error("Not on " + repository.getDevelop()));
+			}
+		} catch (IOException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		}
+		start(monitor, branchName, repository.findHead());
+
 	}
 }

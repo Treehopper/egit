@@ -11,6 +11,7 @@ package org.eclipse.egit.gitflow.op;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -21,13 +22,12 @@ import org.eclipse.egit.core.op.DeleteBranchOperation;
 import org.eclipse.egit.core.op.FetchOperation;
 import org.eclipse.egit.core.op.IEGitOperation;
 import org.eclipse.egit.core.op.MergeOperation;
-import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
-import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
 
@@ -48,19 +48,12 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		return RuleUtil.getRule(repository.getRepository());
 	}
 
-	protected CreateLocalBranchOperation createBranchFromHead(String branchName) {
-		return new CreateLocalBranchOperation(repository.getRepository(), branchName, repository.findHead());
+	protected CreateLocalBranchOperation createBranchFromHead(String branchName, RevCommit sourceCommit) {
+		return new CreateLocalBranchOperation(repository.getRepository(), branchName, sourceCommit);
 	}
 
-	protected void start(IProgressMonitor monitor, String branchName) throws WrongGitFlowStateException, CoreException {
-		try {
-			if (!repository.isDevelop()) {
-				throw new WrongGitFlowStateException("Not on " + repository.getDevelop());
-			}
-		} catch (IOException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
-		}
-		CreateLocalBranchOperation branchOperation = createBranchFromHead(branchName);
+	protected void start(IProgressMonitor monitor, String branchName, RevCommit sourceCommit) throws CoreException {
+		CreateLocalBranchOperation branchOperation = createBranchFromHead(branchName, sourceCommit);
 		branchOperation.execute(monitor);
 		BranchOperation checkoutOperation = new BranchOperation(repository.getRepository(), branchName);
 		checkoutOperation.execute(monitor);

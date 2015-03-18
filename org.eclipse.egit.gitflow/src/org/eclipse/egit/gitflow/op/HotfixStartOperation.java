@@ -8,28 +8,18 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import java.io.IOException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
-public final class FeatureStartOperation extends AbstractFeatureOperation {
-	public FeatureStartOperation(GitFlowRepository repository, String featureName) {
-		super(repository, featureName);
+public final class HotfixStartOperation extends AbstractHotfixOperation {
+	public HotfixStartOperation(GitFlowRepository repository, String hotfixName) {
+		super(repository, hotfixName);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String branchName = repository.getFeatureBranchName(featureName);
+		String branchName = repository.getHotfixBranchName(hotfixName);
 
-		try {
-			if (!repository.isDevelop()) {
-				throw new CoreException(Activator.error("Not on " + repository.getDevelop()));
-			}
-		} catch (IOException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
-		}
-		start(monitor, branchName, repository.findHead());
+		start(monitor, branchName, repository.findHead(repository.getMaster()));
 	}
 }

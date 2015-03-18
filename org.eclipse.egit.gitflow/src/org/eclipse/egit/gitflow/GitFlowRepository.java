@@ -156,12 +156,37 @@ public class GitFlowRepository {
 		}
 	}
 
+	public RevCommit findHead(String branchName) {
+		RevWalk walk = new RevWalk(repository);
+
+		try {
+			ObjectId head = repository.resolve(Constants.R_HEADS + branchName);
+			return walk.parseCommit(head);
+		} catch (RevisionSyntaxException e) {
+			throw new RuntimeException(e);
+		} catch (AmbiguousObjectException e) {
+			throw new RuntimeException(e);
+		} catch (IncorrectObjectTypeException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public String getFullFeatureBranchName(String featureName) {
 		return Constants.R_HEADS + getFeatureBranchName(featureName);
 	}
 
 	public String getFeatureBranchName(String featureName) {
 		return getFeaturePrefix() + featureName;
+	}
+
+	public String getHotfixBranchName(String hotfixName) {
+		return getHotfixPrefix() + hotfixName;
+	}
+
+	public String getFullHotfixBranchName(String hotfixName) {
+		return Constants.R_HEADS + getHotfixBranchName(hotfixName);
 	}
 
 	public String getFullReleaseBranchName(String releaseName) {

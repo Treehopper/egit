@@ -61,7 +61,7 @@ public final class InitOperation extends GitFlowOperation {
 
 		try {
 			if (!repository.hasBranch(DEVELOP)) {
-				CreateLocalBranchOperation branchFromHead = createBranchFromHead(develop);
+				CreateLocalBranchOperation branchFromHead = createBranchFromHead(develop, repository.findHead());
 				branchFromHead.execute(monitor);
 				BranchOperation checkoutOperation = new BranchOperation(repository.getRepository(), develop);
 				checkoutOperation.execute(monitor);
