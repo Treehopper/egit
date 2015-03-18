@@ -22,14 +22,10 @@ abstract public class AbstractReleaseOperation extends GitFlowOperation {
 		this.releaseName = releaseName;
 	}
 
-	protected String createReleaseBranchName(String releaseName) {
-		return repository.getReleasePrefix() + releaseName;
-	}
-
 	protected static String getReleaseName(GitFlowRepository repository) throws WrongGitFlowStateException,
 	CoreException, IOException {
 		if (!repository.isRelease()) {
-			throw new WrongGitFlowStateException("Not on a feature branch.");
+			throw new WrongGitFlowStateException("Not on a release branch.");
 		}
 		String currentBranch = repository.getRepository().getBranch();
 		return currentBranch.substring(repository.getReleasePrefix().length());

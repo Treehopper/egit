@@ -29,7 +29,7 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String releaseBranchName = createReleaseBranchName(releaseName);
+		String releaseBranchName = repository.getReleaseBranchName(releaseName);
 		mergeTo(monitor, releaseBranchName, repository.getMaster());
 		finish(monitor, releaseBranchName);
 		RevCommit head = repository.findHead();

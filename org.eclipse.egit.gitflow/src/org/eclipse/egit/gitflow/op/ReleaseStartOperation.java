@@ -21,8 +21,7 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String branchName = createReleaseBranchName(releaseName);
-
+		String branchName = repository.getReleaseBranchName(releaseName);
 
 		try {
 			if (!repository.isDevelop()) {
