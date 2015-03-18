@@ -14,10 +14,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 public final class ReleaseStartOperation extends AbstractReleaseOperation {
+	private String startCommitSha1;
+
+	public ReleaseStartOperation(GitFlowRepository repository, String startCommitSha1, String releaseName) {
+		super(repository, releaseName);
+		this.startCommitSha1 = startCommitSha1;
+	}
+
 	public ReleaseStartOperation(GitFlowRepository repository, String releaseName) {
 		super(repository, releaseName);
+		this.startCommitSha1 = repository.findHead().getName();
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
@@ -30,7 +39,9 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 		} catch (IOException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		}
-		start(monitor, branchName, repository.findHead());
+
+		RevCommit commit = repository.findCommit(startCommitSha1);
+		start(monitor, branchName, commit);
 
 	}
 }

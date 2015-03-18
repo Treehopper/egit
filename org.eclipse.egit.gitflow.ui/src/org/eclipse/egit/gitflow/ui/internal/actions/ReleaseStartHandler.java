@@ -25,14 +25,20 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revplot.PlotCommit;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.team.ui.history.IHistoryView;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class ReleaseStartHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		Repository repository = getRepository(event);
+		if (repository == null) {
+			return null;
+		}
+		final String startCommitSha1 = getStartCommit(event);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		InputDialog inputDialog = new InputDialog(HandlerUtil.getActiveShell(event), "Provide release name",
@@ -48,7 +54,7 @@ public class ReleaseStartHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new ReleaseStartOperation(gfRepo, releaseName).execute(monitor);
+					new ReleaseStartOperation(gfRepo, startCommitSha1, releaseName).execute(monitor);
 				} catch (CoreException e) {
 					return Activator.error(e.getMessage(), e);
 				}
@@ -59,5 +65,33 @@ public class ReleaseStartHandler extends AbstractHandler {
 		job.schedule();
 
 		return null;
+	}
+
+	private String getStartCommit(ExecutionEvent event) throws ExecutionException {
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
+		if (selection.getFirstElement() instanceof PlotCommit) {
+			RevCommit plotCommit = (RevCommit) selection.getFirstElement();
+			return plotCommit.getName();
+		} else {
+			return new GitFlowRepository(getRepository(event)).findHead().getName();
+		}
+	}
+
+	private Repository getRepository(ExecutionEvent event) throws ExecutionException {
+		PlatformObject firstElement;
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
+		if (selection.getFirstElement() instanceof PlotCommit) {
+			IWorkbenchPart ap = HandlerUtil.getActivePartChecked(event);
+			if (ap instanceof IHistoryView) {
+				firstElement = (PlatformObject) ((IHistoryView) ap).getHistoryPage().getInput();
+			} else {
+				// This is unexpected
+				return null;
+			}
+
+		} else {
+			firstElement = (PlatformObject) selection.getFirstElement();
+		}
+		return (Repository) firstElement.getAdapter(Repository.class);
 	}
 }

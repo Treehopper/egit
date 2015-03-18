@@ -177,6 +177,25 @@ public class GitFlowRepository {
 		}
 	}
 
+	public RevCommit findCommit(String sha1) {
+		RevWalk walk = new RevWalk(repository);
+
+		try {
+			ObjectId head = repository.resolve(sha1);
+			return walk.parseCommit(head);
+		} catch (RevisionSyntaxException e) {
+			throw new RuntimeException(e);
+		} catch (AmbiguousObjectException e) {
+			throw new RuntimeException(e);
+		} catch (IncorrectObjectTypeException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			walk.release();
+		}
+	}
+
 	public String getFullFeatureBranchName(String featureName) {
 		return Constants.R_HEADS + getFeatureBranchName(featureName);
 	}
@@ -232,5 +251,4 @@ public class GitFlowRepository {
 			throw new RuntimeException(e);
 		}
 	}
-
 }
