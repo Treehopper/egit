@@ -446,16 +446,6 @@
       </handler>
    </extension>
    <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode"
-            class="org.eclipse.egit.gitflow.ui.internal.adapter.GitFlowAdapterFactory">
-         <adapter
-               type="org.eclipse.egit.gitflow.GitFlowRepository">
-         </adapter>
-      </factory>
-   </extension>
-   <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
             class="org.eclipse.egit.gitflow.ui.internal.adapter.PropertyTester"
