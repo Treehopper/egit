@@ -10,7 +10,9 @@ package org.eclipse.egit.gitflow.op;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.egit.core.test.GitTestCase;
 import org.eclipse.egit.core.test.TestRepository;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
@@ -92,4 +94,15 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 			throw new RuntimeException(e);
 		}
 	}
+
+	protected RevCommit addFileAndCommit(String fileName, String commitMessage) throws Exception, UnsupportedEncodingException {
+		IFile file = project.createFile(fileName, "Hello, world".getBytes("UTF-8"));
+		return testRepository
+				.addAndCommit(project.project, new File(file.getLocationURI()), commitMessage);
+	}
+
+	protected RevCommit findCommitForTag(Repository repository, String tagName) throws MissingObjectException,
+			IncorrectObjectTypeException, IOException {
+				return new RevWalk(repository).parseCommit(repository.getRef(Constants.R_TAGS + tagName).getObjectId());
+			}
 }

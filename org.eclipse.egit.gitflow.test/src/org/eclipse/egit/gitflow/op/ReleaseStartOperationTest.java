@@ -19,7 +19,7 @@ import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 
-public class ReleaseStartOperationTest extends AbstractReleaseOperationTest {
+public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 	@Test
 	public void testReleaseStart() throws Exception {
 		testRepository.createInitialCommit("testReleaseStart\n\nfirst commit\n");

@@ -16,10 +16,6 @@ import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
 import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.*;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.api.RebaseResult;
 import org.eclipse.jgit.lib.Repository;
@@ -53,11 +49,5 @@ public class FeatureRebaseOperationTest extends AbstractFeatureOperationTest {
 
 		assertEquals(branchCommitMessage, findHead(repository).getShortMessage());
 		assertEquals(developCommit, findCommit(repository, repository.resolve("HEAD^")));
-	}
-
-	private RevCommit addFileAndCommit(String fileName, String commitMessage) throws Exception, UnsupportedEncodingException {
-		IFile file = project.createFile(fileName, "Hello, world".getBytes("UTF-8"));
-		return testRepository
-				.addAndCommit(project.project, new File(file.getLocationURI()), commitMessage);
 	}
 }

@@ -22,7 +22,7 @@ abstract public class AbstractHotfixOperation extends GitFlowOperation {
 		this.hotfixName = hotfixName;
 	}
 
-	protected static String getFeatureName(GitFlowRepository repository) throws WrongGitFlowStateException,
+	protected static String getHotfixName(GitFlowRepository repository) throws WrongGitFlowStateException,
 	CoreException, IOException {
 		if (!repository.isHotfix()) {
 			throw new WrongGitFlowStateException("Not on a hotfix branch.");

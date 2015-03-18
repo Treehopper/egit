@@ -19,7 +19,7 @@ import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 
-public class FeatureHotfixOperationTest extends AbstractFeatureOperationTest {
+public class HotfixStartOperationTest extends AbstractFeatureOperationTest {
 	@Test
 	public void testHotfixStart() throws Exception {
 		testRepository.createInitialCommit("testHotfixStart\n\nfirst commit\n");
@@ -32,5 +32,6 @@ public class FeatureHotfixOperationTest extends AbstractFeatureOperationTest {
 
 		assertEquals(gfRepo.getFullHotfixBranchName(MY_HOTFIX), repository
 				.getFullBranch());
+
 	}
 }

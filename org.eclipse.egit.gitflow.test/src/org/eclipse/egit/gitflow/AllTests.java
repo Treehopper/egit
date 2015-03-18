@@ -10,12 +10,13 @@ package org.eclipse.egit.gitflow;
 
 import org.eclipse.egit.gitflow.op.FeatureCheckoutOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureFinishOperationTest;
-import org.eclipse.egit.gitflow.op.FeatureHotfixOperationTest;
+import org.eclipse.egit.gitflow.op.HotfixStartOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureListOperationTest;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureRebaseOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureStartOperationTest;
 import org.eclipse.egit.gitflow.op.FeatureTrackOperationTest;
+import org.eclipse.egit.gitflow.op.HotfixFinishOperationTest;
 import org.eclipse.egit.gitflow.op.InitOperationTest;
 import org.eclipse.egit.gitflow.op.ReleaseFinishOperationTest;
 import org.eclipse.egit.gitflow.op.ReleaseStartOperationTest;
@@ -27,7 +28,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ InitOperationTest.class, FeatureStartOperationTest.class, FeatureFinishOperationTest.class,
 	ReleaseStartOperationTest.class, ReleaseFinishOperationTest.class, FeaturePublishOperationTest.class,
 	BranchNameValidatorTest.class, FeatureTrackOperationTest.class, FeatureListOperationTest.class,
-	FeatureCheckoutOperationTest.class, FeatureRebaseOperationTest.class, FeatureHotfixOperationTest.class })
+	FeatureCheckoutOperationTest.class, FeatureRebaseOperationTest.class, HotfixStartOperationTest.class,
+	HotfixFinishOperationTest.class })
 public class AllTests {
 
 }
