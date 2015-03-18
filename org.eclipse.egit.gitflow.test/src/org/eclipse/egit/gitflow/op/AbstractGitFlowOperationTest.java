@@ -15,10 +15,8 @@ import java.io.UnsupportedEncodingException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.egit.core.test.GitTestCase;
 import org.eclipse.egit.core.test.TestRepository;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -58,41 +56,9 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 		return repository.getRef(Constants.R_HEADS + branchName);
 	}
 
-	protected RevCommit findHead(Repository repo) {
-		try {
-			ObjectId head = repo.resolve(Constants.HEAD);
-			return findCommit(repo, head);
-		} catch (RevisionSyntaxException e) {
-			throw new RuntimeException(e);
-		} catch (AmbiguousObjectException e) {
-			throw new RuntimeException(e);
-		} catch (IncorrectObjectTypeException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	protected RevCommit findCommit(Repository repo, ObjectId head) throws MissingObjectException,
 	IncorrectObjectTypeException, IOException {
 		return new RevWalk(repo).parseCommit(head);
-	}
-
-	protected RevCommit findHead(Repository repo, String branch) {
-		RevWalk walk = new RevWalk(repo);
-
-		try {
-			ObjectId head = repo.resolve(Constants.R_HEADS + branch);
-			return walk.parseCommit(head);
-		} catch (RevisionSyntaxException e) {
-			throw new RuntimeException(e);
-		} catch (AmbiguousObjectException e) {
-			throw new RuntimeException(e);
-		} catch (IncorrectObjectTypeException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	protected RevCommit addFileAndCommit(String fileName, String commitMessage) throws Exception, UnsupportedEncodingException {

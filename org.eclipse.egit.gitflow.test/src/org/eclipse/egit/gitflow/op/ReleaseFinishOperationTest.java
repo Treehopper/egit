@@ -49,10 +49,10 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 		// branch removed?
 		assertEquals(findBranch(repository, branchName), null);
 
-		RevCommit developHead = findHead(repository);
+		RevCommit developHead = gfRepo.findHead();
 		assertEquals(branchCommit, developHead);
 
-		RevCommit masterHead = findHead(repository, MY_MASTER);
+		RevCommit masterHead = gfRepo.findHead(MY_MASTER);
 		assertEquals(branchCommit, masterHead);
 
 	}

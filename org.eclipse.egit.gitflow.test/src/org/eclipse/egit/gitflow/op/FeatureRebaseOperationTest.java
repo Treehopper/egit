@@ -40,14 +40,14 @@ public class FeatureRebaseOperationTest extends AbstractFeatureOperationTest {
 		RevCommit developCommit = addFileAndCommit("theOtherFile.txt", "adding second file on develop branch");
 
 		new FeatureCheckoutOperation(gfRepo, MY_FEATURE).execute(null);
-		assertEquals(initialCommit, findHead(repository).getParent(0));
+		assertEquals(initialCommit, gfRepo.findHead().getParent(0));
 		FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(gfRepo);
 		featureRebaseOperation.execute(null);
 
 		RebaseResult res = featureRebaseOperation.getOperationResult();
 		assertEquals(RebaseResult.Status.OK, res.getStatus());
 
-		assertEquals(branchCommitMessage, findHead(repository).getShortMessage());
+		assertEquals(branchCommitMessage, gfRepo.findHead().getShortMessage());
 		assertEquals(developCommit, findCommit(repository, repository.resolve("HEAD^")));
 	}
 }

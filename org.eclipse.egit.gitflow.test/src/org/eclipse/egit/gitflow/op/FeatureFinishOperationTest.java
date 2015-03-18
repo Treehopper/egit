@@ -44,7 +44,7 @@ public class FeatureFinishOperationTest extends AbstractFeatureOperationTest {
 
 		assertEquals(findBranch(repository, branchName), null);
 
-		RevCommit developHead = findHead(repository);
+		RevCommit developHead = gfRepo.findHead();
 		assertEquals(branchCommit, developHead);
 	}
 
