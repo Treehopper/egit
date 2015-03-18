@@ -138,10 +138,6 @@
       </command>
       <command
             id="org.eclipse.egit.gitflow.ui.command.featureTrack"
-            name="%TeamGitFlowFeatureStart.name">
-      </command>
-      <command
-            id="org.eclipse.egit.gitflow.ui.command.featureTrack"
             name="%TeamGitFlowFeatureTrack.name">
       </command>
       <command
