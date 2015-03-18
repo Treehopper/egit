@@ -106,6 +106,28 @@
                   </reference>
                </visibleWhen>
             </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.hotfixStart"
+                  label="%TeamGitFlowHotfixStart.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.hotfixFinish"
+                  label="%TeamGitFlowHotfixFinish.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -147,6 +169,14 @@
       <command
             id="org.eclipse.egit.gitflow.ui.command.featureRebase"
             name="%TeamGitFlowFeatureRebase.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.hotfixStart"
+            name="%TeamGitFlowHotfixStart.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.hotfixFinish"
+            name="%TeamGitFlowHotfixFinish.name">
       </command>
    </extension>
    <extension
@@ -367,6 +397,48 @@
                   <test
                         forcePluginActivation="true"
                         property="GitFlowRepository.isFeature">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.hotfixStart">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.HotfixStartHandler">
+         </class>
+         <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.hotfixFinish">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.HotfixFinishHandler">
+         </class>
+         <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isHotfix">
                   </test>
                </and>
             </iterate>

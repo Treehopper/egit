@@ -22,6 +22,10 @@ public class BranchNameValidator {
 		return branchExists(repository, repository.getFullFeatureBranchName(featureName));
 	}
 
+	public static boolean hotfixExists(GitFlowRepository repository, String hotfixName) throws CoreException {
+		return branchExists(repository, repository.getFullHotfixBranchName(hotfixName));
+	}
+
 	public static boolean releaseExists(GitFlowRepository repository, String releaseName) throws CoreException {
 		return branchExists(repository, repository.getFullReleaseBranchName(releaseName));
 	}
