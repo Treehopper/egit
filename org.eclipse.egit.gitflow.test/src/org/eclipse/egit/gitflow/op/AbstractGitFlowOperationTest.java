@@ -58,7 +58,10 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 
 	protected RevCommit findCommit(Repository repo, ObjectId head) throws MissingObjectException,
 	IncorrectObjectTypeException, IOException {
-		return new RevWalk(repo).parseCommit(head);
+		RevWalk revWalk = new RevWalk(repo);
+		RevCommit result = revWalk.parseCommit(head);
+		revWalk.release();
+		return result;
 	}
 
 	protected RevCommit addFileAndCommit(String fileName, String commitMessage) throws Exception, UnsupportedEncodingException {
@@ -68,7 +71,10 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	}
 
 	protected RevCommit findCommitForTag(Repository repository, String tagName) throws MissingObjectException,
-			IncorrectObjectTypeException, IOException {
-				return new RevWalk(repository).parseCommit(repository.getRef(Constants.R_TAGS + tagName).getObjectId());
-			}
+	IncorrectObjectTypeException, IOException {
+		RevWalk revWalk = new RevWalk(repository);
+		RevCommit result = revWalk.parseCommit(repository.getRef(Constants.R_TAGS + tagName).getObjectId());
+		revWalk.release();
+		return result;
+	}
 }

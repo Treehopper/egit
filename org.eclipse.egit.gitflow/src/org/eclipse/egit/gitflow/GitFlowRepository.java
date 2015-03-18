@@ -153,6 +153,8 @@ public class GitFlowRepository {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} finally {
+			walk.release();
 		}
 	}
 
@@ -170,6 +172,8 @@ public class GitFlowRepository {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} finally {
+			walk.release();
 		}
 	}
 

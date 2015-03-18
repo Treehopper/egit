@@ -104,6 +104,8 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} finally {
+			walk.release();
 		}
 	}
 }
