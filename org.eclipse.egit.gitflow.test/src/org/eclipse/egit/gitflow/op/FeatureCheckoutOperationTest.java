@@ -15,8 +15,10 @@ import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
 import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.assertEquals;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.jgit.api.CheckoutResult.Status;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 
@@ -37,5 +39,38 @@ public class FeatureCheckoutOperationTest extends AbstractFeatureOperationTest {
 
 		assertEquals(gfRepo.getFullFeatureBranchName(MY_FEATURE), repository
 				.getFullBranch());
+	}
+
+	@Test
+	public void testFeatureCheckoutConflicts() throws Exception {
+		testRepository.createInitialCommit("testFeatureCheckoutConflicts\n\nfirst commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+
+		// setup something we can modify later
+		IFile file = testUtils.addFileToProject(project.getProject(), "folder1/file1.txt", "Hello world");
+		testRepository.connect(project.getProject());
+		testRepository.trackAllFiles(project.getProject());
+		testRepository.commit("Initial commit");
+
+		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);
+		// modify on first branch
+		testUtils.changeContentOfFile(project.getProject(), file, "Hello Feature");
+		testRepository.addToIndex(file);
+		testRepository.commit("Feature commit");
+		new BranchOperation(repository, gfRepo.getDevelop()).execute(null);
+		assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());
+
+		// modify on second branch
+		testUtils.changeContentOfFile(project.getProject(), file, "Hello Develop");
+		testRepository.addToIndex(file);
+
+		FeatureCheckoutOperation featureCheckoutOperation = new FeatureCheckoutOperation(gfRepo, MY_FEATURE);
+		featureCheckoutOperation.execute(null);
+
+		assertEquals(Status.CONFLICTS, featureCheckoutOperation.getResult().getStatus());
+		assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());
 	}
 }

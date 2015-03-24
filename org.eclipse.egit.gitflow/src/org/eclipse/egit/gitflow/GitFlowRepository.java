@@ -251,4 +251,8 @@ public class GitFlowRepository {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public String getFeatureBranchName(Ref ref) {
+		return ref.getName().substring((Constants.R_HEADS + getFeaturePrefix()).length());
+	}
 }
