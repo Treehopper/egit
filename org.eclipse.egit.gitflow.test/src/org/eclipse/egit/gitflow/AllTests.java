@@ -29,7 +29,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	ReleaseStartOperationTest.class, ReleaseFinishOperationTest.class, FeaturePublishOperationTest.class,
 	BranchNameValidatorTest.class, FeatureTrackOperationTest.class, FeatureListOperationTest.class,
 	FeatureCheckoutOperationTest.class, FeatureRebaseOperationTest.class, HotfixStartOperationTest.class,
-	HotfixFinishOperationTest.class })
+	HotfixFinishOperationTest.class, GitFlowRepositoryTest.class })
 public class AllTests {
 
 }
