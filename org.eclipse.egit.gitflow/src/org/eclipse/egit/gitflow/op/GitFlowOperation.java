@@ -23,6 +23,7 @@ import org.eclipse.egit.core.op.FetchOperation;
 import org.eclipse.egit.core.op.IEGitOperation;
 import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
@@ -59,27 +60,35 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		checkoutOperation.execute(monitor);
 	}
 
-	protected void finish(IProgressMonitor monitor, String branchName) throws CoreException {
+	protected MergeResult finish(IProgressMonitor monitor, String branchName) throws CoreException {
 		try {
-			mergeTo(monitor, branchName, repository.getDevelop());
+			MergeResult mergeResult = mergeTo(monitor, branchName, repository.getDevelop());
+			if (!mergeResult.getMergeStatus().isSuccessful()) {
+				return mergeResult;
+			}
 
 			Ref branch = repository.findBranch(branchName);
 			if (branch == null) {
 				throw new IllegalStateException(String.format("Branch %s missing", branchName));
 			}
 			new DeleteBranchOperation(repository.getRepository(), branch, false).execute(monitor);
+
+			return mergeResult;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected void mergeTo(IProgressMonitor monitor, String branchName, String targetBranchName) throws CoreException {
+	protected MergeResult mergeTo(IProgressMonitor monitor, String branchName, String targetBranchName)
+			throws CoreException {
 		try {
 			if (!repository.hasBranch(targetBranchName)) {
 				throw new RuntimeException(String.format("No branch '%s' found.", targetBranchName));
 			}
 			new BranchOperation(repository.getRepository(), targetBranchName).execute(monitor);
-			new MergeOperation(repository.getRepository(), branchName).execute(monitor);
+			MergeOperation mergeOperation = new MergeOperation(repository.getRepository(), branchName);
+			mergeOperation.execute(monitor);
+			return mergeOperation.getResult();
 		} catch (GitAPIException e) {
 			throw new RuntimeException(e);
 		}
