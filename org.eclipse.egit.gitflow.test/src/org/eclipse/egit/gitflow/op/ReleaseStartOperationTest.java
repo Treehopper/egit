@@ -17,11 +17,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
 public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 	@Test
-	public void testReleaseStart() throws Exception {
+	public void testReleaseBranchCreated() throws Exception {
 		testRepository.createInitialCommit("testReleaseStart\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
@@ -32,5 +33,24 @@ public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 
 		assertEquals(gfRepo.getFullReleaseBranchName(MY_RELEASE), repository
 				.getFullBranch());
+	}
+
+	@Test
+	public void testReleaseStartWithContent() throws Exception {
+		testRepository.createInitialCommit("testReleaseStartWithContent\n\nfirst commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+
+		testUtils.addFileToProject(project.getProject(), "folder1/file1.txt", "Hello world");
+		testRepository.connect(project.getProject());
+		testRepository.trackAllFiles(project.getProject());
+		RevCommit developCommit = testRepository.commit("Initial commit");
+
+		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
+
+		RevCommit releaseHead = gfRepo.findHead(gfRepo.getReleaseBranchName(MY_RELEASE));
+		assertEquals(developCommit, releaseHead);
 	}
 }
