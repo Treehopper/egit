@@ -431,6 +431,20 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <not>
+                     <test
+                           forcePluginActivation="true"
+                           property="GitFlowRepository.isHotfix">
+                     </test>
+                  </not>
+               </and>
+            </iterate>
+         </enabledWhen>
       </handler>
       <handler
             commandId="org.eclipse.egit.gitflow.ui.command.hotfixFinish">
