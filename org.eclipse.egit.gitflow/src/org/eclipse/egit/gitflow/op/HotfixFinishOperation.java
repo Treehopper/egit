@@ -29,9 +29,9 @@ public final class HotfixFinishOperation extends AbstractHotfixOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String releaseBranchName = repository.getHotfixBranchName(hotfixName);
-		mergeTo(monitor, releaseBranchName, repository.getMaster());
-		finish(monitor, releaseBranchName);
+		String hotfixBranchName = repository.getHotfixBranchName(hotfixName);
+		mergeTo(monitor, hotfixBranchName, repository.getMaster());
+		finish(monitor, hotfixBranchName);
 		RevCommit head = repository.findHead();
 		createTag(monitor, head, "Hotifx " + hotfixName);
 	}
