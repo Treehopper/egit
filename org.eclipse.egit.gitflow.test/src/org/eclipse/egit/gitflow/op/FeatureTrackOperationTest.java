@@ -8,18 +8,14 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import static org.eclipse.egit.gitflow.GitFlowRepository.*;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.gitflow.GitFlowRepository;
-
-import static org.eclipse.jgit.lib.Constants.*;
-
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
 import org.junit.Test;
@@ -52,17 +48,5 @@ public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
 		FeatureListOperation featureListOperation = new FeatureListOperation(gfRepo, 0);
 		featureListOperation.execute(null);
 		return featureListOperation.getResult().get(0);
-	}
-
-	private String getRemote(GitFlowRepository gfRepo, String featureName) {
-		Repository repository = gfRepo.getRepository();
-		StoredConfig config = repository.getConfig();
-		return config.getString(BRANCH_SECTION, gfRepo.getFeatureBranchName(featureName), REMOTE_KEY);
-	}
-
-	private String getMerge(GitFlowRepository gfRepo, String featureName) {
-		Repository repository = gfRepo.getRepository();
-		StoredConfig config = repository.getConfig();
-		return config.getString(BRANCH_SECTION, gfRepo.getFeatureBranchName(featureName), MERGE_KEY);
 	}
 }

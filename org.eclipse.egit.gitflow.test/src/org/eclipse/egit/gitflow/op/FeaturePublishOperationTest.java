@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -22,8 +24,6 @@ import org.junit.Test;
 public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase {
 	@Test
 	public void testFeaturePublish() throws Exception {
-		GitFlowRepository gfRepo1 = new GitFlowRepository(repository1.getRepository());
-
 		new InitOperation(repository2.getRepository()).execute(null);
 		GitFlowRepository gfRepo2 = new GitFlowRepository(repository2.getRepository());
 
@@ -39,6 +39,8 @@ public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase 
 
 		assertCommitArrivedAtRemote(branchCommit, repository1.getRepository());
 
-		new FeatureFinishOperation(gfRepo1, MY_FEATURE);
+		// config updated?
+		assertEquals(DEFAULT_REMOTE_NAME, getRemote(gfRepo2, MY_FEATURE));
+		assertEquals(R_HEADS + gfRepo2.getFeatureBranchName(MY_FEATURE), getMerge(gfRepo2, MY_FEATURE));
 	}
 }

@@ -25,10 +25,14 @@ import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 
+import static org.eclipse.egit.gitflow.GitFlowRepository.BRANCH_SECTION;
+import static org.eclipse.egit.gitflow.GitFlowRepository.MERGE_KEY;
+import static org.eclipse.egit.gitflow.GitFlowRepository.REMOTE_KEY;
 import static org.eclipse.jgit.lib.Constants.*;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.URIish;
@@ -104,5 +108,17 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		} finally {
 			walk.release();
 		}
+	}
+
+	protected String getRemote(GitFlowRepository gfRepo, String featureName) {
+		Repository repository = gfRepo.getRepository();
+		StoredConfig config = repository.getConfig();
+		return config.getString(BRANCH_SECTION, gfRepo.getFeatureBranchName(featureName), REMOTE_KEY);
+	}
+
+	protected String getMerge(GitFlowRepository gfRepo, String featureName) {
+		Repository repository = gfRepo.getRepository();
+		StoredConfig config = repository.getConfig();
+		return config.getString(BRANCH_SECTION, gfRepo.getFeatureBranchName(featureName), MERGE_KEY);
 	}
 }

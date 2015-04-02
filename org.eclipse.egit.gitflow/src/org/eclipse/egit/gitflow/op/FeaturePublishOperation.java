@@ -18,16 +18,17 @@ import org.eclipse.egit.core.op.PushOperationResult;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
+
 import static org.eclipse.jgit.lib.Constants.*;
 
 @SuppressWarnings("restriction")
 public final class FeaturePublishOperation extends AbstractFeatureOperation {
-
-	private PushOperation pushOperation;
+	private PushOperationResult operationResult;
+	private int timeout;
 
 	public FeaturePublishOperation(GitFlowRepository repository, String featureName, int timeout) throws CoreException {
 		super(repository, featureName);
-		pushOperation = new PushOperation(repository.getRepository(), DEFAULT_REMOTE_NAME, false, timeout);
+		this.timeout = timeout;
 	}
 
 	public FeaturePublishOperation(GitFlowRepository repository, int timeout) throws WrongGitFlowStateException,
@@ -37,7 +38,23 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
+			PushOperation pushOperation = new PushOperation(repository.getRepository(), DEFAULT_REMOTE_NAME, false,
+					timeout);
 			pushOperation.run(monitor);
+			operationResult = pushOperation.getOperationResult();
+
+			if (!operationResult.isSuccessfulConnectionForAnyURI()) {
+				throw new CoreException(Activator.error(String.format("Push to remote repository failed: ",
+						operationResult.getErrorStringForAllURis())));
+			}
+
+			String newLocalBranch = repository.getFeatureBranchName(featureName);
+			try {
+				setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
+				setMerge(newLocalBranch, repository.getFullFeatureBranchName(featureName));
+			} catch (IOException e) {
+				throw new CoreException(Activator.error("Unable to store git config.", e));
+			}
 		} catch (InvocationTargetException e) {
 			Throwable targetException = e.getTargetException();
 			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
@@ -45,6 +62,6 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 	}
 
 	public PushOperationResult getOperationResult() {
-		return pushOperation.getOperationResult();
+		return operationResult;
 	}
 }

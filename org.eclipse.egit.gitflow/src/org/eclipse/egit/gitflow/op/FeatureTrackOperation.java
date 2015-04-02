@@ -23,13 +23,10 @@ import org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
-import static org.eclipse.egit.gitflow.GitFlowRepository.*;
-
 import org.eclipse.jgit.api.CheckoutResult;
 import org.eclipse.jgit.api.CheckoutResult.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.FetchResult;
 
 @SuppressWarnings("restriction")
@@ -72,7 +69,7 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 
 			try {
 				setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
-				setMerge(newLocalBranch, featureName);
+				setMerge(newLocalBranch, repository.getFullFeatureBranchName(featureName));
 			} catch (IOException e) {
 				throw new CoreException(Activator.error("Unable to store git config.", e));
 			}
@@ -89,17 +86,5 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 
 	public FetchResult getOperationResult() {
 		return operationResult;
-	}
-
-	public void setRemote(String featureName, String value) throws IOException {
-		StoredConfig config = repository.getRepository().getConfig();
-		config.setString(BRANCH_SECTION, featureName, REMOTE_KEY, value);
-		config.save();
-	}
-
-	public void setMerge(String featureName, String value) throws IOException {
-		StoredConfig config = repository.getRepository().getConfig();
-		config.setString(BRANCH_SECTION, featureName, MERGE_KEY, repository.getFullFeatureBranchName(value));
-		config.save();
 	}
 }
