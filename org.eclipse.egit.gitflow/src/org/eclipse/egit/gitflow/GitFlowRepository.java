@@ -32,6 +32,8 @@ public class GitFlowRepository {
 	public static final String BRANCH_SECTION = "branch"; //$NON-NLS-1$
 	public static final String PREFIX_SECTION = "prefix"; //$NON-NLS-1$
 	public static final String GITFLOW_SECTION = "gitflow"; //$NON-NLS-1$
+	public static final String REMOTE_KEY = "remote"; //$NON-NLS-1$
+	public static final String MERGE_KEY = "merge"; //$NON-NLS-1$
 	private Repository repository;
 
 	public GitFlowRepository(Repository repository) {

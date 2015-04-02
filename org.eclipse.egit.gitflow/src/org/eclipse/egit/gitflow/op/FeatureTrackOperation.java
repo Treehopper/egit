@@ -12,6 +12,7 @@ import static org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
@@ -21,10 +22,14 @@ import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
+
+import static org.eclipse.egit.gitflow.GitFlowRepository.*;
+
 import org.eclipse.jgit.api.CheckoutResult;
 import org.eclipse.jgit.api.CheckoutResult.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.transport.FetchResult;
 
 @SuppressWarnings("restriction")
@@ -39,13 +44,13 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 	}
 
 	public FeatureTrackOperation(GitFlowRepository repository, Ref ref, String newLocalBranch) {
-		super(repository, repository.getFeaturePrefix() + newLocalBranch);
+		super(repository, newLocalBranch);
 		this.remoteFeature = ref;
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
-			String newLocalBranch = featureName;
+			String newLocalBranch = repository.getFeaturePrefix() + featureName;
 			operationResult = fetch(monitor);
 
 			if (repository.hasBranch(newLocalBranch)) {
@@ -64,6 +69,13 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 						.getStatus().name());
 				throw new CoreException(Activator.error(errorMessage));
 			}
+
+			try {
+				setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
+				setMerge(newLocalBranch, featureName);
+			} catch (IOException e) {
+				throw new CoreException(Activator.error("Unable to store git config.", e));
+			}
 		} catch (URISyntaxException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {
@@ -77,5 +89,17 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 
 	public FetchResult getOperationResult() {
 		return operationResult;
+	}
+
+	public void setRemote(String featureName, String value) throws IOException {
+		StoredConfig config = repository.getRepository().getConfig();
+		config.setString(BRANCH_SECTION, featureName, REMOTE_KEY, value);
+		config.save();
+	}
+
+	public void setMerge(String featureName, String value) throws IOException {
+		StoredConfig config = repository.getRepository().getConfig();
+		config.setString(BRANCH_SECTION, featureName, MERGE_KEY, repository.getFullFeatureBranchName(value));
+		config.save();
 	}
 }
