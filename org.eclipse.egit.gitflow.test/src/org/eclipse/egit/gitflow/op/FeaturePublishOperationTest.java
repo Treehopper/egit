@@ -23,6 +23,8 @@ public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase 
 	@Test
 	public void testFeaturePublish() throws Exception {
 		GitFlowRepository gfRepo1 = new GitFlowRepository(repository1.getRepository());
+
+		new InitOperation(repository2.getRepository()).execute(null);
 		GitFlowRepository gfRepo2 = new GitFlowRepository(repository2.getRepository());
 
 		new FeatureStartOperation(gfRepo2, MY_FEATURE).execute(null);
