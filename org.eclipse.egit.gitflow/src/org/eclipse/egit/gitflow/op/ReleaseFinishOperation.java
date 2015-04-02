@@ -38,7 +38,7 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 
 	private void createTag(IProgressMonitor monitor, RevCommit head, String message) throws CoreException {
 		TagBuilder tag = new TagBuilder();
-		tag.setTag(releaseName);
+		tag.setTag(repository.getVersionTagPrefix() + releaseName);
 		tag.setMessage(message);
 		tag.setObjectId(head);
 		new TagOperation(repository.getRepository(), tag, false).execute(monitor);

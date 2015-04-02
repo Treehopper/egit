@@ -32,6 +32,7 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	protected static final String MY_FEATURE = "myFeature";
 
 	protected static final String MY_RELEASE = "myRelease";
+	protected static final String MY_VERSION_TAG = "v";
 
 	protected static final String MY_MASTER = "master";
 

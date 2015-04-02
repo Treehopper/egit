@@ -11,6 +11,7 @@ package org.eclipse.egit.gitflow.op;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.egit.core.op.BranchOperation;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.lib.Repository;
@@ -24,7 +25,8 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 		testRepository.createInitialCommit("testReleaseFinish\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository).execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX, MY_VERSION_TAG)
+				.execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
@@ -39,7 +41,7 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 		String branchName = gfRepo.getReleaseBranchName(MY_RELEASE);
 
 		// tag created?
-		assertEquals(branchCommit, findCommitForTag(repository, MY_RELEASE));
+		assertEquals(branchCommit, findCommitForTag(repository, MY_VERSION_TAG + MY_RELEASE));
 
 		// branch removed?
 		assertEquals(findBranch(repository, branchName), null);

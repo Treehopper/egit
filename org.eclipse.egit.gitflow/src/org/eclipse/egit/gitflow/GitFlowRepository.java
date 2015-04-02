@@ -10,8 +10,10 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
+
 import static org.eclipse.jgit.lib.Constants.*;
 import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
+
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -105,6 +107,10 @@ public class GitFlowRepository {
 
 	public String getHotfixPrefix() {
 		return getPrefix(HOTFIX_KEY, HOTFIX_PREFIX);
+	}
+
+	public String getVersionTagPrefix() {
+		return getPrefix(VERSION_TAG_KEY, VERSION_TAG);
 	}
 
 	public String getDevelop() {
@@ -257,4 +263,5 @@ public class GitFlowRepository {
 	public String getFeatureBranchName(Ref ref) {
 		return ref.getName().substring((R_HEADS + getFeaturePrefix()).length());
 	}
+
 }
