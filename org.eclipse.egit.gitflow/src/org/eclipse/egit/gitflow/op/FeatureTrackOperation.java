@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import static org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig.REBASE;
 import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
 import static org.eclipse.jgit.lib.Constants.R_REMOTES;
 
@@ -20,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
+import org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
@@ -58,7 +58,7 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 				throw new CoreException(Activator.error(errorMessage));
 			}
 			CreateLocalBranchOperation createLocalBranchOperation = new CreateLocalBranchOperation(
-					repository.getRepository(), newLocalBranch, remoteFeature, REBASE);
+					repository.getRepository(), newLocalBranch, remoteFeature, UpstreamConfig.MERGE);
 			createLocalBranchOperation.execute(monitor);
 
 			BranchOperation branchOperation = new BranchOperation(repository.getRepository(), newLocalBranch);
