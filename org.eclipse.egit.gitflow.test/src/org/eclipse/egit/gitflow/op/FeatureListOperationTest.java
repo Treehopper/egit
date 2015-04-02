@@ -36,7 +36,5 @@ public class FeatureListOperationTest extends AbstractDualRepositoryTestCase {
 		assertEquals(
 				R_REMOTES + DEFAULT_REMOTE_NAME + SEP + gfRepo2.getFeatureBranchName(MY_FEATURE),
 				result.get(0).getName());
-
-		new FeatureFinishOperation(gfRepo1, MY_FEATURE);
 	}
 }
