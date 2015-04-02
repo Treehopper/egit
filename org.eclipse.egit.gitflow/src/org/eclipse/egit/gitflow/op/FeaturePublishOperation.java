@@ -44,20 +44,21 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 			operationResult = pushOperation.getOperationResult();
 
 			if (!operationResult.isSuccessfulConnectionForAnyURI()) {
-				throw new CoreException(Activator.error(String.format("Push to remote repository failed: ",
-						operationResult.getErrorStringForAllURis())));
-			}
-
-			String newLocalBranch = repository.getFeatureBranchName(featureName);
-			try {
-				setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
-				setMerge(newLocalBranch, repository.getFullFeatureBranchName(featureName));
-			} catch (IOException e) {
-				throw new CoreException(Activator.error("Unable to store git config.", e));
+				String errorMessage = String.format("Push to remote repository failed: ",
+						operationResult.getErrorStringForAllURis());
+				throw new CoreException(Activator.error(errorMessage));
 			}
 		} catch (InvocationTargetException e) {
 			Throwable targetException = e.getTargetException();
 			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
+		}
+
+		String newLocalBranch = repository.getFeatureBranchName(featureName);
+		try {
+			setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
+			setMerge(newLocalBranch, repository.getFullFeatureBranchName(featureName));
+		} catch (IOException e) {
+			throw new CoreException(Activator.error("Unable to store git config.", e));
 		}
 	}
 

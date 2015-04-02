@@ -47,7 +47,7 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
-			String newLocalBranch = repository.getFeaturePrefix() + featureName;
+			String newLocalBranch = repository.getFeatureBranchName(featureName);
 			operationResult = fetch(monitor);
 
 			if (repository.hasBranch(newLocalBranch)) {
