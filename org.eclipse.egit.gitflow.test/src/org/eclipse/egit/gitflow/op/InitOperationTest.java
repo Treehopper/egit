@@ -9,10 +9,14 @@
 package org.eclipse.egit.gitflow.op;
 
 import static org.junit.Assert.assertEquals;
-
 import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
+
 import org.eclipse.egit.gitflow.GitFlowRepository;
+
+import static org.eclipse.egit.gitflow.GitFlowRepository.*;
+
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.junit.Test;
 
 public class InitOperationTest extends AbstractGitFlowOperationTest {
@@ -22,12 +26,28 @@ public class InitOperationTest extends AbstractGitFlowOperationTest {
 		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		InitOperation initOperation = new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX,
-				HOTFIX_PREFIX);
+		InitOperation initOperation = new InitOperation(repository);
 		initOperation.execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 		assertEquals(gfRepo.getDevelopFull(), repository
 				.getFullBranch());
+
+		assertEquals(FEATURE_PREFIX, getPrefix(repository, FEATURE_KEY));
+		assertEquals(RELEASE_PREFIX, getPrefix(repository, RELEASE_KEY));
+		assertEquals(HOTFIX_PREFIX, getPrefix(repository, HOTFIX_KEY));
+		assertEquals(VERSION_TAG, getPrefix(repository, VERSION_TAG_KEY));
+		assertEquals(DEVELOP, getBranch(repository, DEVELOP_KEY));
+		assertEquals(MASTER, getBranch(repository, MASTER_KEY));
+	}
+
+	private String getPrefix(Repository repository, String prefixName) {
+		StoredConfig config = repository.getConfig();
+		return config.getString(GITFLOW_SECTION, PREFIX_SECTION, prefixName);
+	}
+
+	private String getBranch(Repository repository, String branch) {
+		StoredConfig config = repository.getConfig();
+		return config.getString(GITFLOW_SECTION, BRANCH_SECTION, branch);
 	}
 
 	@Test

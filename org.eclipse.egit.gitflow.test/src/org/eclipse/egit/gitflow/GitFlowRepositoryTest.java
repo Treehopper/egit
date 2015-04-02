@@ -8,11 +8,7 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow;
 
-import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -117,7 +113,7 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 		Repository repository = testRepository.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX, VERSION_TAG).execute(null);
 
 		assertTrue(gfRepo.getFeatureBranches().isEmpty());
 

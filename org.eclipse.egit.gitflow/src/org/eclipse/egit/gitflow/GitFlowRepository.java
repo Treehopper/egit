@@ -19,15 +19,16 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
 public class GitFlowRepository {
-	private static final String MASTER_KEY = "master";
-	private static final String DEVELOP_KEY = "develop";
-	private static final String HOTFIX_KEY = "hotfix";
-	private static final String RELEASE_KEY = "release";
-	private static final String FEATURE_KEY = "feature";
-	private static final String USER_SECTION = "user";
-	private static final String BRANCH_SECTION = "branch";
-	private static final String PREFIX_SECTION = "prefix";
-	private static final String GITFLOW_SECTION = "gitflow";
+	public static final String MASTER_KEY = "master"; //$NON-NLS-1$
+	public static final String DEVELOP_KEY = "develop"; //$NON-NLS-1$
+	public static final String HOTFIX_KEY = "hotfix"; //$NON-NLS-1$
+	public static final String RELEASE_KEY = "release"; //$NON-NLS-1$
+	public static final String FEATURE_KEY = "feature"; //$NON-NLS-1$
+	public static final String VERSION_TAG_KEY = "versiontag"; //$NON-NLS-1$
+	public static final String USER_SECTION = "user"; //$NON-NLS-1$
+	public static final String BRANCH_SECTION = "branch"; //$NON-NLS-1$
+	public static final String PREFIX_SECTION = "prefix"; //$NON-NLS-1$
+	public static final String GITFLOW_SECTION = "gitflow"; //$NON-NLS-1$
 	private Repository repository;
 
 	public GitFlowRepository(Repository repository) {
