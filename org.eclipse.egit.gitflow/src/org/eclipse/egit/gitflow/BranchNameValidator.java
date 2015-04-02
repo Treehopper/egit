@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-
+import static org.eclipse.egit.gitflow.Activator.error;
 public class BranchNameValidator {
 	public static final String ILLEGAL_CHARS = "/ ";
 
@@ -35,7 +35,7 @@ public class BranchNameValidator {
 		try {
 			branches = Git.wrap(repository.getRepository()).branchList().call();
 		} catch (GitAPIException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		}
 		for (Ref ref : branches) {
 			if (fullBranchName.equals(ref.getTarget().getName())) {

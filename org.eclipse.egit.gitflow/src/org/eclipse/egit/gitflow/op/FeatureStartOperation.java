@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.gitflow.Activator;
+import static org.eclipse.egit.gitflow.Activator.error;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
 public final class FeatureStartOperation extends AbstractFeatureOperation {
@@ -25,10 +25,10 @@ public final class FeatureStartOperation extends AbstractFeatureOperation {
 
 		try {
 			if (!repository.isDevelop()) {
-				throw new CoreException(Activator.error("Not on " + repository.getDevelop()));
+				throw new CoreException(error("Not on " + repository.getDevelop()));
 			}
 		} catch (IOException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		}
 		start(monitor, branchName, repository.findHead());
 	}

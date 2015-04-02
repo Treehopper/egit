@@ -3,8 +3,11 @@ package org.eclipse.egit.gitflow.ui.internal.adapter;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
-import org.eclipse.egit.gitflow.ui.Activator;
+
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.jgit.lib.Repository;
 
 public class PropertyTester extends org.eclipse.core.expressions.PropertyTester {
@@ -34,7 +37,7 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 				return gitFlowRepository.isMaster();
 			}
 		} catch (IOException e) {
-			Activator.getDefault().getLog().log(Activator.error(e.getMessage(), e));
+			Activator.getDefault().getLog().log(error(e.getMessage(), e));
 		}
 		return false;
 	}

@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureCheckoutOperation;
-import org.eclipse.egit.gitflow.ui.Activator;
+import static org.eclipse.egit.gitflow.ui.Activator.error;
 import org.eclipse.egit.gitflow.ui.internal.dialog.AbstractSelectionDialog;
 import org.eclipse.egit.ui.internal.UIText;
 import org.eclipse.egit.ui.internal.branch.CleanupUncomittedChangesDialog;
@@ -79,7 +79,7 @@ public class FeatureCheckoutHandler extends AbstractHandler {
 						}
 					}
 				} catch (CoreException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				} catch (GitAPIException e) {
 					throw new RuntimeException(e);
 				}

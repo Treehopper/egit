@@ -13,7 +13,7 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.TagOperation;
-import org.eclipse.egit.gitflow.Activator;
+import static org.eclipse.egit.gitflow.Activator.error;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.jgit.api.MergeResult;
@@ -38,7 +38,7 @@ public final class HotfixFinishOperation extends AbstractHotfixOperation {
 		this.mergeResult = mergeResult;
 		if (!mergeResult.getMergeStatus().isSuccessful()) {
 			throw new CoreException(
-					Activator.error("Merge from Hotfix to Master branch failed. This shouldn't happen in GitFlow."));
+					error("Merge from Hotfix to Master branch failed. This shouldn't happen in GitFlow."));
 		}
 
 		mergeResult = finish(monitor, hotfixBranchName);

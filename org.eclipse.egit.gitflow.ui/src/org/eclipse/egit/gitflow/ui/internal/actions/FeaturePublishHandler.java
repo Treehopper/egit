@@ -23,6 +23,9 @@ import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
+
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
@@ -46,11 +49,11 @@ public class FeaturePublishHandler extends AbstractHandler {
 					FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(gfRepo, timeout);
 					featurePublishOperation.execute(monitor);
 				} catch (WrongGitFlowStateException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				} catch (CoreException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				} catch (IOException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				}
 				return Status.OK_STATUS;
 			}

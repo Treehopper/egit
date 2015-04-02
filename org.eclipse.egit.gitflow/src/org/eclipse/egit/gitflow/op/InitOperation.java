@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
-import org.eclipse.egit.gitflow.Activator;
+import static org.eclipse.egit.gitflow.Activator.error;
 
 import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
 
@@ -61,7 +61,7 @@ public final class InitOperation extends GitFlowOperation {
 			setBranches(develop, master);
 			repository.getRepository().getConfig().save();
 		} catch (IOException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		}
 
 		if (!repository.hasBranches()) {
@@ -77,7 +77,7 @@ public final class InitOperation extends GitFlowOperation {
 				checkoutOperation.execute(monitor);
 			}
 		} catch (GitAPIException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		}
 	}
 

@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.gitflow.Activator;
+import static org.eclipse.egit.gitflow.Activator.error;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
@@ -34,10 +34,10 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 
 		try {
 			if (!repository.isDevelop()) {
-				throw new CoreException(Activator.error("Not on " + repository.getDevelop()));
+				throw new CoreException(error("Not on " + repository.getDevelop()));
 			}
 		} catch (IOException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		}
 
 		RevCommit commit = repository.findCommit(startCommitSha1);

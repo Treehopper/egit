@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureRebaseOperation;
-import org.eclipse.egit.gitflow.ui.Activator;
+import static org.eclipse.egit.gitflow.ui.Activator.error;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.api.RebaseResult;
@@ -45,7 +45,7 @@ public class FeatureRebaseHandler extends AbstractHandler {
 					featureRebaseOperation.execute(monitor);
 					RebaseResult.Status status = featureRebaseOperation.getOperationResult().getStatus();
 					if (RebaseResult.Status.FAILED.equals(status)) {
-						return Activator.error("Rebase failed.");
+						return error("Rebase failed.");
 					}
 					if (RebaseResult.Status.CONFLICTS.equals(status)) {
 						MessageDialog
@@ -56,7 +56,7 @@ public class FeatureRebaseHandler extends AbstractHandler {
 						return Status.OK_STATUS;
 					}
 				} catch (CoreException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				}
 				return Status.OK_STATUS;
 			}

@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.ListRemoteOperation;
-import org.eclipse.egit.gitflow.Activator;
+import static org.eclipse.egit.gitflow.Activator.error;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
@@ -52,12 +52,12 @@ public final class FeatureListOperation extends GitFlowOperation {
 				}
 			}
 		} catch (URISyntaxException e) {
-			throw new CoreException(Activator.error("Unable to parse: " + uriString, e));
+			throw new CoreException(error("Unable to parse: " + uriString, e));
 		} catch (InvocationTargetException e) {
 			Throwable targetException = e.getTargetException();
-			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
+			throw new CoreException(error(targetException.getMessage(), targetException));
 		} catch (InterruptedException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		}
 	}
 

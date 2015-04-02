@@ -25,12 +25,17 @@ import static org.eclipse.egit.gitflow.op.AbstractFeatureOperation.*;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureListOperation;
 import org.eclipse.egit.gitflow.op.FeatureTrackOperation;
+
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.egit.gitflow.ui.Activator;
 import org.eclipse.egit.gitflow.ui.internal.dialog.AbstractSelectionDialog;
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+
 import static org.eclipse.jgit.lib.Constants.*;
+
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -57,7 +62,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 					featureListOperation.execute(monitor);
 					refs.addAll(featureListOperation.getResult());
 				} catch (CoreException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				}
 
 				AbstractSelectionDialog<Ref> dialog = new AbstractSelectionDialog<Ref>(getDisplay().getActiveShell(),
@@ -76,7 +81,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 				try {
 					new FeatureTrackOperation(gfRepo, ref).execute(monitor);
 				} catch (CoreException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				}
 
 				return Status.OK_STATUS;

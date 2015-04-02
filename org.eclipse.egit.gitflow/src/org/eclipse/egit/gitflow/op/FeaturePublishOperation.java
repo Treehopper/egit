@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.PushOperation;
 import org.eclipse.egit.core.op.PushOperationResult;
-import org.eclipse.egit.gitflow.Activator;
+import static org.eclipse.egit.gitflow.Activator.error;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 
@@ -46,11 +46,11 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 			if (!operationResult.isSuccessfulConnectionForAnyURI()) {
 				String errorMessage = String.format("Push to remote repository failed: ",
 						operationResult.getErrorStringForAllURis());
-				throw new CoreException(Activator.error(errorMessage));
+				throw new CoreException(error(errorMessage));
 			}
 		} catch (InvocationTargetException e) {
 			Throwable targetException = e.getTargetException();
-			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
+			throw new CoreException(error(targetException.getMessage(), targetException));
 		}
 
 		String newLocalBranch = repository.getFeatureBranchName(featureName);
@@ -58,7 +58,7 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 			setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
 			setMerge(newLocalBranch, repository.getFullFeatureBranchName(featureName));
 		} catch (IOException e) {
-			throw new CoreException(Activator.error("Unable to store git config.", e));
+			throw new CoreException(error("Unable to store git config.", e));
 		}
 	}
 

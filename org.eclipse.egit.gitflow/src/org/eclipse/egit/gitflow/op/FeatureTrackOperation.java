@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig;
-import org.eclipse.egit.gitflow.Activator;
+import static org.eclipse.egit.gitflow.Activator.error;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
 import org.eclipse.jgit.api.CheckoutResult;
@@ -52,7 +52,7 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 
 			if (repository.hasBranch(newLocalBranch)) {
 				String errorMessage = String.format("Local branch '%s' already exists.", newLocalBranch);
-				throw new CoreException(Activator.error(errorMessage));
+				throw new CoreException(error(errorMessage));
 			}
 			CreateLocalBranchOperation createLocalBranchOperation = new CreateLocalBranchOperation(
 					repository.getRepository(), newLocalBranch, remoteFeature, UpstreamConfig.MERGE);
@@ -64,22 +64,22 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 			if (!Status.OK.equals(result.getStatus())) {
 				String errorMessage = String.format("Trying checkout '%s' returned: %s", newLocalBranch, result
 						.getStatus().name());
-				throw new CoreException(Activator.error(errorMessage));
+				throw new CoreException(error(errorMessage));
 			}
 
 			try {
 				setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
 				setMerge(newLocalBranch, repository.getFullFeatureBranchName(featureName));
 			} catch (IOException e) {
-				throw new CoreException(Activator.error("Unable to store git config.", e));
+				throw new CoreException(error("Unable to store git config.", e));
 			}
 		} catch (URISyntaxException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {
 			Throwable targetException = e.getTargetException();
-			throw new CoreException(Activator.error(targetException.getMessage(), targetException));
+			throw new CoreException(error(targetException.getMessage(), targetException));
 		} catch (GitAPIException e) {
-			throw new CoreException(Activator.error(e.getMessage(), e));
+			throw new CoreException(error(e.getMessage(), e));
 		}
 
 	}

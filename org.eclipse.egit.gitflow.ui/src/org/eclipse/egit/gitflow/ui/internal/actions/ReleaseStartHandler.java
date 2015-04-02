@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.ReleaseStartOperation;
-import org.eclipse.egit.gitflow.ui.Activator;
+import static org.eclipse.egit.gitflow.ui.Activator.error;
 import org.eclipse.egit.gitflow.ui.internal.validation.ReleaseNameValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -56,7 +56,7 @@ public class ReleaseStartHandler extends AbstractHandler {
 				try {
 					new ReleaseStartOperation(gfRepo, startCommitSha1, releaseName).execute(monitor);
 				} catch (CoreException e) {
-					return Activator.error(e.getMessage(), e);
+					return error(e.getMessage(), e);
 				}
 				return Status.OK_STATUS;
 			}
