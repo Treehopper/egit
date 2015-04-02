@@ -17,7 +17,7 @@ import org.eclipse.egit.core.test.GitTestCase;
 import org.eclipse.egit.core.test.TestRepository;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -41,7 +41,7 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		gitDir = new File(project.getProject()
-				.getLocationURI().getPath(), Constants.DOT_GIT);
+				.getLocationURI().getPath(), DOT_GIT);
 		testRepository = new TestRepository(gitDir);
 		testRepository.connect(project.getProject());
 	}
@@ -53,7 +53,7 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	}
 
 	protected Ref findBranch(Repository repository, String branchName) throws IOException {
-		return repository.getRef(Constants.R_HEADS + branchName);
+		return repository.getRef(R_HEADS + branchName);
 	}
 
 	protected RevCommit findCommit(Repository repo, ObjectId head) throws MissingObjectException,
@@ -73,7 +73,7 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	protected RevCommit findCommitForTag(Repository repository, String tagName) throws MissingObjectException,
 	IncorrectObjectTypeException, IOException {
 		RevWalk revWalk = new RevWalk(repository);
-		Ref tagRef = repository.getRef(Constants.R_TAGS + tagName);
+		Ref tagRef = repository.getRef(R_TAGS + tagName);
 		if (tagRef == null) {
 			return null;
 		}

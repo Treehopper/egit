@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.ListRemoteOperation;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.URIish;
@@ -27,7 +27,7 @@ import org.eclipse.jgit.transport.URIish;
 @SuppressWarnings("restriction")
 public final class FeatureListOperation extends GitFlowOperation {
 	private static final String FILE = "file:///";
-	private static final String REMOTE_ORIGIN_FEATURE_PREFIX = Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP;
+	private static final String REMOTE_ORIGIN_FEATURE_PREFIX = R_REMOTES + DEFAULT_REMOTE_NAME + SEP;
 	private List<Ref> result = new ArrayList<Ref>();
 	private int timeout;
 	private FetchResult operationResult;

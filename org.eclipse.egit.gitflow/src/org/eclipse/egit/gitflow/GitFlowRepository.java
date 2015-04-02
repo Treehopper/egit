@@ -10,7 +10,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -46,7 +47,7 @@ public class GitFlowRepository {
 	}
 
 	public boolean hasBranch(String branch) throws GitAPIException {
-		String fullBranchName = Constants.R_HEADS + branch;
+		String fullBranchName = R_HEADS + branch;
 		List<Ref> branchList = Git.wrap(repository).branchList().call();
 		for (Ref ref : branchList) {
 			if (fullBranchName.equals(ref.getTarget().getName())) {
@@ -58,7 +59,7 @@ public class GitFlowRepository {
 	}
 
 	public Ref findBranch(String branchName) throws IOException {
-		return repository.getRef(Constants.R_HEADS + branchName);
+		return repository.getRef(R_HEADS + branchName);
 	}
 
 	public boolean isInitialized() throws IOException {
@@ -95,19 +96,19 @@ public class GitFlowRepository {
 	}
 
 	public String getFeaturePrefix() {
-		return getPrefix(FEATURE_KEY, GitFlowDefaults.FEATURE_PREFIX);
+		return getPrefix(FEATURE_KEY, FEATURE_PREFIX);
 	}
 
 	public String getReleasePrefix() {
-		return getPrefix(RELEASE_KEY, GitFlowDefaults.RELEASE_PREFIX);
+		return getPrefix(RELEASE_KEY, RELEASE_PREFIX);
 	}
 
 	public String getHotfixPrefix() {
-		return getPrefix(HOTFIX_KEY, GitFlowDefaults.HOTFIX_PREFIX);
+		return getPrefix(HOTFIX_KEY, HOTFIX_PREFIX);
 	}
 
 	public String getDevelop() {
-		return getBranch(DEVELOP_KEY, GitFlowDefaults.DEVELOP);
+		return getBranch(DEVELOP_KEY, DEVELOP);
 	}
 
 	public String getMaster() {
@@ -115,7 +116,7 @@ public class GitFlowRepository {
 	}
 
 	public String getDevelopFull() {
-		return Constants.R_HEADS + getDevelop();
+		return R_HEADS + getDevelop();
 	}
 
 	public String getPrefix(String prefixName, String defaultPrefix) {
@@ -144,7 +145,7 @@ public class GitFlowRepository {
 		RevWalk walk = new RevWalk(repository);
 
 		try {
-			ObjectId head = repository.resolve(Constants.HEAD);
+			ObjectId head = repository.resolve(HEAD);
 			return walk.parseCommit(head);
 		} catch (RevisionSyntaxException e) {
 			throw new RuntimeException(e);
@@ -163,7 +164,7 @@ public class GitFlowRepository {
 		RevWalk walk = new RevWalk(repository);
 
 		try {
-			ObjectId head = repository.resolve(Constants.R_HEADS + branchName);
+			ObjectId head = repository.resolve(R_HEADS + branchName);
 			return walk.parseCommit(head);
 		} catch (RevisionSyntaxException e) {
 			throw new RuntimeException(e);
@@ -198,7 +199,7 @@ public class GitFlowRepository {
 	}
 
 	public String getFullFeatureBranchName(String featureName) {
-		return Constants.R_HEADS + getFeatureBranchName(featureName);
+		return R_HEADS + getFeatureBranchName(featureName);
 	}
 
 	public String getFeatureBranchName(String featureName) {
@@ -210,11 +211,11 @@ public class GitFlowRepository {
 	}
 
 	public String getFullHotfixBranchName(String hotfixName) {
-		return Constants.R_HEADS + getHotfixBranchName(hotfixName);
+		return R_HEADS + getHotfixBranchName(hotfixName);
 	}
 
 	public String getFullReleaseBranchName(String releaseName) {
-		return Constants.R_HEADS + getReleaseBranchName(releaseName);
+		return R_HEADS + getReleaseBranchName(releaseName);
 	}
 
 	public String getReleaseBranchName(String releaseName) {
@@ -226,15 +227,15 @@ public class GitFlowRepository {
 	}
 
 	public List<Ref> getFeatureBranches() {
-		return getPrefixBranches(Constants.R_HEADS + getFeaturePrefix());
+		return getPrefixBranches(R_HEADS + getFeaturePrefix());
 	}
 
 	public List<Ref> getReleaseBranches() {
-		return getPrefixBranches(Constants.R_HEADS + getReleasePrefix());
+		return getPrefixBranches(R_HEADS + getReleasePrefix());
 	}
 
 	public List<Ref> getHotfixBranches() {
-		return getPrefixBranches(Constants.R_HEADS + getHotfixPrefix());
+		return getPrefixBranches(R_HEADS + getHotfixPrefix());
 	}
 
 	private List<Ref> getPrefixBranches(String prefix) {
@@ -254,6 +255,6 @@ public class GitFlowRepository {
 	}
 
 	public String getFeatureBranchName(Ref ref) {
-		return ref.getName().substring((Constants.R_HEADS + getFeaturePrefix()).length());
+		return ref.getName().substring((R_HEADS + getFeaturePrefix()).length());
 	}
 }

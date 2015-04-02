@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eclipse.egit.ui.internal.CommonUtils;
 import org.eclipse.egit.ui.internal.GitLabelProvider;
-import org.eclipse.jface.dialogs.IDialogConstants;
+import static org.eclipse.jface.dialogs.IDialogConstants.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -35,8 +35,7 @@ public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 	private List<T> selected = new ArrayList<T>();
 
 	public AbstractSelectionDialog(Shell parentShell, List<T> nodes, String title, String message) {
-		super(parentShell, title, null, message, MessageDialog.QUESTION, new String[] { IDialogConstants.OK_LABEL,
-				IDialogConstants.CANCEL_LABEL }, 0);
+		super(parentShell, title, null, message, MessageDialog.QUESTION, new String[] { OK_LABEL, CANCEL_LABEL }, 0);
 		this.nodes = nodes;
 	}
 

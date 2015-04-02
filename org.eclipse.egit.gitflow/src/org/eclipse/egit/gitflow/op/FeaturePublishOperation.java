@@ -18,7 +18,7 @@ import org.eclipse.egit.core.op.PushOperationResult;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 
 @SuppressWarnings("restriction")
 public final class FeaturePublishOperation extends AbstractFeatureOperation {
@@ -27,11 +27,11 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 
 	public FeaturePublishOperation(GitFlowRepository repository, String featureName, int timeout) throws CoreException {
 		super(repository, featureName);
-		pushOperation = new PushOperation(repository.getRepository(), Constants.DEFAULT_REMOTE_NAME, false, timeout);
+		pushOperation = new PushOperation(repository.getRepository(), DEFAULT_REMOTE_NAME, false, timeout);
 	}
 
 	public FeaturePublishOperation(GitFlowRepository repository, int timeout) throws WrongGitFlowStateException,
-			CoreException, IOException {
+	CoreException, IOException {
 		this(repository, getFeatureName(repository), timeout);
 	}
 

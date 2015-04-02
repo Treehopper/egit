@@ -30,7 +30,7 @@ import org.eclipse.egit.gitflow.ui.internal.dialog.AbstractSelectionDialog;
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -64,7 +64,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 						refs, "Select Feature", "Remote features:") {
 					@Override
 					protected String getPrefix() {
-						return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP + gfRepo.getFeaturePrefix();
+						return R_REMOTES + DEFAULT_REMOTE_NAME + SEP + gfRepo.getFeaturePrefix();
 					}
 				};
 				if (dialog.open() != Window.OK) {

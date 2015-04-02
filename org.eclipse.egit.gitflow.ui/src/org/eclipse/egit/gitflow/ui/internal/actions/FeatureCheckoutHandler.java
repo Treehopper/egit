@@ -32,7 +32,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.api.CheckoutResult;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.swt.widgets.Shell;
@@ -54,7 +54,7 @@ public class FeatureCheckoutHandler extends AbstractHandler {
 				"Select Feature", "Local features:") {
 			@Override
 			protected String getPrefix() {
-				return Constants.R_HEADS + gfRepo.getFeaturePrefix();
+				return R_HEADS + gfRepo.getFeaturePrefix();
 			}
 		};
 		if (dialog.open() != Window.OK) {

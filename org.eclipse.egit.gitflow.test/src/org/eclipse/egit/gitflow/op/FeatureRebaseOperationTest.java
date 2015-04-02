@@ -9,11 +9,6 @@
 package org.eclipse.egit.gitflow.op;
 
 
-import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.*;
 
 import org.eclipse.egit.gitflow.GitFlowRepository;
@@ -29,7 +24,7 @@ public class FeatureRebaseOperationTest extends AbstractFeatureOperationTest {
 		RevCommit initialCommit = testRepository.createInitialCommit("testFeatureRebase\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);

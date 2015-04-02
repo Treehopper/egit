@@ -53,8 +53,7 @@ public class InitOperationTest extends AbstractGitFlowOperationTest {
 	@Test
 	public void testInitEmptyRepository() throws Exception {
 		Repository repository = testRepository.getRepository();
-		InitOperation initOperation = new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX,
-				HOTFIX_PREFIX);
+		InitOperation initOperation = new InitOperation(repository);
 		initOperation.execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 		assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());

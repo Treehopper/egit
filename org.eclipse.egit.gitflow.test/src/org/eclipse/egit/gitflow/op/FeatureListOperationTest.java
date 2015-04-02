@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import org.eclipse.egit.gitflow.GitFlowRepository;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class FeatureListOperationTest extends AbstractDualRepositoryTestCase {
 		List<Ref> result = featureListOperation.getResult();
 		assertEquals(1, result.size());
 		assertEquals(
-				Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME + SEP + gfRepo2.getFeatureBranchName(MY_FEATURE),
+				R_REMOTES + DEFAULT_REMOTE_NAME + SEP + gfRepo2.getFeatureBranchName(MY_FEATURE),
 				result.get(0).getName());
 
 		new FeatureFinishOperation(gfRepo1, MY_FEATURE);

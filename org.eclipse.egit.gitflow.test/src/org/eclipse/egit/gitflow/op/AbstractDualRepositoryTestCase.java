@@ -8,11 +8,6 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
@@ -29,7 +24,9 @@ import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
-import org.eclipse.jgit.lib.Constants;
+
+import static org.eclipse.jgit.lib.Constants.*;
+
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -52,12 +49,12 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		workdir = testUtils.createTempDir("Repository1");
 		workdir2 = testUtils.createTempDir("Repository2");
 
-		repository1 = new TestRepository(new File(workdir, Constants.DOT_GIT));
+		repository1 = new TestRepository(new File(workdir, DOT_GIT));
 
 		repository1.createInitialCommit("setUp");
 
 		Repository repository = repository1.getRepository();
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 
 		// now we create a project in repo1
 		IProject project = testUtils.createProjectInLocalFileSystem(workdir, projectName);
@@ -72,14 +69,14 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 
 		// let's clone repository1 to repository2
 		URIish uri = repository1.getUri();
-		CloneOperation clop = new CloneOperation(uri, true, null, workdir2, Constants.R_HEADS + MY_MASTER,
-				Constants.DEFAULT_REMOTE_NAME, 0);
+		CloneOperation clop = new CloneOperation(uri, true, null, workdir2, R_HEADS + MY_MASTER,
+				DEFAULT_REMOTE_NAME, 0);
 		clop.run(null);
 
 		Repository repo2 = Activator.getDefault().getRepositoryCache()
-				.lookupRepository(new File(workdir2, Constants.DOT_GIT));
+				.lookupRepository(new File(workdir2, DOT_GIT));
 		repository2 = new TestRepository(repo2);
-		new InitOperation(repo2, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 	}
 
 	protected void assertCommitArrivedAtRemote(RevCommit branchCommit, Repository remote) throws CoreException {
@@ -94,7 +91,7 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		RevWalk walk = new RevWalk(repo);
 
 		try {
-			ObjectId head = repo.resolve(Constants.HEAD);
+			ObjectId head = repo.resolve(HEAD);
 			return walk.parseCommit(head);
 		} catch (RevisionSyntaxException e) {
 			throw new RuntimeException(e);

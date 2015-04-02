@@ -8,11 +8,6 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.egit.core.op.BranchOperation;
@@ -29,7 +24,7 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 		testRepository.createInitialCommit("testReleaseFinish\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
@@ -62,7 +57,7 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 		testRepository.createInitialCommit("testReleaseFinishFail\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);

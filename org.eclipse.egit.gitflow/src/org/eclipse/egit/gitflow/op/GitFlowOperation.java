@@ -25,7 +25,7 @@ import org.eclipse.egit.core.op.MergeOperation;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -103,7 +103,7 @@ abstract public class GitFlowOperation implements IEGitOperation {
 
 	private RemoteConfig getDefaultRemoteConfig() throws URISyntaxException {
 		StoredConfig rc = repository.getRepository().getConfig();
-		RemoteConfig config = new RemoteConfig(rc, Constants.DEFAULT_REMOTE_NAME);
+		RemoteConfig config = new RemoteConfig(rc, DEFAULT_REMOTE_NAME);
 		return config;
 	}
 }

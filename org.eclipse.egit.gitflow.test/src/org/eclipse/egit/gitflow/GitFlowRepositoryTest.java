@@ -19,7 +19,7 @@ import org.eclipse.egit.gitflow.op.HotfixStartOperation;
 import org.eclipse.egit.gitflow.op.InitOperation;
 import org.eclipse.egit.gitflow.op.ReleaseFinishOperation;
 import org.eclipse.egit.gitflow.op.ReleaseStartOperation;
-import org.eclipse.jgit.lib.Constants;
+import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 
 		assertFalse(gfRepo.isInitialized());
 
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 
 		assertTrue(gfRepo.isInitialized());
 	}
@@ -48,7 +48,7 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 
 		assertTrue(gfRepo.isMaster());
 
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 
 		assertFalse(gfRepo.isMaster());
 	}
@@ -60,13 +60,13 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 		Repository repository = testRepository.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 
 		assertTrue(gfRepo.getFeatureBranches().isEmpty());
 
 		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);
 
-		assertEquals(Constants.R_HEADS + gfRepo.getFeaturePrefix() + MY_FEATURE, gfRepo.getFeatureBranches().get(0)
+		assertEquals(R_HEADS + gfRepo.getFeaturePrefix() + MY_FEATURE, gfRepo.getFeatureBranches().get(0)
 				.getName());
 	}
 
@@ -77,13 +77,13 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 		Repository repository = testRepository.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 
 		assertTrue(gfRepo.getReleaseBranches().isEmpty());
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
 
-		assertEquals(Constants.R_HEADS + gfRepo.getReleasePrefix() + MY_RELEASE, gfRepo.getReleaseBranches().get(0)
+		assertEquals(R_HEADS + gfRepo.getReleasePrefix() + MY_RELEASE, gfRepo.getReleaseBranches().get(0)
 				.getName());
 	}
 
@@ -94,7 +94,7 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 		Repository repository = testRepository.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX).execute(null);
+		new InitOperation(repository).execute(null);
 
 		assertTrue(gfRepo.getHotfixBranches().isEmpty());
 
@@ -102,7 +102,7 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 		new ReleaseFinishOperation(gfRepo, MY_RELEASE).execute(null);
 		new HotfixStartOperation(gfRepo, MY_HOTFIX).execute(null);
 
-		assertEquals(Constants.R_HEADS + gfRepo.getHotfixPrefix() + MY_HOTFIX, gfRepo.getHotfixBranches().get(0)
+		assertEquals(R_HEADS + gfRepo.getHotfixPrefix() + MY_HOTFIX, gfRepo.getHotfixBranches().get(0)
 				.getName());
 	}
 
@@ -113,13 +113,14 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 		Repository repository = testRepository.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX, VERSION_TAG).execute(null);
+		new InitOperation(repository, DEVELOP, GitFlowDefaults.MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX,
+				VERSION_TAG).execute(null);
 
 		assertTrue(gfRepo.getFeatureBranches().isEmpty());
 
 		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);
 
-		Ref actualFeatureRef = repository.getRef(Constants.R_HEADS + gfRepo.getFeaturePrefix() + MY_FEATURE);
+		Ref actualFeatureRef = repository.getRef(R_HEADS + gfRepo.getFeaturePrefix() + MY_FEATURE);
 		assertEquals(MY_FEATURE, gfRepo.getFeatureBranchName(actualFeatureRef));
 	}
 
