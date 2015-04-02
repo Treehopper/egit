@@ -8,6 +8,10 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import static org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig.REBASE;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Constants.R_REMOTES;
+
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
@@ -15,11 +19,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
-import org.eclipse.egit.core.op.CreateLocalBranchOperation.UpstreamConfig;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.FetchResult;
 
@@ -44,13 +46,16 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 			String newLocalBranch = featureName;
 			operationResult = fetch(monitor);
 
-			if (!repository.hasBranch(newLocalBranch)) {
-				new CreateLocalBranchOperation(repository.getRepository(), newLocalBranch, remoteFeature,
-						UpstreamConfig.REBASE)
-				.execute(monitor);
+			if (repository.hasBranch(newLocalBranch)) {
+				String errorMessage = String.format("Local branch '%s' already exists.", newLocalBranch);
+				throw new CoreException(Activator.error(errorMessage));
 			}
+			CreateLocalBranchOperation createLocalBranchOperation = new CreateLocalBranchOperation(
+					repository.getRepository(), newLocalBranch, remoteFeature, REBASE);
+			createLocalBranchOperation.execute(monitor);
 
-			new BranchOperation(repository.getRepository(), newLocalBranch).execute(monitor);
+			BranchOperation branchOperation = new BranchOperation(repository.getRepository(), newLocalBranch);
+			branchOperation.execute(monitor);
 		} catch (URISyntaxException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {
