@@ -21,6 +21,8 @@ import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
 import org.eclipse.egit.gitflow.Activator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.jgit.api.CheckoutResult;
+import org.eclipse.jgit.api.CheckoutResult.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.FetchResult;
@@ -56,6 +58,12 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 
 			BranchOperation branchOperation = new BranchOperation(repository.getRepository(), newLocalBranch);
 			branchOperation.execute(monitor);
+			CheckoutResult result = branchOperation.getResult();
+			if (!Status.OK.equals(result.getStatus())) {
+				String errorMessage = String.format("Trying checkout '%s' returned: %s", newLocalBranch, result
+						.getStatus().name());
+				throw new CoreException(Activator.error(errorMessage));
+			}
 		} catch (URISyntaxException e) {
 			throw new CoreException(Activator.error(e.getMessage(), e));
 		} catch (InvocationTargetException e) {
