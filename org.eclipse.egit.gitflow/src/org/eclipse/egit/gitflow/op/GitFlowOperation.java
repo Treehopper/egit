@@ -22,10 +22,16 @@ import org.eclipse.egit.core.op.DeleteBranchOperation;
 import org.eclipse.egit.core.op.FetchOperation;
 import org.eclipse.egit.core.op.IEGitOperation;
 import org.eclipse.egit.core.op.MergeOperation;
+import static org.eclipse.egit.gitflow.Activator.error;
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.jgit.api.CheckoutResult;
+import org.eclipse.jgit.api.CheckoutResult.Status;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import static java.lang.String.format;
+
 import static org.eclipse.jgit.lib.Constants.*;
+
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -86,7 +92,12 @@ abstract public class GitFlowOperation implements IEGitOperation {
 				throw new RuntimeException(String.format("No branch '%s' found.", targetBranchName));
 			}
 			boolean dontCloseProjects = false;
-			new BranchOperation(repository.getRepository(), targetBranchName, dontCloseProjects).execute(monitor);
+			BranchOperation branchOperation = new BranchOperation(repository.getRepository(), targetBranchName, dontCloseProjects);
+			branchOperation.execute(monitor);
+			Status status = branchOperation.getResult().getStatus();
+			if (!CheckoutResult.Status.OK.equals(status)) {
+				throw new CoreException(error(format("Unable to checkout '%s': %s", branchName, status.toString())));
+			}
 			MergeOperation mergeOperation = new MergeOperation(repository.getRepository(), branchName);
 			mergeOperation.execute(monitor);
 			return mergeOperation.getResult();
