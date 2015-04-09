@@ -85,7 +85,8 @@ abstract public class GitFlowOperation implements IEGitOperation {
 			if (!repository.hasBranch(targetBranchName)) {
 				throw new RuntimeException(String.format("No branch '%s' found.", targetBranchName));
 			}
-			new BranchOperation(repository.getRepository(), targetBranchName).execute(monitor);
+			boolean dontCloseProjects = false;
+			new BranchOperation(repository.getRepository(), targetBranchName, dontCloseProjects).execute(monitor);
 			MergeOperation mergeOperation = new MergeOperation(repository.getRepository(), branchName);
 			mergeOperation.execute(monitor);
 			return mergeOperation.getResult();
