@@ -9,12 +9,17 @@
 package org.eclipse.egit.gitflow.op;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.egit.core.op.TagOperation;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.TagBuilder;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
+@SuppressWarnings("restriction")
 public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 	@Test
 	public void testReleaseBranchCreated() throws Exception {
@@ -47,5 +52,31 @@ public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 
 		RevCommit releaseHead = gfRepo.findHead(gfRepo.getReleaseBranchName(MY_RELEASE));
 		assertEquals(developCommit, releaseHead);
+	}
+
+	@Test
+	public void testReleaseStartFailed() throws Exception {
+		testRepository.createInitialCommit("testReleaseStart\n\nfirst commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+
+		createTag(gfRepo.findHead(), MY_RELEASE, "irrelevant", repository);
+
+		try {
+			new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
+			fail();
+		} catch (CoreException e) {
+			assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());
+		}
+	}
+
+	protected void createTag(RevCommit head, String name, String message, Repository repository) throws CoreException {
+		TagBuilder tag = new TagBuilder();
+		tag.setTag(name);
+		tag.setMessage(message);
+		tag.setObjectId(head);
+		new TagOperation(repository, tag, false).execute(null);
 	}
 }
