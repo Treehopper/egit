@@ -48,6 +48,10 @@ public class Activator extends Plugin {
 		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, throwable);
 	}
 
+	public static IStatus error(Throwable throwable) {
+		return error(throwable.getMessage(), throwable);
+	}
+
 	public static IStatus error(String message) {
 		return new Status(IStatus.ERROR, PLUGIN_ID, message);
 	}

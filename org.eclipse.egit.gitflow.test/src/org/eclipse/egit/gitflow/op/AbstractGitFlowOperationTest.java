@@ -70,16 +70,4 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 		return testRepository
 				.addAndCommit(project.project, new File(file.getLocationURI()), commitMessage);
 	}
-
-	protected RevCommit findCommitForTag(Repository repository, String tagName) throws MissingObjectException,
-	IncorrectObjectTypeException, IOException {
-		RevWalk revWalk = new RevWalk(repository);
-		Ref tagRef = repository.getRef(R_TAGS + tagName);
-		if (tagRef == null) {
-			return null;
-		}
-		RevCommit result = revWalk.parseCommit(tagRef.getObjectId());
-		revWalk.release();
-		return result;
-	}
 }

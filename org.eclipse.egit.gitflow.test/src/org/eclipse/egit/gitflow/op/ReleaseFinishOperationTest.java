@@ -8,12 +8,22 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-import static org.junit.Assert.assertEquals;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
+import static org.junit.Assert.*;
 
+import java.util.Iterator;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.core.op.BranchOperation;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
@@ -26,7 +36,7 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX, MY_VERSION_TAG)
-				.execute(null);
+		.execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
@@ -41,7 +51,7 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 		String branchName = gfRepo.getReleaseBranchName(MY_RELEASE);
 
 		// tag created?
-		assertEquals(branchCommit, findCommitForTag(repository, MY_VERSION_TAG + MY_RELEASE));
+		assertEquals(branchCommit, gfRepo.findCommitForTag(MY_VERSION_TAG + MY_RELEASE));
 
 		// branch removed?
 		assertEquals(findBranch(repository, branchName), null);
@@ -67,5 +77,56 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 		new BranchOperation(repository, gfRepo.getDevelop()).execute(null);
 
 		new ReleaseFinishOperation(gfRepo).execute(null);
+	}
+
+	@Test
+	public void testReleaseTagWithWrongReferenceExists() throws Exception {
+		testRepository.createInitialCommit("testReleaseTagExists\n\nfirst commit\n");
+		testRepository.createInitialCommit("testReleaseTagExists\n\nsecond commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+
+		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
+
+		RevCommit next = getPreviousCommit(repository, 1);
+
+		ReleaseFinishOperation releaseFinishOperation = new ReleaseFinishOperation(gfRepo);
+		releaseFinishOperation.createTag(null, next, MY_RELEASE, "irrelevant");
+
+		try {
+			releaseFinishOperation.execute(null);
+			fail();
+		} catch (CoreException e) {
+			assertFalse(e.getStatus().isOK());
+		}
+	}
+
+	@Test
+	public void testReleaseTagWithCorrectReferenceExists() throws Exception {
+		testRepository.createInitialCommit("testReleaseTagExists\n\nfirst commit\n");
+
+		Repository repository = testRepository.getRepository();
+		new InitOperation(repository).execute(null);
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+
+		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
+
+		RevCommit next = getPreviousCommit(repository, 0);
+
+		ReleaseFinishOperation releaseFinishOperation = new ReleaseFinishOperation(gfRepo);
+		releaseFinishOperation.createTag(null, next, MY_RELEASE, "irrelevant");
+		releaseFinishOperation.execute(null);
+	}
+
+	private RevCommit getPreviousCommit(Repository repository, int count) throws GitAPIException, NoHeadException {
+		Iterable<RevCommit> logs = Git.wrap(repository).log().call();
+		Iterator<RevCommit> i = logs.iterator();
+		for (int j = 0; j < count; j++) {
+			i.next();
+		}
+		RevCommit next = i.next();
+		return next;
 	}
 }

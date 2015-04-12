@@ -43,7 +43,7 @@ public class HotfixFinishOperationTest extends AbstractGitFlowOperationTest {
 		String branchName = gfRepo.getHotfixBranchName(MY_HOTFIX);
 
 		// tag created?
-		assertEquals(branchCommit, findCommitForTag(repository, MY_HOTFIX));
+		assertEquals(branchCommit, gfRepo.findCommitForTag(MY_HOTFIX));
 
 		// branch removed?
 		assertEquals(findBranch(repository, branchName), null);
@@ -91,7 +91,7 @@ public class HotfixFinishOperationTest extends AbstractGitFlowOperationTest {
 		hotfixFinishOperation.execute(null);
 
 		// tag not created?
-		assertNotEquals(hotfixCommit, findCommitForTag(repository, MY_HOTFIX));
+		assertNotEquals(hotfixCommit, gfRepo.findCommitForTag(MY_HOTFIX));
 
 		// branch not removed?
 		assertNotEquals(findBranch(repository, branchName), null);

@@ -18,7 +18,7 @@ public final class HotfixStartOperation extends AbstractHotfixOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String branchName = repository.getHotfixBranchName(hotfixName);
+		String branchName = repository.getHotfixBranchName(versionName);
 
 		start(monitor, branchName, repository.findHead(repository.getMaster()));
 	}

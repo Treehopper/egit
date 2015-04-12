@@ -14,12 +14,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 
-abstract public class AbstractHotfixOperation extends GitFlowOperation {
-	protected String hotfixName;
-
+abstract public class AbstractHotfixOperation extends AbstractVersionFinishOperation {
 	public AbstractHotfixOperation(GitFlowRepository repository, String hotfixName) {
-		super(repository);
-		this.hotfixName = hotfixName;
+		super(repository, hotfixName);
 	}
 
 	protected static String getHotfixName(GitFlowRepository repository) throws WrongGitFlowStateException,

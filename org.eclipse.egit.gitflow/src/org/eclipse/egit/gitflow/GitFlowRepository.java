@@ -9,6 +9,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 
 import static org.eclipse.jgit.lib.Constants.*;
@@ -266,4 +267,15 @@ public class GitFlowRepository {
 		return ref.getName().substring((R_HEADS + getFeaturePrefix()).length());
 	}
 
+	public RevCommit findCommitForTag(String tagName) throws MissingObjectException,
+	IncorrectObjectTypeException, IOException {
+		RevWalk revWalk = new RevWalk(repository);
+		Ref tagRef = repository.getRef(R_TAGS + tagName);
+		if (tagRef == null) {
+			return null;
+		}
+		RevCommit result = revWalk.parseCommit(tagRef.getObjectId());
+		revWalk.release();
+		return result;
+	}
 }

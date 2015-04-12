@@ -12,13 +12,9 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.egit.core.op.TagOperation;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
-import org.eclipse.jgit.lib.TagBuilder;
-import org.eclipse.jgit.revwalk.RevCommit;
 
-@SuppressWarnings("restriction")
 public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 	public ReleaseFinishOperation(GitFlowRepository repository, String releaseName) {
 		super(repository, releaseName);
@@ -29,18 +25,9 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String releaseBranchName = repository.getReleaseBranchName(releaseName);
+		String releaseBranchName = repository.getReleaseBranchName(versionName);
 		mergeTo(monitor, releaseBranchName, repository.getMaster());
 		finish(monitor, releaseBranchName);
-		RevCommit head = repository.findHead();
-		createTag(monitor, head, "Release of " + releaseName);
-	}
-
-	private void createTag(IProgressMonitor monitor, RevCommit head, String message) throws CoreException {
-		TagBuilder tag = new TagBuilder();
-		tag.setTag(repository.getVersionTagPrefix() + releaseName);
-		tag.setMessage(message);
-		tag.setObjectId(head);
-		new TagOperation(repository.getRepository(), tag, false).execute(monitor);
+		safeCreateTag(monitor, repository.getVersionTagPrefix() + versionName, "Release of " + versionName);
 	}
 }

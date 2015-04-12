@@ -30,7 +30,7 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		String branchName = repository.getReleaseBranchName(releaseName);
+		String branchName = repository.getReleaseBranchName(versionName);
 
 		try {
 			if (!repository.isDevelop()) {

@@ -14,12 +14,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 
-abstract public class AbstractReleaseOperation extends GitFlowOperation {
-	protected String releaseName;
-
+abstract public class AbstractReleaseOperation extends AbstractVersionFinishOperation {
 	public AbstractReleaseOperation(GitFlowRepository repository, String releaseName) {
-		super(repository);
-		this.releaseName = releaseName;
+		super(repository, releaseName);
 	}
 
 	protected static String getReleaseName(GitFlowRepository repository) throws WrongGitFlowStateException,
