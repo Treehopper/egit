@@ -173,6 +173,7 @@ class CommitGraphTable {
 		rawTable.setLinesVisible(false);
 		rawTable.setFont(nFont);
 		rawTable.addListener(SWT.SetData, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				if (tableLoader != null) {
 					TableItem item = (TableItem) event.item;
@@ -193,10 +194,12 @@ class CommitGraphTable {
 		createPaintListener(rawTable);
 
 		table = new TableViewer(rawTable) {
+			@Override
 			protected Widget doFindItem(final Object element) {
 				return element != null ? ((SWTCommit) element).widget : null;
 			}
 
+			@Override
 			protected void mapElement(final Object element, final Widget item) {
 				((SWTCommit) element).widget = item;
 			}
@@ -210,6 +213,7 @@ class CommitGraphTable {
 
 		clipboard = new Clipboard(rawTable.getDisplay());
 		rawTable.addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(final DisposeEvent e) {
 				clipboard.dispose();
 			}
@@ -220,6 +224,7 @@ class CommitGraphTable {
 		table.setUseHashlookup(true);
 
 		table.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection s = event.getSelection();
 				if (s.isEmpty() || !(s instanceof IStructuredSelection))
@@ -237,6 +242,7 @@ class CommitGraphTable {
 
 		table.getTable().addDisposeListener(new DisposeListener() {
 
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				if (allCommits != null)
 					allCommits.dispose();
@@ -256,6 +262,7 @@ class CommitGraphTable {
 
 		final IAction selectAll = createStandardAction(ActionFactory.SELECT_ALL);
 		getControl().addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent e) {
 				site.getActionBars().setGlobalActionHandler(
 						ActionFactory.SELECT_ALL.getId(), null);
@@ -264,6 +271,7 @@ class CommitGraphTable {
 				site.getActionBars().updateActionBars();
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				site.getActionBars().setGlobalActionHandler(
 						ActionFactory.SELECT_ALL.getId(), selectAll);
@@ -274,6 +282,7 @@ class CommitGraphTable {
 		});
 
 		getTableView().addOpenListener(new IOpenListener() {
+			@Override
 			public void open(OpenEvent event) {
 				if (input == null || !input.isSingleFile())
 					return;
@@ -464,6 +473,7 @@ class CommitGraphTable {
 		// Tell SWT we will completely handle painting for some columns.
 		//
 		rawTable.addListener(SWT.EraseItem, new Listener() {
+			@Override
 			public void handleEvent(final Event event) {
 				if (0 <= event.index && event.index <= 5)
 					event.detail &= ~SWT.FOREGROUND;
@@ -471,6 +481,7 @@ class CommitGraphTable {
 		});
 
 		rawTable.addListener(SWT.PaintItem, new Listener() {
+			@Override
 			public void handleEvent(final Event event) {
 				doPaint(event);
 			}
@@ -561,6 +572,7 @@ class CommitGraphTable {
 			event.doit = commit.getParentCount() == 1;
 		}
 
+		@Override
 		public void dragSetData(DragSourceEvent event) {
 			boolean isFileTransfer = FileTransfer.getInstance()
 					.isSupportedType(event.dataType);
@@ -629,14 +641,12 @@ class CommitGraphTable {
 			IStructuredSelection selection = (IStructuredSelection) table
 					.getSelection();
 			RevCommit commit = (RevCommit) selection.getFirstElement();
-			RevWalk walk = new org.eclipse.jgit.revwalk.RevWalk(input.getRepository());
-			try {
+			try (RevWalk walk = new org.eclipse.jgit.revwalk.RevWalk(
+					input.getRepository())) {
 				return walk.parseCommit(commit.getId());
 			} catch (IOException e) {
 				throw new RuntimeException(
 						"Could not parse commit " + commit.getId(), e); //$NON-NLS-1$
-			} finally {
-				walk.release();
 			}
 		}
 
@@ -677,15 +687,20 @@ class CommitGraphTable {
 			this.input = input;
 		}
 
+		@Override
 		public void menuDetected(MenuDetectEvent e) {
 			popupMgr.removeAll();
+
+			final HistoryPageInput lastInput = this.input;
+			if (lastInput == null)
+				return;
 
 			int selectionSize = ((IStructuredSelection) selectionProvider
 					.getSelection()).size();
 
-			if (input.isSingleFile()) {
+			if (lastInput.isSingleFile()) {
 				if (selectionSize == 1)
-					if (input.getSingleFile() instanceof IResource)
+					if (lastInput.getSingleFile() instanceof IResource)
 						popupMgr
 								.add(getCommandContributionItem(
 										HistoryViewCommands.COMPARE_WITH_TREE,
@@ -717,8 +732,8 @@ class CommitGraphTable {
 
 			if (selectionSize == 1) {
 				popupMgr.add(new Separator());
-				if (!input.getRepository().isBare()) {
-					if (hasMultipleRefNodes()) {
+				if (!lastInput.getRepository().isBare()) {
+					if (hasMultipleRefNodes(lastInput)) {
 						popupMgr.add(getCommandContributionItem(
 								HistoryViewCommands.CHECKOUT,
 								UIText.GitHistoryPage_CheckoutMenuLabel2));
@@ -772,7 +787,7 @@ class CommitGraphTable {
 				popupMgr.add(getCommandContributionItem(
 						HistoryViewCommands.COMPARE_VERSIONS,
 						UIText.GitHistoryPage_CompareWithEachOtherMenuLabel));
-				if (!input.isSingleFile())
+				if (!lastInput.isSingleFile())
 					popupMgr
 							.add(getCommandContributionItem(
 									HistoryViewCommands.COMPARE_VERSIONS_IN_TREE,
@@ -836,9 +851,9 @@ class CommitGraphTable {
 			popupMgr.add(new Separator());
 		}
 
-		private boolean hasMultipleRefNodes() {
+		private boolean hasMultipleRefNodes(HistoryPageInput lastInput) {
 			try {
-				Map<String, Ref> branches = input.getRepository()
+				Map<String, Ref> branches = lastInput.getRepository()
 						.getRefDatabase().getRefs(Constants.R_HEADS);
 				int count = 0;
 				for (Ref branch : branches.values()) {
