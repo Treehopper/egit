@@ -27,8 +27,8 @@
    <feature url="features/org.eclipse.jgit.http.apache_0.0.0.qualifier.jar" id="org.eclipse.jgit.http.apache" version="0.0.0">
       <category name="JGit"/>
    </feature>
-   <feature url="features/org.eclipse.egit.gitflow.feature_3.7.0.qualifier.jar" id="org.eclipse.egit.gitflow.feature" version="3.7.0.qualifier">
-      <category name="GitFlow"/>
+   <feature url="features/org.eclipse.egit.gitflow.feature_4.0.0.qualifier.jar" id="org.eclipse.egit.gitflow.feature" version="4.0.0.qualifier">
+      <category name="Eclipse Git Team Provider - experimental features (incubation)"/>
    </feature>
    <bundle id="org.eclipse.egit.ui.importer" version="0.0.1.qualifier">
       <category name="Eclipse Git Team Provider - experimental features (incubation)"/>
@@ -41,11 +41,6 @@
    <category-def name="JGit" label="JGit">
       <description>
          JGit
-      </description>
-   </category-def>
-   <category-def name="GitFlow" label="GitFlow">
-      <description>
-         GitFlow
       </description>
    </category-def>
    <category-def name="Eclipse Git Team Provider - experimental features (incubation)" label="Eclipse Git Team Provider - experimental features  (incubation)"/>

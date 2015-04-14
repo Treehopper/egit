@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>org.eclipse.egit</groupId>
 		<artifactId>egit-parent</artifactId>
-		<version>3.7.0-SNAPSHOT</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>org.eclipse.egit.gitflow.test</artifactId>
@@ -30,9 +30,7 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<!--excludes>
-						<exclude>**/Test*.class</exclude>
-					</excludes-->
+					<!--excludes> <exclude>**/Test*.class</exclude> </excludes -->
 					<useUIHarness>false</useUIHarness>
 					<useUIThread>false</useUIThread>
 				</configuration>
@@ -44,9 +42,9 @@
 					<dependency-resolution>
 						<extraRequirements>
 							<requirement>
-								<type>eclipse-test-plugin</type>
-								<id>org.eclipse.egit.core.test</id>
-								<versionRange>3.7.0</versionRange>
+								<type>eclipse-feature</type>
+								<id>org.eclipse.egit</id>
+								<versionRange>0.0.0</versionRange>
 							</requirement>
 						</extraRequirements>
 					</dependency-resolution>
