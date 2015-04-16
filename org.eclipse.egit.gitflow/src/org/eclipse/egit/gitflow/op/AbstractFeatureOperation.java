@@ -17,34 +17,65 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
+import org.eclipse.egit.gitflow.internal.CoreText;
 import org.eclipse.jgit.lib.StoredConfig;
 
+/**
+ * Common logic for feature branch operations.
+ */
 abstract public class AbstractFeatureOperation extends GitFlowOperation {
+	/** */
 	protected String featureName;
 
-	public AbstractFeatureOperation(GitFlowRepository repository, String featureName) {
+	/**
+	 * @param repository
+	 * @param featureName
+	 */
+	public AbstractFeatureOperation(GitFlowRepository repository,
+			String featureName) {
 		super(repository);
 		this.featureName = featureName;
 	}
 
-	protected static String getFeatureName(GitFlowRepository repository) throws WrongGitFlowStateException,
-	CoreException, IOException {
+	/**
+	 * @param repository
+	 * @return current feature branch name
+	 * @throws WrongGitFlowStateException
+	 * @throws CoreException
+	 * @throws IOException
+	 */
+	protected static String getFeatureName(GitFlowRepository repository)
+			throws WrongGitFlowStateException, CoreException, IOException {
 		if (!repository.isFeature()) {
-			throw new WrongGitFlowStateException("Not on a feature branch.");
+			throw new WrongGitFlowStateException(
+					CoreText.AbstractFeatureOperation_notOnAFeautreBranch);
 		}
 		String currentBranch = repository.getRepository().getBranch();
 		return currentBranch.substring(repository.getFeaturePrefix().length());
 	}
 
-	protected void setRemote(String featureName, String value) throws IOException {
+	/**
+	 * @param featureName
+	 * @param value
+	 * @throws IOException
+	 */
+	protected void setRemote(String featureName, String value)
+			throws IOException {
 		setBranchValue(featureName, value, REMOTE_KEY);
 	}
 
-	protected void setMerge(String featureName, String value) throws IOException {
+	/**
+	 * @param featureName
+	 * @param value
+	 * @throws IOException
+	 */
+	protected void setMerge(String featureName, String value)
+			throws IOException {
 		setBranchValue(featureName, value, MERGE_KEY);
 	}
 
-	private void setBranchValue(String featureName, String value, String mergeKey) throws IOException {
+	private void setBranchValue(String featureName, String value,
+			String mergeKey) throws IOException {
 		StoredConfig config = repository.getRepository().getConfig();
 		config.setString(BRANCH_SECTION, featureName, mergeKey, value);
 		config.save();

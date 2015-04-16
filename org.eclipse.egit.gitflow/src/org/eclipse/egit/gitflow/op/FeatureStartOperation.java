@@ -12,11 +12,22 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import static org.eclipse.egit.gitflow.Activator.error;
-import org.eclipse.egit.gitflow.GitFlowRepository;
 
+import static org.eclipse.egit.gitflow.Activator.error;
+
+import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.egit.gitflow.internal.CoreText;
+
+/**
+ * git flow feature start
+ */
 public final class FeatureStartOperation extends AbstractFeatureOperation {
-	public FeatureStartOperation(GitFlowRepository repository, String featureName) {
+	/**
+	 * @param repository
+	 * @param featureName
+	 */
+	public FeatureStartOperation(GitFlowRepository repository,
+			String featureName) {
 		super(repository, featureName);
 	}
 
@@ -25,7 +36,9 @@ public final class FeatureStartOperation extends AbstractFeatureOperation {
 
 		try {
 			if (!repository.isDevelop()) {
-				throw new CoreException(error("Not on " + repository.getDevelop()));
+				throw new CoreException(
+						error(CoreText.FeatureStartOperation_notOn
+								+ repository.getDevelop()));
 			}
 		} catch (IOException e) {
 			throw new CoreException(error(e.getMessage(), e));

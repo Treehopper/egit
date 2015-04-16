@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import java.io.IOException;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -23,30 +25,35 @@ import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.op.FeaturePublishOperation;
 import org.eclipse.egit.gitflow.ui.Activator;
-
-import static org.eclipse.egit.gitflow.ui.Activator.error;
-
+import org.eclipse.egit.gitflow.ui.internal.UIText;
 import org.eclipse.egit.ui.UIPreferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * git flow feature finish
+ */
 @SuppressWarnings("restriction")
 public class FeaturePublishHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
+		PlatformObject firstElement = (PlatformObject) selection
+				.getFirstElement();
+		Repository repository = (Repository) firstElement
+				.getAdapter(Repository.class);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		Job job = new Job("Publishing feature...") {
+		Job job = new Job(UIText.FeaturePublishHandler_publishingFeature) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					int timeout = Activator.getDefault().getPreferenceStore()
 							.getInt(UIPreferences.REMOTE_CONNECTION_TIMEOUT);
-					FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(gfRepo, timeout);
+					FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(
+							gfRepo, timeout);
 					featurePublishOperation.execute(monitor);
 				} catch (WrongGitFlowStateException e) {
 					return error(e.getMessage(), e);

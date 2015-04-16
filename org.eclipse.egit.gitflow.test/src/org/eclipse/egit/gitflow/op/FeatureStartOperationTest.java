@@ -20,7 +20,8 @@ import org.junit.Test;
 public class FeatureStartOperationTest extends AbstractFeatureOperationTest {
 	@Test
 	public void testFeatureStart() throws Exception {
-		testRepository.createInitialCommit("testFeatureStart\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testFeatureStart\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -28,19 +29,21 @@ public class FeatureStartOperationTest extends AbstractFeatureOperationTest {
 
 		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);
 
-		assertEquals(gfRepo.getFullFeatureBranchName(MY_FEATURE), repository
-				.getFullBranch());
+		assertEquals(gfRepo.getFullFeatureBranchName(MY_FEATURE),
+				repository.getFullBranch());
 	}
 
 	@Test(expected = CoreException.class)
 	public void testFeatureStartFail() throws Exception {
-		testRepository.createInitialCommit("testFeatureStart\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testFeatureStart\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		BranchOperation branchOperation = new BranchOperation(repository, MY_MASTER);
+		BranchOperation branchOperation = new BranchOperation(repository,
+				MY_MASTER);
 		branchOperation.execute(null);
 
 		new FeatureStartOperation(gfRepo, MY_FEATURE).execute(null);

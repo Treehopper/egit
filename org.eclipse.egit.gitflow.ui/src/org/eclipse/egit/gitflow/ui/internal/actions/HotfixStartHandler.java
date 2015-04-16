@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.HotfixStartOperation;
+
 import static org.eclipse.egit.gitflow.ui.Activator.error;
+
+import org.eclipse.egit.gitflow.ui.internal.UIText;
 import org.eclipse.egit.gitflow.ui.internal.validation.HotfixNameValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,16 +30,26 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * git flow hotfix start
+ */
 public class HotfixStartHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
+		PlatformObject firstElement = (PlatformObject) selection
+				.getFirstElement();
+		Repository repository = (Repository) firstElement
+				.getAdapter(Repository.class);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		InputDialog inputDialog = new InputDialog(HandlerUtil.getActiveShell(event), "Provide hotfix name",
-				"Please provide a name for the new hotfix.", "", new HotfixNameValidator(gfRepo));
+		InputDialog inputDialog = new InputDialog(
+				HandlerUtil.getActiveShell(event),
+				UIText.HotfixStartHandler_provideHotfixName,
+				UIText.HotfixStartHandler_pleaseProvideANameForTheNewHotfix,
+				"", //$NON-NLS-1$
+				new HotfixNameValidator(gfRepo));
 
 		if (inputDialog.open() != Window.OK) {
 			return null;
@@ -44,11 +57,12 @@ public class HotfixStartHandler extends AbstractHandler {
 
 		final String hotfixName = inputDialog.getValue();
 
-		Job job = new Job("Starting new Hotfix...") {
+		Job job = new Job(UIText.HotfixStartHandler_startingNewHotfix) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new HotfixStartOperation(gfRepo, hotfixName).execute(monitor);
+					new HotfixStartOperation(gfRepo, hotfixName)
+							.execute(monitor);
 				} catch (CoreException e) {
 					return error(e.getMessage(), e);
 				}

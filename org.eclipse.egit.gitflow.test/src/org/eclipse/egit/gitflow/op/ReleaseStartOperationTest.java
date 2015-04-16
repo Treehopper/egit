@@ -23,7 +23,8 @@ import org.junit.Test;
 public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 	@Test
 	public void testReleaseBranchCreated() throws Exception {
-		testRepository.createInitialCommit("testReleaseStart\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testReleaseStart\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -31,32 +32,36 @@ public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
 
-		assertEquals(gfRepo.getFullReleaseBranchName(MY_RELEASE), repository
-				.getFullBranch());
+		assertEquals(gfRepo.getFullReleaseBranchName(MY_RELEASE),
+				repository.getFullBranch());
 	}
 
 	@Test
 	public void testReleaseStartWithContent() throws Exception {
-		testRepository.createInitialCommit("testReleaseStartWithContent\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testReleaseStartWithContent\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		testUtils.addFileToProject(project.getProject(), "folder1/file1.txt", "Hello world");
+		testUtils.addFileToProject(project.getProject(), "folder1/file1.txt",
+				"Hello world");
 		testRepository.connect(project.getProject());
 		testRepository.trackAllFiles(project.getProject());
 		RevCommit developCommit = testRepository.commit("Initial commit");
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
 
-		RevCommit releaseHead = gfRepo.findHead(gfRepo.getReleaseBranchName(MY_RELEASE));
+		RevCommit releaseHead = gfRepo.findHead(gfRepo
+				.getReleaseBranchName(MY_RELEASE));
 		assertEquals(developCommit, releaseHead);
 	}
 
 	@Test
 	public void testReleaseStartFailed() throws Exception {
-		testRepository.createInitialCommit("testReleaseStart\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testReleaseStart\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -72,7 +77,8 @@ public class ReleaseStartOperationTest extends AbstractGitFlowOperationTest {
 		}
 	}
 
-	protected void createTag(RevCommit head, String name, String message, Repository repository) throws CoreException {
+	protected void createTag(RevCommit head, String name, String message,
+			Repository repository) throws CoreException {
 		TagBuilder tag = new TagBuilder();
 		tag.setTag(name);
 		tag.setMessage(message);

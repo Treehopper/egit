@@ -25,6 +25,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Select Git Flow branches.
+ *
+ * @param <T>
+ */
 @SuppressWarnings("restriction")
 public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 
@@ -34,8 +39,16 @@ public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 
 	private List<T> selected = new ArrayList<T>();
 
-	public AbstractSelectionDialog(Shell parentShell, List<T> nodes, String title, String message) {
-		super(parentShell, title, null, message, MessageDialog.QUESTION, new String[] { OK_LABEL, CANCEL_LABEL }, 0);
+	/**
+	 * @param parentShell
+	 * @param nodes
+	 * @param title
+	 * @param message
+	 */
+	public AbstractSelectionDialog(Shell parentShell, List<T> nodes,
+			String title, String message) {
+		super(parentShell, title, null, message, MessageDialog.QUESTION,
+				new String[] { OK_LABEL, CANCEL_LABEL }, 0);
 		this.nodes = nodes;
 	}
 
@@ -47,19 +60,24 @@ public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 	@Override
 	protected Control createCustomArea(Composite parent) {
 		Composite area = new Composite(parent, SWT.NONE);
-		GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(area);
+		GridDataFactory.fillDefaults().grab(true, true).span(2, 1)
+				.applyTo(area);
 		area.setLayout(new GridLayout(1, false));
-		branchesList = new TableViewer(area, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(branchesList.getControl());
+		branchesList = new TableViewer(area, SWT.SINGLE | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.BORDER);
+		GridDataFactory.fillDefaults().grab(true, true)
+				.applyTo(branchesList.getControl());
 		branchesList.setContentProvider(ArrayContentProvider.getInstance());
 		branchesList.setLabelProvider(createLabelProvider());
-		branchesList.setComparator(new ViewerComparator(CommonUtils.STRING_ASCENDING_COMPARATOR));
+		branchesList.setComparator(new ViewerComparator(
+				CommonUtils.STRING_ASCENDING_COMPARATOR));
 		branchesList.setInput(nodes);
-		branchesList.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				checkPage();
-			}
-		});
+		branchesList
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						checkPage();
+					}
+				});
 		branchesList.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				buttonPressed(OK);
@@ -70,16 +88,17 @@ public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 		return area;
 	}
 
-	protected ViewerFilter createFilter() {
+	private ViewerFilter createFilter() {
 		return new ViewerFilter() {
 			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
+			public boolean select(Viewer viewer, Object parentElement,
+					Object element) {
 				return true;
 			}
 		};
 	}
 
-	protected IBaseLabelProvider createLabelProvider() {
+	private IBaseLabelProvider createLabelProvider() {
 		final String prefix = getPrefix();
 		return new GitLabelProvider() {
 			@Override
@@ -89,6 +108,9 @@ public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 		};
 	}
 
+	/**
+	 * @return Git Flow prefix for this dialog. E.g. feature, release, hotfix
+	 */
 	abstract protected String getPrefix();
 
 	private void checkPage() {
@@ -100,7 +122,8 @@ public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == OK) {
-			selected = ((IStructuredSelection) branchesList.getSelection()).toList();
+			selected = ((IStructuredSelection) branchesList.getSelection())
+					.toList();
 		}
 		super.buttonPressed(buttonId);
 	}

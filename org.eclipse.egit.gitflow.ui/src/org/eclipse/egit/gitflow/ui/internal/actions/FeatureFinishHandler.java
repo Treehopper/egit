@@ -22,20 +22,29 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.op.FeatureFinishOperation;
+import org.eclipse.egit.gitflow.ui.internal.UIText;
+
 import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * git flow feature finish
+ */
 public class FeatureFinishHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
+		PlatformObject firstElement = (PlatformObject) selection
+				.getFirstElement();
+		Repository repository = (Repository) firstElement
+				.getAdapter(Repository.class);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		Job job = new Job("Finishing feature...") {
+		Job job = new Job(UIText.FeatureFinishHandler_finishingFeature) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {

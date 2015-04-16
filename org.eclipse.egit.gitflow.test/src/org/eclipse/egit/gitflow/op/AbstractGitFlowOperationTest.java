@@ -32,6 +32,7 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	protected static final String MY_FEATURE = "myFeature";
 
 	protected static final String MY_RELEASE = "myRelease";
+
 	protected static final String MY_VERSION_TAG = "v";
 
 	protected static final String MY_MASTER = "master";
@@ -41,8 +42,8 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		gitDir = new File(project.getProject()
-				.getLocationURI().getPath(), DOT_GIT);
+		gitDir = new File(project.getProject().getLocationURI().getPath(),
+				DOT_GIT);
 		testRepository = new TestRepository(gitDir);
 		testRepository.connect(project.getProject());
 	}
@@ -53,21 +54,25 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 		super.tearDown();
 	}
 
-	protected Ref findBranch(Repository repository, String branchName) throws IOException {
+	protected Ref findBranch(Repository repository, String branchName)
+			throws IOException {
 		return repository.getRef(R_HEADS + branchName);
 	}
 
-	protected RevCommit findCommit(Repository repo, ObjectId head) throws MissingObjectException,
-	IncorrectObjectTypeException, IOException {
+	protected RevCommit findCommit(Repository repo, ObjectId head)
+			throws MissingObjectException, IncorrectObjectTypeException,
+			IOException {
 		RevWalk revWalk = new RevWalk(repo);
 		RevCommit result = revWalk.parseCommit(head);
 		revWalk.release();
 		return result;
 	}
 
-	protected RevCommit addFileAndCommit(String fileName, String commitMessage) throws Exception, UnsupportedEncodingException {
-		IFile file = project.createFile(fileName, "Hello, world".getBytes("UTF-8"));
-		return testRepository
-				.addAndCommit(project.project, new File(file.getLocationURI()), commitMessage);
+	protected RevCommit addFileAndCommit(String fileName, String commitMessage)
+			throws Exception, UnsupportedEncodingException {
+		IFile file = project.createFile(fileName,
+				"Hello, world".getBytes("UTF-8"));
+		return testRepository.addAndCommit(project.project,
+				new File(file.getLocationURI()), commitMessage);
 	}
 }

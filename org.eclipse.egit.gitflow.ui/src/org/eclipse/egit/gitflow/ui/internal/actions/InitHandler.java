@@ -18,19 +18,28 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.op.InitOperation;
+import org.eclipse.egit.gitflow.ui.internal.UIText;
+
 import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * git flow feature init
+ */
 public class InitHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
+		PlatformObject firstElement = (PlatformObject) selection
+				.getFirstElement();
+		final Repository repository = (Repository) firstElement
+				.getAdapter(Repository.class);
 
-		Job job = new Job("Initializing...") {
+		Job job = new Job(UIText.InitHandler_initializing) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {

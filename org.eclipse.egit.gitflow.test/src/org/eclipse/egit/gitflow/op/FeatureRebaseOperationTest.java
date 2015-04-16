@@ -8,7 +8,6 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-
 import static org.junit.Assert.*;
 
 import org.eclipse.egit.gitflow.GitFlowRepository;
@@ -21,7 +20,8 @@ public class FeatureRebaseOperationTest extends AbstractFeatureOperationTest {
 	@Test
 	public void testFeatureRebase() throws Exception {
 
-		RevCommit initialCommit = testRepository.createInitialCommit("testFeatureRebase\n\nfirst commit\n");
+		RevCommit initialCommit = testRepository
+				.createInitialCommit("testFeatureRebase\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -32,17 +32,20 @@ public class FeatureRebaseOperationTest extends AbstractFeatureOperationTest {
 		addFileAndCommit("theFile.txt", branchCommitMessage);
 
 		testRepository.checkoutBranch(gfRepo.getDevelop());
-		RevCommit developCommit = addFileAndCommit("theOtherFile.txt", "adding second file on develop branch");
+		RevCommit developCommit = addFileAndCommit("theOtherFile.txt",
+				"adding second file on develop branch");
 
 		new FeatureCheckoutOperation(gfRepo, MY_FEATURE).execute(null);
 		assertEquals(initialCommit, gfRepo.findHead().getParent(0));
-		FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(gfRepo);
+		FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(
+				gfRepo);
 		featureRebaseOperation.execute(null);
 
 		RebaseResult res = featureRebaseOperation.getOperationResult();
 		assertEquals(RebaseResult.Status.OK, res.getStatus());
 
 		assertEquals(branchCommitMessage, gfRepo.findHead().getShortMessage());
-		assertEquals(developCommit, findCommit(repository, repository.resolve("HEAD^")));
+		assertEquals(developCommit,
+				findCommit(repository, repository.resolve("HEAD^")));
 	}
 }

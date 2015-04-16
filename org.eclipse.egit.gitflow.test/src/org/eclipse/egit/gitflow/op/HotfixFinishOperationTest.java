@@ -25,7 +25,8 @@ import org.junit.Test;
 public class HotfixFinishOperationTest extends AbstractGitFlowOperationTest {
 	@Test
 	public void testHotfixFinish() throws Exception {
-		testRepository.createInitialCommit("testHotfixFinish\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testHotfixFinish\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -33,12 +34,12 @@ public class HotfixFinishOperationTest extends AbstractGitFlowOperationTest {
 
 		new HotfixStartOperation(gfRepo, MY_HOTFIX).execute(null);
 
-		RevCommit branchCommit = testRepository.createInitialCommit("testHotfixFinish\n\nbranch commit\n");
+		RevCommit branchCommit = testRepository
+				.createInitialCommit("testHotfixFinish\n\nbranch commit\n");
 
 		new HotfixFinishOperation(gfRepo).execute(null);
 
 		assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());
-
 
 		String branchName = gfRepo.getHotfixBranchName(MY_HOTFIX);
 
@@ -58,36 +59,39 @@ public class HotfixFinishOperationTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testMergeToDevelopFail() throws Exception {
-		testRepository.createInitialCommit("testMergeToDevelopFail\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testMergeToDevelopFail\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		// setup something we can modify later
-		File file = testRepository.createFile(project.getProject(), "folder1/file1.txt");
+		File file = testRepository.createFile(project.getProject(),
+				"folder1/file1.txt");
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
 
-		testRepository.appendContentAndCommit(project.getProject(), file, "Hello Release",
-				"Release Commit");
+		testRepository.appendContentAndCommit(project.getProject(), file,
+				"Hello Release", "Release Commit");
 
 		new ReleaseFinishOperation(gfRepo).execute(null);
 
 		new HotfixStartOperation(gfRepo, MY_HOTFIX).execute(null);
 		// modify on first branch
-		RevCommit hotfixCommit = testRepository.appendContentAndCommit(project.getProject(), file, "Hello Hotfix",
-				"Hotfix Commit");
+		RevCommit hotfixCommit = testRepository.appendContentAndCommit(
+				project.getProject(), file, "Hello Hotfix", "Hotfix Commit");
 		new BranchOperation(repository, gfRepo.getDevelop()).execute(null);
 		assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());
 
 		// modify on second branch
-		RevCommit developCommit = testRepository.appendContentAndCommit(project.getProject(), file, "Hello Develop",
-				"Develop Commit");
+		RevCommit developCommit = testRepository.appendContentAndCommit(
+				project.getProject(), file, "Hello Develop", "Develop Commit");
 
 		String branchName = gfRepo.getHotfixBranchName(MY_HOTFIX);
 		new BranchOperation(repository, branchName).execute(null);
-		HotfixFinishOperation hotfixFinishOperation = new HotfixFinishOperation(gfRepo);
+		HotfixFinishOperation hotfixFinishOperation = new HotfixFinishOperation(
+				gfRepo);
 		hotfixFinishOperation.execute(null);
 
 		// tag not created?
@@ -99,7 +103,8 @@ public class HotfixFinishOperationTest extends AbstractGitFlowOperationTest {
 		// not merged on develop => conflict
 		RevCommit developHead = gfRepo.findHead(DEVELOP);
 		assertEquals(developCommit, developHead);
-		assertEquals(MergeResult.MergeStatus.CONFLICTING, hotfixFinishOperation.getOperationResult().getMergeStatus());
+		assertEquals(MergeResult.MergeStatus.CONFLICTING, hotfixFinishOperation
+				.getOperationResult().getMergeStatus());
 
 		// merged on master
 		RevCommit masterHead = gfRepo.findHead(MY_MASTER);

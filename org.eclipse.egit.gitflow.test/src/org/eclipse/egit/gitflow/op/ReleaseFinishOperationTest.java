@@ -32,26 +32,28 @@ import org.junit.Test;
 public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 	@Test
 	public void testReleaseFinish() throws Exception {
-		testRepository.createInitialCommit("testReleaseFinish\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testReleaseFinish\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
-		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX, MY_VERSION_TAG)
-		.execute(null);
+		new InitOperation(repository, DEVELOP, MASTER, FEATURE_PREFIX,
+				RELEASE_PREFIX, HOTFIX_PREFIX, MY_VERSION_TAG).execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new ReleaseStartOperation(gfRepo, MY_RELEASE).execute(null);
 
-		RevCommit branchCommit = testRepository.createInitialCommit("testReleaseFinish\n\nbranch commit\n");
+		RevCommit branchCommit = testRepository
+				.createInitialCommit("testReleaseFinish\n\nbranch commit\n");
 
 		new ReleaseFinishOperation(gfRepo).execute(null);
 
 		assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());
 
-
 		String branchName = gfRepo.getReleaseBranchName(MY_RELEASE);
 
 		// tag created?
-		assertEquals(branchCommit, gfRepo.findCommitForTag(MY_VERSION_TAG + MY_RELEASE));
+		assertEquals(branchCommit,
+				gfRepo.findCommitForTag(MY_VERSION_TAG + MY_RELEASE));
 
 		// branch removed?
 		assertEquals(findBranch(repository, branchName), null);
@@ -66,7 +68,8 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 	@Test(expected = WrongGitFlowStateException.class)
 	public void testReleaseFinishFail() throws Exception {
-		testRepository.createInitialCommit("testReleaseFinishFail\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testReleaseFinishFail\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -81,8 +84,10 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testReleaseTagWithWrongReferenceExists() throws Exception {
-		testRepository.createInitialCommit("testReleaseTagExists\n\nfirst commit\n");
-		testRepository.createInitialCommit("testReleaseTagExists\n\nsecond commit\n");
+		testRepository
+				.createInitialCommit("testReleaseTagExists\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testReleaseTagExists\n\nsecond commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -92,7 +97,8 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 		RevCommit next = getPreviousCommit(repository, 1);
 
-		ReleaseFinishOperation releaseFinishOperation = new ReleaseFinishOperation(gfRepo);
+		ReleaseFinishOperation releaseFinishOperation = new ReleaseFinishOperation(
+				gfRepo);
 		releaseFinishOperation.createTag(null, next, MY_RELEASE, "irrelevant");
 
 		try {
@@ -105,7 +111,8 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testReleaseTagWithCorrectReferenceExists() throws Exception {
-		testRepository.createInitialCommit("testReleaseTagExists\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testReleaseTagExists\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -115,12 +122,14 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 		RevCommit next = getPreviousCommit(repository, 0);
 
-		ReleaseFinishOperation releaseFinishOperation = new ReleaseFinishOperation(gfRepo);
+		ReleaseFinishOperation releaseFinishOperation = new ReleaseFinishOperation(
+				gfRepo);
 		releaseFinishOperation.createTag(null, next, MY_RELEASE, "irrelevant");
 		releaseFinishOperation.execute(null);
 	}
 
-	private RevCommit getPreviousCommit(Repository repository, int count) throws GitAPIException, NoHeadException {
+	private RevCommit getPreviousCommit(Repository repository, int count)
+			throws GitAPIException, NoHeadException {
 		Iterable<RevCommit> logs = Git.wrap(repository).log().call();
 		Iterator<RevCommit> i = logs.iterator();
 		for (int j = 0; j < count; j++) {

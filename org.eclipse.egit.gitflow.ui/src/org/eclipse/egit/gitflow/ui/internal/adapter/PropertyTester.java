@@ -10,17 +10,27 @@ import static org.eclipse.egit.gitflow.ui.Activator.error;
 
 import org.eclipse.jgit.lib.Repository;
 
+/**
+ * Testing Git Flow states.
+ */
 public class PropertyTester extends org.eclipse.core.expressions.PropertyTester {
-	private static final String IS_MASTER = "isMaster";
-	private static final String IS_DEVELOP = "isDevelop";
-	private static final String IS_HOTFIX = "isHotfix";
-	private static final String IS_RELEASE = "isRelease";
-	private static final String IS_INITIALIZED = "isInitialized";
-	private static final String IS_FEATURE = "isFeature";
+	private static final String IS_MASTER = "isMaster"; //$NON-NLS-1$
 
-	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+	private static final String IS_DEVELOP = "isDevelop"; //$NON-NLS-1$
+
+	private static final String IS_HOTFIX = "isHotfix"; //$NON-NLS-1$
+
+	private static final String IS_RELEASE = "isRelease"; //$NON-NLS-1$
+
+	private static final String IS_INITIALIZED = "isInitialized"; //$NON-NLS-1$
+
+	private static final String IS_FEATURE = "isFeature"; //$NON-NLS-1$
+
+	public boolean test(Object receiver, String property, Object[] args,
+			Object expectedValue) {
 		PlatformObject firstElement = (PlatformObject) receiver;
-		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		Repository repository = (Repository) firstElement
+				.getAdapter(Repository.class);
 		GitFlowRepository gitFlowRepository = new GitFlowRepository(repository);
 		try {
 			if (IS_INITIALIZED.equals(property)) {

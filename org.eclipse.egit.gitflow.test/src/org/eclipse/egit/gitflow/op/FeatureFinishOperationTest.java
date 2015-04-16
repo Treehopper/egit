@@ -21,7 +21,8 @@ import org.junit.Test;
 public class FeatureFinishOperationTest extends AbstractFeatureOperationTest {
 	@Test
 	public void testFeatureFinish() throws Exception {
-		testRepository.createInitialCommit("testFeatureFinish\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testFeatureFinish\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -35,7 +36,8 @@ public class FeatureFinishOperationTest extends AbstractFeatureOperationTest {
 
 		String branchName = gfRepo.getFeatureBranchName(MY_FEATURE);
 
-		RevCommit branchCommit = testRepository.createInitialCommit("testFeatureFinish\n\nbranch commit\n");
+		RevCommit branchCommit = testRepository
+				.createInitialCommit("testFeatureFinish\n\nbranch commit\n");
 
 		assertEquals(findBranch(repository, branchName), null);
 
@@ -45,7 +47,8 @@ public class FeatureFinishOperationTest extends AbstractFeatureOperationTest {
 
 	@Test(expected = WrongGitFlowStateException.class)
 	public void testFeatureFinishFail() throws Exception {
-		testRepository.createInitialCommit("testFeatureFinishFail\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testFeatureFinishFail\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);

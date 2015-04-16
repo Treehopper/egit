@@ -8,6 +8,7 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
-abstract public class AbstractFeatureOperationTest extends AbstractGitFlowOperationTest {
+abstract public class AbstractFeatureOperationTest extends
+		AbstractGitFlowOperationTest {
 	// TODO: remove this if it's not necessary
 }

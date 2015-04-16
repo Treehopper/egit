@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureRebaseOperation;
+import org.eclipse.egit.gitflow.ui.internal.UIText;
+
 import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.api.RebaseResult;
@@ -28,31 +31,43 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.UIJob;
 
+/**
+ * git flow feature rebase
+ */
 public class FeatureRebaseHandler extends AbstractHandler {
-	private static final String INTERACTIVE_REBASE_VIEW_ID = "org.eclipse.egit.ui.InteractiveRebaseView";
+	private static final String INTERACTIVE_REBASE_VIEW_ID = "org.eclipse.egit.ui.InteractiveRebaseView"; //$NON-NLS-1$
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		final Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
+		PlatformObject firstElement = (PlatformObject) selection
+				.getFirstElement();
+		final Repository repository = (Repository) firstElement
+				.getAdapter(Repository.class);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		Job job = new UIJob(HandlerUtil.getActiveShell(event).getDisplay(), "Rebasing feature...") {
+		Job job = new UIJob(HandlerUtil.getActiveShell(event).getDisplay(),
+				UIText.FeatureRebaseHandler_rebasingFeature) {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
-					FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(gfRepo);
+					FeatureRebaseOperation featureRebaseOperation = new FeatureRebaseOperation(
+							gfRepo);
 					featureRebaseOperation.execute(monitor);
-					RebaseResult.Status status = featureRebaseOperation.getOperationResult().getStatus();
+					RebaseResult.Status status = featureRebaseOperation
+							.getOperationResult().getStatus();
 					if (RebaseResult.Status.FAILED.equals(status)) {
-						return error("Rebase failed.");
+						return error(UIText.FeatureRebaseHandler_rebaseFailed);
 					}
 					if (RebaseResult.Status.CONFLICTS.equals(status)) {
 						MessageDialog
-						.openInformation(getDisplay().getActiveShell(), "Conflicts",
-								"There are conflicts that need to be resolve manually. Add your changes and continue rebase when you are finished.");
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.showView(INTERACTIVE_REBASE_VIEW_ID);
+								.openInformation(
+										getDisplay().getActiveShell(),
+										UIText.FeatureRebaseHandler_conflicts,
+										UIText.FeatureRebaseHandler_resolveConflictsManually);
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getActivePage()
+								.showView(INTERACTIVE_REBASE_VIEW_ID);
 						return Status.OK_STATUS;
 					}
 				} catch (CoreException e) {

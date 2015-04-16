@@ -14,22 +14,34 @@ import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.api.CheckoutResult;
 
+/**
+ * git flow feature checkout
+ */
 @SuppressWarnings("restriction")
 public final class FeatureCheckoutOperation extends AbstractFeatureOperation {
 	private CheckoutResult result;
 
-	public FeatureCheckoutOperation(GitFlowRepository repository, String featureName) {
+	/**
+	 * @param repository
+	 * @param featureName
+	 */
+	public FeatureCheckoutOperation(GitFlowRepository repository,
+			String featureName) {
 		super(repository, featureName);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String branchName = repository.getFeatureBranchName(featureName);
 
-		BranchOperation branchOperation = new BranchOperation(repository.getRepository(), branchName);
+		BranchOperation branchOperation = new BranchOperation(
+				repository.getRepository(), branchName);
 		branchOperation.execute(null);
 		result = branchOperation.getResult();
 	}
 
+	/**
+	 * @return result set after operation was executed
+	 */
 	public CheckoutResult getResult() {
 		return result;
 	}

@@ -12,9 +12,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.gitflow.BranchNameValidator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
+/**
+ * Validate feature branch name.
+ */
 public class FeatureNameValidator extends NameValidator {
 	private final GitFlowRepository repository;
 
+	/**
+	 * @param gfRepo
+	 */
 	public FeatureNameValidator(GitFlowRepository gfRepo) {
 		this.repository = gfRepo;
 	}

@@ -15,12 +15,31 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 
+/**
+ * git flow feature finish
+ */
 public final class FeatureFinishOperation extends AbstractFeatureOperation {
-	public FeatureFinishOperation(GitFlowRepository repository, String featureName) {
+	/**
+	 * Finish given feautre.
+	 *
+	 * @param repository
+	 * @param featureName
+	 */
+	public FeatureFinishOperation(GitFlowRepository repository,
+			String featureName) {
 		super(repository, featureName);
 	}
 
-	public FeatureFinishOperation(GitFlowRepository repository) throws CoreException, WrongGitFlowStateException, IOException {
+	/**
+	 * Finish current feature.
+	 *
+	 * @param repository
+	 * @throws CoreException
+	 * @throws WrongGitFlowStateException
+	 * @throws IOException
+	 */
+	public FeatureFinishOperation(GitFlowRepository repository)
+			throws CoreException, WrongGitFlowStateException, IOException {
 		this(repository, getFeatureName(repository));
 	}
 

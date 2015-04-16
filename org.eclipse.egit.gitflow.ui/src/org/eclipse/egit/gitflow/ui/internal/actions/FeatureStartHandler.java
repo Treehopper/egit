@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureStartOperation;
+
 import static org.eclipse.egit.gitflow.ui.Activator.error;
+
+import org.eclipse.egit.gitflow.ui.internal.UIText;
 import org.eclipse.egit.gitflow.ui.internal.validation.FeatureNameValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,16 +30,26 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * git flow feature start $NAME
+ */
 public class FeatureStartHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection.getFirstElement();
-		Repository repository = (Repository) firstElement.getAdapter(Repository.class);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
+		PlatformObject firstElement = (PlatformObject) selection
+				.getFirstElement();
+		Repository repository = (Repository) firstElement
+				.getAdapter(Repository.class);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		InputDialog inputDialog = new InputDialog(HandlerUtil.getActiveShell(event), "Provide feature name",
-				"Please provide a name for the new feature.", "", new FeatureNameValidator(gfRepo));
+		InputDialog inputDialog = new InputDialog(
+				HandlerUtil.getActiveShell(event),
+				UIText.FeatureStartHandler_provideFeatureName,
+				UIText.FeatureStartHandler_pleaseProvideANameForTheNewFeature,
+				"", //$NON-NLS-1$
+				new FeatureNameValidator(gfRepo));
 
 		if (inputDialog.open() != Window.OK) {
 			return null;
@@ -44,11 +57,12 @@ public class FeatureStartHandler extends AbstractHandler {
 
 		final String featureName = inputDialog.getValue();
 
-		Job job = new Job("Starting new Feature...") {
+		Job job = new Job(UIText.FeatureStartHandler_startingNewFeature) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new FeatureStartOperation(gfRepo, featureName).execute(monitor);
+					new FeatureStartOperation(gfRepo, featureName)
+							.execute(monitor);
 				} catch (CoreException e) {
 					return error(e.getMessage(), e);
 				}

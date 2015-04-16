@@ -18,11 +18,13 @@ import org.eclipse.egit.gitflow.op.InitOperation;
 import org.eclipse.egit.gitflow.op.ReleaseStartOperation;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
+
 public class BranchNameValidatorTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testFeatureExists() throws Exception {
-		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -34,7 +36,8 @@ public class BranchNameValidatorTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testReleaseExists() throws Exception {
-		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);
@@ -46,7 +49,8 @@ public class BranchNameValidatorTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testBranchNotExists() throws Exception {
-		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		new InitOperation(repository).execute(null);

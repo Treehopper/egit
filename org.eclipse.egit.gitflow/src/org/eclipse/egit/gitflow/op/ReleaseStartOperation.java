@@ -9,6 +9,7 @@
 package org.eclipse.egit.gitflow.op;
 
 import java.io.IOException;
+
 import static java.lang.String.format;
 
 import org.eclipse.core.runtime.CoreException;
@@ -18,20 +19,39 @@ import static org.eclipse.egit.gitflow.Activator.error;
 import static org.eclipse.jgit.lib.Constants.*;
 
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.egit.gitflow.internal.CoreText;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+/**
+ * git flow release start
+ */
 public final class ReleaseStartOperation extends AbstractReleaseOperation {
 	private String startCommitSha1;
 
-	public ReleaseStartOperation(GitFlowRepository repository, String startCommitSha1, String releaseName) {
+	/**
+	 * start release from given commit
+	 *
+	 * @param repository
+	 * @param startCommitSha1
+	 * @param releaseName
+	 */
+	public ReleaseStartOperation(GitFlowRepository repository,
+			String startCommitSha1, String releaseName) {
 		super(repository, releaseName);
 		this.startCommitSha1 = startCommitSha1;
 	}
 
-	public ReleaseStartOperation(GitFlowRepository repository, String releaseName) {
+	/**
+	 * start release from HEAD
+	 *
+	 * @param repository
+	 * @param releaseName
+	 */
+	public ReleaseStartOperation(GitFlowRepository repository,
+			String releaseName) {
 		super(repository, releaseName);
 		this.startCommitSha1 = repository.findHead().getName();
 	}
@@ -42,10 +62,15 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 
 		try {
 			if (releaseExists(versionName)) {
-				throw new CoreException(error(format("The release name '%s' already exists.", versionName)));
+				throw new CoreException(
+						error(format(
+								CoreText.ReleaseStartOperation_releaseNameAlreadyExists,
+								versionName)));
 			}
 			if (!repository.isDevelop()) {
-				throw new CoreException(error("Not on " + repository.getDevelop()));
+				throw new CoreException(
+						error(CoreText.ReleaseStartOperation_notOn
+								+ repository.getDevelop()));
 			}
 		} catch (IOException e) {
 			throw new CoreException(error(e.getMessage(), e));
@@ -55,8 +80,18 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 		start(monitor, branchName, commit);
 	}
 
-	public boolean releaseExists(String versionName) throws RevisionSyntaxException, AmbiguousObjectException,
-	IncorrectObjectTypeException, IOException {
-		return null != repository.getRepository().resolve(R_TAGS + repository.getVersionTagPrefix() + versionName);
+	/**
+	 * @param versionName
+	 * @return whether or not the given versionName exists
+	 * @throws RevisionSyntaxException
+	 * @throws AmbiguousObjectException
+	 * @throws IncorrectObjectTypeException
+	 * @throws IOException
+	 */
+	public boolean releaseExists(String versionName)
+			throws RevisionSyntaxException, AmbiguousObjectException,
+			IncorrectObjectTypeException, IOException {
+		return null != repository.getRepository().resolve(
+				R_TAGS + repository.getVersionTagPrefix() + versionName);
 	}
 }

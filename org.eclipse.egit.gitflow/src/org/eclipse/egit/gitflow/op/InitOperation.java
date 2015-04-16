@@ -15,28 +15,47 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.BranchOperation;
 import org.eclipse.egit.core.op.CommitOperation;
 import org.eclipse.egit.core.op.CreateLocalBranchOperation;
-import static org.eclipse.egit.gitflow.Activator.error;
 
+import static org.eclipse.egit.gitflow.Activator.error;
 import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
 
 import org.eclipse.egit.gitflow.GitFlowRepository;
+import org.eclipse.egit.gitflow.internal.CoreText;
 
 import static org.eclipse.egit.gitflow.GitFlowRepository.*;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 
+/**
+ * git flow init
+ */
 @SuppressWarnings("restriction")
 public final class InitOperation extends GitFlowOperation {
 	private String develop;
+
 	private String master;
+
 	private String feature;
+
 	private String release;
+
 	private String hotfix;
+
 	private String versionTag;
 
-	public InitOperation(Repository jGitRepository, String develop, String master, String feature, String release,
-			String hotfix, String versionTag) {
+	/**
+	 * @param jGitRepository
+	 * @param develop
+	 * @param master
+	 * @param feature
+	 * @param release
+	 * @param hotfix
+	 * @param versionTag
+	 */
+	public InitOperation(Repository jGitRepository, String develop,
+			String master, String feature, String release, String hotfix,
+			String versionTag) {
 		super(new GitFlowRepository(jGitRepository));
 		this.develop = develop;
 		this.master = master;
@@ -46,13 +65,28 @@ public final class InitOperation extends GitFlowOperation {
 		this.versionTag = versionTag;
 	}
 
+	/**
+	 * use default prefixes and names
+	 * 
+	 * @param repository
+	 */
 	public InitOperation(Repository repository) {
-		this(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX, HOTFIX_PREFIX);
+		this(repository, DEVELOP, MASTER, FEATURE_PREFIX, RELEASE_PREFIX,
+				HOTFIX_PREFIX);
 	}
 
-	public InitOperation(Repository repository, String develop, String master, String featurePrefix,
-			String releasePrefix, String hotfixPrefix) {
-		this(repository, develop, master, featurePrefix, releasePrefix, hotfixPrefix, VERSION_TAG);
+	/**
+	 * @param repository
+	 * @param develop
+	 * @param master
+	 * @param featurePrefix
+	 * @param releasePrefix
+	 * @param hotfixPrefix
+	 */
+	public InitOperation(Repository repository, String develop, String master,
+			String featurePrefix, String releasePrefix, String hotfixPrefix) {
+		this(repository, develop, master, featurePrefix, releasePrefix,
+				hotfixPrefix, VERSION_TAG);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
@@ -65,15 +99,18 @@ public final class InitOperation extends GitFlowOperation {
 		}
 
 		if (!repository.hasBranches()) {
-			new CommitOperation(repository.getRepository(), repository.getUser(), repository.getUser(),
-					"Git Flow inital commit").execute(monitor);
+			new CommitOperation(repository.getRepository(),
+					repository.getUser(), repository.getUser(),
+					CoreText.InitOperation_initialCommit).execute(monitor);
 		}
 
 		try {
 			if (!repository.hasBranch(develop)) {
-				CreateLocalBranchOperation branchFromHead = createBranchFromHead(develop, repository.findHead());
+				CreateLocalBranchOperation branchFromHead = createBranchFromHead(
+						develop, repository.findHead());
 				branchFromHead.execute(monitor);
-				BranchOperation checkoutOperation = new BranchOperation(repository.getRepository(), develop);
+				BranchOperation checkoutOperation = new BranchOperation(
+						repository.getRepository(), develop);
 				checkoutOperation.execute(monitor);
 			}
 		} catch (GitAPIException e) {
@@ -81,7 +118,8 @@ public final class InitOperation extends GitFlowOperation {
 		}
 	}
 
-	private void setPrefixes(String feature, String release, String hotfix, String versionTag) {
+	private void setPrefixes(String feature, String release, String hotfix,
+			String versionTag) {
 		repository.setPrefix(FEATURE_KEY, feature);
 		repository.setPrefix(RELEASE_KEY, release);
 		repository.setPrefix(HOTFIX_KEY, hotfix);

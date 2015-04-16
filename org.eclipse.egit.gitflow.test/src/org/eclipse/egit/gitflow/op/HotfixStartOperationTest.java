@@ -25,8 +25,8 @@ public class HotfixStartOperationTest extends AbstractFeatureOperationTest {
 
 		new HotfixStartOperation(gfRepo, MY_HOTFIX).execute(null);
 
-		assertEquals(gfRepo.getFullHotfixBranchName(MY_HOTFIX), repository
-				.getFullBranch());
+		assertEquals(gfRepo.getFullHotfixBranchName(MY_HOTFIX),
+				repository.getFullBranch());
 
 	}
 }

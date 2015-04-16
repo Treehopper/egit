@@ -25,22 +25,28 @@ public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase 
 	@Test
 	public void testFeaturePublish() throws Exception {
 		new InitOperation(repository2.getRepository()).execute(null);
-		GitFlowRepository gfRepo2 = new GitFlowRepository(repository2.getRepository());
+		GitFlowRepository gfRepo2 = new GitFlowRepository(
+				repository2.getRepository());
 
 		new FeatureStartOperation(gfRepo2, MY_FEATURE).execute(null);
-		RevCommit branchCommit = repository2.createInitialCommit("testFeaturePublish");
-		FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(gfRepo2, 0);
+		RevCommit branchCommit = repository2
+				.createInitialCommit("testFeaturePublish");
+		FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(
+				gfRepo2, 0);
 		featurePublishOperation.execute(null);
-		PushOperationResult result = featurePublishOperation.getOperationResult();
+		PushOperationResult result = featurePublishOperation
+				.getOperationResult();
 
 		assertTrue(result.isSuccessfulConnection(repository1.getUri()));
 		PushResult pushResult = result.getPushResult(repository1.getUri());
-		assertEquals(RefUpdate.Result.NEW, pushResult.getTrackingRefUpdates().iterator().next().getResult());
+		assertEquals(RefUpdate.Result.NEW, pushResult.getTrackingRefUpdates()
+				.iterator().next().getResult());
 
 		assertCommitArrivedAtRemote(branchCommit, repository1.getRepository());
 
 		// config updated?
 		assertEquals(DEFAULT_REMOTE_NAME, getRemote(gfRepo2, MY_FEATURE));
-		assertEquals(R_HEADS + gfRepo2.getFeatureBranchName(MY_FEATURE), getMerge(gfRepo2, MY_FEATURE));
+		assertEquals(R_HEADS + gfRepo2.getFeatureBranchName(MY_FEATURE),
+				getMerge(gfRepo2, MY_FEATURE));
 	}
 }

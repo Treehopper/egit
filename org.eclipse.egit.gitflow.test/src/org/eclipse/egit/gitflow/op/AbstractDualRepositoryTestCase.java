@@ -41,9 +41,11 @@ import org.junit.Before;
 @SuppressWarnings("restriction")
 public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 	protected static final String MY_FEATURE = "myFeature";
+
 	protected static final String MY_MASTER = "master";
 
 	private File workdir;
+
 	private File workdir2;
 
 	String projectName = "FeaturePublishTest";
@@ -61,7 +63,8 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		new InitOperation(repository).execute(null);
 
 		// now we create a project in repo1
-		IProject project = testUtils.createProjectInLocalFileSystem(workdir, projectName);
+		IProject project = testUtils.createProjectInLocalFileSystem(workdir,
+				projectName);
 		testUtils.addFileToProject(project, "folder1/file1.txt", "Hello world");
 
 		repository1.connect(project);
@@ -73,8 +76,8 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 
 		// let's clone repository1 to repository2
 		URIish uri = repository1.getUri();
-		CloneOperation clop = new CloneOperation(uri, true, null, workdir2, R_HEADS + MY_MASTER,
-				DEFAULT_REMOTE_NAME, 0);
+		CloneOperation clop = new CloneOperation(uri, true, null, workdir2,
+				R_HEADS + MY_MASTER, DEFAULT_REMOTE_NAME, 0);
 		clop.run(null);
 
 		Repository repo2 = Activator.getDefault().getRepositoryCache()
@@ -83,9 +86,11 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 		new InitOperation(repository).execute(null);
 	}
 
-	protected void assertCommitArrivedAtRemote(RevCommit branchCommit, Repository remote) throws CoreException {
+	protected void assertCommitArrivedAtRemote(RevCommit branchCommit,
+			Repository remote) throws CoreException {
 		GitFlowRepository gfRepo = new GitFlowRepository(remote);
-		BranchOperation checkoutOperation = new BranchOperation(remote, gfRepo.getFullFeatureBranchName(MY_FEATURE));
+		BranchOperation checkoutOperation = new BranchOperation(remote,
+				gfRepo.getFullFeatureBranchName(MY_FEATURE));
 		checkoutOperation.execute(null);
 		RevCommit developHead = findHead(remote);
 		assertEquals(branchCommit, developHead);
@@ -113,12 +118,14 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 	protected String getRemote(GitFlowRepository gfRepo, String featureName) {
 		Repository repository = gfRepo.getRepository();
 		StoredConfig config = repository.getConfig();
-		return config.getString(BRANCH_SECTION, gfRepo.getFeatureBranchName(featureName), REMOTE_KEY);
+		return config.getString(BRANCH_SECTION,
+				gfRepo.getFeatureBranchName(featureName), REMOTE_KEY);
 	}
 
 	protected String getMerge(GitFlowRepository gfRepo, String featureName) {
 		Repository repository = gfRepo.getRepository();
 		StoredConfig config = repository.getConfig();
-		return config.getString(BRANCH_SECTION, gfRepo.getFeatureBranchName(featureName), MERGE_KEY);
+		return config.getString(BRANCH_SECTION,
+				gfRepo.getFeatureBranchName(featureName), MERGE_KEY);
 	}
 }

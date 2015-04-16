@@ -12,9 +12,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.gitflow.BranchNameValidator;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
+/**
+ * Validate name of hotfix branch.
+ *
+ */
 public class HotfixNameValidator extends NameValidator {
 	private final GitFlowRepository repository;
 
+	/**
+	 * @param gfRepo
+	 */
 	public HotfixNameValidator(GitFlowRepository gfRepo) {
 		this.repository = gfRepo;
 	}

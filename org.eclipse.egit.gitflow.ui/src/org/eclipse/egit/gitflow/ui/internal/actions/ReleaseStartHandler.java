@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.ReleaseStartOperation;
+
 import static org.eclipse.egit.gitflow.ui.Activator.error;
+
+import org.eclipse.egit.gitflow.ui.internal.UIText;
 import org.eclipse.egit.gitflow.ui.internal.validation.ReleaseNameValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -31,6 +34,9 @@ import org.eclipse.team.ui.history.IHistoryView;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+/**
+ * git flow release start
+ */
 public class ReleaseStartHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -41,8 +47,11 @@ public class ReleaseStartHandler extends AbstractHandler {
 		final String startCommitSha1 = getStartCommit(event);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
-		InputDialog inputDialog = new InputDialog(HandlerUtil.getActiveShell(event), "Provide release name",
-				"Please provide a name for the new release.", "", new ReleaseNameValidator(gfRepo));
+		InputDialog inputDialog = new InputDialog(
+				HandlerUtil.getActiveShell(event),
+				UIText.ReleaseStartHandler_provideReleaseName,
+				UIText.ReleaseStartHandler_provideANameForTheNewRelease, "", //$NON-NLS-1$
+				new ReleaseNameValidator(gfRepo));
 
 		if (inputDialog.open() != Window.OK) {
 			return null;
@@ -50,11 +59,12 @@ public class ReleaseStartHandler extends AbstractHandler {
 
 		final String releaseName = inputDialog.getValue();
 
-		Job job = new Job("Starting new Release...") {
+		Job job = new Job(UIText.ReleaseStartHandler_startingNewRelease) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					new ReleaseStartOperation(gfRepo, startCommitSha1, releaseName).execute(monitor);
+					new ReleaseStartOperation(gfRepo, startCommitSha1,
+							releaseName).execute(monitor);
 				} catch (CoreException e) {
 					return error(e.getMessage(), e);
 				}
@@ -67,23 +77,29 @@ public class ReleaseStartHandler extends AbstractHandler {
 		return null;
 	}
 
-	private String getStartCommit(ExecutionEvent event) throws ExecutionException {
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
+	private String getStartCommit(ExecutionEvent event)
+			throws ExecutionException {
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
 		if (selection.getFirstElement() instanceof PlotCommit) {
 			RevCommit plotCommit = (RevCommit) selection.getFirstElement();
 			return plotCommit.getName();
 		} else {
-			return new GitFlowRepository(getRepository(event)).findHead().getName();
+			return new GitFlowRepository(getRepository(event)).findHead()
+					.getName();
 		}
 	}
 
-	private Repository getRepository(ExecutionEvent event) throws ExecutionException {
+	private Repository getRepository(ExecutionEvent event)
+			throws ExecutionException {
 		PlatformObject firstElement;
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
 		if (selection.getFirstElement() instanceof PlotCommit) {
 			IWorkbenchPart ap = HandlerUtil.getActivePartChecked(event);
 			if (ap instanceof IHistoryView) {
-				firstElement = (PlatformObject) ((IHistoryView) ap).getHistoryPage().getInput();
+				firstElement = (PlatformObject) ((IHistoryView) ap)
+						.getHistoryPage().getInput();
 			} else {
 				// This is unexpected
 				return null;

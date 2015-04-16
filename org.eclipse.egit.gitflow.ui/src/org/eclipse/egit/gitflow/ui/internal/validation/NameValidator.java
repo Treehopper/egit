@@ -10,17 +10,23 @@ package org.eclipse.egit.gitflow.ui.internal.validation;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.egit.gitflow.BranchNameValidator;
+import org.eclipse.egit.gitflow.ui.internal.UIText;
 import org.eclipse.jface.dialogs.IInputValidator;
 
+/**
+ * Validates Git Flow branch names.
+ *
+ */
 abstract public class NameValidator implements IInputValidator {
 	public String isValid(String newText) {
 		try {
 			if (branchExists(newText)) {
-				return String.format("Name '%s' already exists", newText);
+				return String.format(UIText.NameValidator_nameAlreadyExists,
+						newText);
 			}
 			if (!BranchNameValidator.isBranchNameValid(newText)) {
-				return String.format("'%s' is not a valid name. None of the following characters is allowed: '%s'",
-						newText, BranchNameValidator.ILLEGAL_CHARS);
+				return String.format(UIText.NameValidator_invalidName, newText,
+						BranchNameValidator.ILLEGAL_CHARS);
 			}
 		} catch (CoreException e) {
 			return null;
@@ -28,5 +34,11 @@ abstract public class NameValidator implements IInputValidator {
 		return null;
 	}
 
-	abstract protected boolean branchExists(String newText) throws CoreException;
+	/**
+	 * @param newText
+	 * @return Whether or not newText corresponds to an existing branch.
+	 * @throws CoreException
+	 */
+	abstract protected boolean branchExists(String newText)
+			throws CoreException;
 }

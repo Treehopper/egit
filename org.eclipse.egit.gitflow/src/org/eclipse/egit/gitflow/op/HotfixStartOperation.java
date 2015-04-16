@@ -12,7 +12,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 
+/**
+ * git flow hotfix start
+ */
 public final class HotfixStartOperation extends AbstractHotfixOperation {
+	/**
+	 * @param repository
+	 * @param hotfixName
+	 */
 	public HotfixStartOperation(GitFlowRepository repository, String hotfixName) {
 		super(repository, hotfixName);
 	}

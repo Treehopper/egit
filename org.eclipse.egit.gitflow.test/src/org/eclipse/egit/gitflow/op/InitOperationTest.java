@@ -23,14 +23,14 @@ public class InitOperationTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testInit() throws Exception {
-		testRepository.createInitialCommit("testInitOperation\n\nfirst commit\n");
+		testRepository
+				.createInitialCommit("testInitOperation\n\nfirst commit\n");
 
 		Repository repository = testRepository.getRepository();
 		InitOperation initOperation = new InitOperation(repository);
 		initOperation.execute(null);
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
-		assertEquals(gfRepo.getDevelopFull(), repository
-				.getFullBranch());
+		assertEquals(gfRepo.getDevelopFull(), repository.getFullBranch());
 
 		assertEquals(FEATURE_PREFIX, getPrefix(repository, FEATURE_KEY));
 		assertEquals(RELEASE_PREFIX, getPrefix(repository, RELEASE_KEY));

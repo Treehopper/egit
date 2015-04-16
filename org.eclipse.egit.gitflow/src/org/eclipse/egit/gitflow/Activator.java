@@ -13,23 +13,25 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
+/**
+ * The activator class controls the plug-in life cycle
+ */
 public class Activator extends Plugin {
 
 	private static Plugin instance;
 
 	private static BundleContext context;
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.egit.gitflow"; //$NON-NLS-1$
-
 	static BundleContext getContext() {
 		return context;
 	}
 
-
 	/*
 	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
@@ -38,25 +40,52 @@ public class Activator extends Plugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
 	}
 
+	/**
+	 * @param message
+	 * @param throwable
+	 * @return Status constructed from parameters.
+	 */
 	public static IStatus error(String message, Throwable throwable) {
-		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, throwable);
+		return new Status(IStatus.ERROR, getPluginId(), 0, message, throwable);
 	}
 
+	/**
+	 * @param throwable
+	 * @return Status constructed from parameters.
+	 */
 	public static IStatus error(Throwable throwable) {
 		return error(throwable.getMessage(), throwable);
 	}
 
+	/**
+	 * @param message
+	 * @return Status constructed from parameters.
+	 */
 	public static IStatus error(String message) {
-		return new Status(IStatus.ERROR, PLUGIN_ID, message);
+		return new Status(IStatus.ERROR, getPluginId(), message);
 	}
 
+	/**
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
+	 */
 	public static Plugin getDefault() {
 		return instance;
+	}
+
+	/**
+	 * @return the id of the egit ui plugin
+	 */
+	public static String getPluginId() {
+		return getDefault().getBundle().getSymbolicName();
 	}
 }

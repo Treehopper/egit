@@ -18,21 +18,15 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.egit.gitflow.ui"; //$NON-NLS-1$
-
 	// The shared instance
 	private static Activator plugin;
 
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
-
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -41,7 +35,10 @@ public class Activator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -57,11 +54,27 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	/**
+	 * @param message
+	 * @param throwable
+	 * @return Status constructed from parameters.
+	 */
 	public static IStatus error(String message, Throwable throwable) {
-		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, throwable);
+		return new Status(IStatus.ERROR, getPluginId(), 0, message, throwable);
 	}
 
+	/**
+	 * @param message
+	 * @return Status constructed from parameters.
+	 */
 	public static IStatus error(String message) {
-		return new Status(IStatus.ERROR, PLUGIN_ID, message);
+		return new Status(IStatus.ERROR, getPluginId(), message);
+	}
+
+	/**
+	 * @return the id of the egit ui plugin
+	 */
+	public static String getPluginId() {
+		return getDefault().getBundle().getSymbolicName();
 	}
 }

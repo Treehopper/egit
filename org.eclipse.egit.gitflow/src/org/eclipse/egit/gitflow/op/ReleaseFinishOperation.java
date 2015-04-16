@@ -14,13 +14,33 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
+import org.eclipse.egit.gitflow.internal.CoreText;
 
+/**
+ * git flow release finish
+ */
 public final class ReleaseFinishOperation extends AbstractReleaseOperation {
-	public ReleaseFinishOperation(GitFlowRepository repository, String releaseName) {
+	/**
+	 * finish given release
+	 *
+	 * @param repository
+	 * @param releaseName
+	 */
+	public ReleaseFinishOperation(GitFlowRepository repository,
+			String releaseName) {
 		super(repository, releaseName);
 	}
 
-	public ReleaseFinishOperation(GitFlowRepository repository) throws WrongGitFlowStateException, CoreException, IOException {
+	/**
+	 * finish current release
+	 *
+	 * @param repository
+	 * @throws WrongGitFlowStateException
+	 * @throws CoreException
+	 * @throws IOException
+	 */
+	public ReleaseFinishOperation(GitFlowRepository repository)
+			throws WrongGitFlowStateException, CoreException, IOException {
 		this(repository, getReleaseName(repository));
 	}
 
@@ -28,6 +48,7 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 		String releaseBranchName = repository.getReleaseBranchName(versionName);
 		mergeTo(monitor, releaseBranchName, repository.getMaster());
 		finish(monitor, releaseBranchName);
-		safeCreateTag(monitor, repository.getVersionTagPrefix() + versionName, "Release of " + versionName);
+		safeCreateTag(monitor, repository.getVersionTagPrefix() + versionName,
+				CoreText.ReleaseFinishOperation_releaseOf + versionName);
 	}
 }
