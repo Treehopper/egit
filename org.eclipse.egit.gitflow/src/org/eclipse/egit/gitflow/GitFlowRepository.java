@@ -270,21 +270,19 @@ public class GitFlowRepository {
 	 * @return HEAD commit
 	 */
 	public RevCommit findHead() {
-		RevWalk walk = new RevWalk(repository);
-
-		try {
-			ObjectId head = repository.resolve(HEAD);
-			return walk.parseCommit(head);
-		} catch (RevisionSyntaxException e) {
-			throw new RuntimeException(e);
-		} catch (AmbiguousObjectException e) {
-			throw new RuntimeException(e);
-		} catch (IncorrectObjectTypeException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			walk.release();
+		try (RevWalk walk = new RevWalk(repository)) {
+			try {
+				ObjectId head = repository.resolve(HEAD);
+				return walk.parseCommit(head);
+			} catch (RevisionSyntaxException e) {
+				throw new RuntimeException(e);
+			} catch (AmbiguousObjectException e) {
+				throw new RuntimeException(e);
+			} catch (IncorrectObjectTypeException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -293,21 +291,19 @@ public class GitFlowRepository {
 	 * @return HEAD commit on branch branchName
 	 */
 	public RevCommit findHead(String branchName) {
-		RevWalk walk = new RevWalk(repository);
-
-		try {
-			ObjectId head = repository.resolve(R_HEADS + branchName);
-			return walk.parseCommit(head);
-		} catch (RevisionSyntaxException e) {
-			throw new RuntimeException(e);
-		} catch (AmbiguousObjectException e) {
-			throw new RuntimeException(e);
-		} catch (IncorrectObjectTypeException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			walk.release();
+		try (RevWalk walk = new RevWalk(repository)) {
+			try {
+				ObjectId head = repository.resolve(R_HEADS + branchName);
+				return walk.parseCommit(head);
+			} catch (RevisionSyntaxException e) {
+				throw new RuntimeException(e);
+			} catch (AmbiguousObjectException e) {
+				throw new RuntimeException(e);
+			} catch (IncorrectObjectTypeException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -316,22 +312,21 @@ public class GitFlowRepository {
 	 * @return Commit for SHA1
 	 */
 	public RevCommit findCommit(String sha1) {
-		RevWalk walk = new RevWalk(repository);
-
-		try {
-			ObjectId head = repository.resolve(sha1);
-			return walk.parseCommit(head);
-		} catch (RevisionSyntaxException e) {
-			throw new RuntimeException(e);
-		} catch (AmbiguousObjectException e) {
-			throw new RuntimeException(e);
-		} catch (IncorrectObjectTypeException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			walk.release();
+		try (RevWalk walk = new RevWalk(repository)) {
+			try {
+				ObjectId head = repository.resolve(sha1);
+				return walk.parseCommit(head);
+			} catch (RevisionSyntaxException e) {
+				throw new RuntimeException(e);
+			} catch (AmbiguousObjectException e) {
+				throw new RuntimeException(e);
+			} catch (IncorrectObjectTypeException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
+
 	}
 
 	/**
@@ -444,13 +439,13 @@ public class GitFlowRepository {
 	public RevCommit findCommitForTag(String tagName)
 			throws MissingObjectException, IncorrectObjectTypeException,
 			IOException {
-		RevWalk revWalk = new RevWalk(repository);
-		Ref tagRef = repository.getRef(R_TAGS + tagName);
-		if (tagRef == null) {
-			return null;
+		try (RevWalk revWalk = new RevWalk(repository)) {
+			Ref tagRef = repository.getRef(R_TAGS + tagName);
+			if (tagRef == null) {
+				return null;
+			}
+			RevCommit result = revWalk.parseCommit(tagRef.getObjectId());
+			return result;
 		}
-		RevCommit result = revWalk.parseCommit(tagRef.getObjectId());
-		revWalk.release();
-		return result;
 	}
 }

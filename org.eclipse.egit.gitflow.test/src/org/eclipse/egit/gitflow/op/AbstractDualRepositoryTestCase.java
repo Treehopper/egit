@@ -97,21 +97,19 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 	}
 
 	protected RevCommit findHead(Repository repo) {
-		RevWalk walk = new RevWalk(repo);
-
-		try {
-			ObjectId head = repo.resolve(HEAD);
-			return walk.parseCommit(head);
-		} catch (RevisionSyntaxException e) {
-			throw new RuntimeException(e);
-		} catch (AmbiguousObjectException e) {
-			throw new RuntimeException(e);
-		} catch (IncorrectObjectTypeException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			walk.release();
+		try (RevWalk walk = new RevWalk(repo)) {
+			try {
+				ObjectId head = repo.resolve(HEAD);
+				return walk.parseCommit(head);
+			} catch (RevisionSyntaxException e) {
+				throw new RuntimeException(e);
+			} catch (AmbiguousObjectException e) {
+				throw new RuntimeException(e);
+			} catch (IncorrectObjectTypeException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

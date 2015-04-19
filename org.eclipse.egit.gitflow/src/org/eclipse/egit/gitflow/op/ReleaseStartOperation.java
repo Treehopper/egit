@@ -61,7 +61,7 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 		String branchName = repository.getReleaseBranchName(versionName);
 
 		try {
-			if (releaseExists(versionName)) {
+			if (releaseExists()) {
 				throw new CoreException(
 						error(format(
 								CoreText.ReleaseStartOperation_releaseNameAlreadyExists,
@@ -81,14 +81,13 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 	}
 
 	/**
-	 * @param versionName
 	 * @return whether or not the given versionName exists
 	 * @throws RevisionSyntaxException
 	 * @throws AmbiguousObjectException
 	 * @throws IncorrectObjectTypeException
 	 * @throws IOException
 	 */
-	public boolean releaseExists(String versionName)
+	public boolean releaseExists()
 			throws RevisionSyntaxException, AmbiguousObjectException,
 			IncorrectObjectTypeException, IOException {
 		return null != repository.getRepository().resolve(

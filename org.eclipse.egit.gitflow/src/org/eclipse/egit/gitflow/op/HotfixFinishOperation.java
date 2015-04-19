@@ -51,16 +51,14 @@ public final class HotfixFinishOperation extends AbstractHotfixOperation {
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String hotfixBranchName = repository.getHotfixBranchName(versionName);
-		MergeResult mergeResult = mergeTo(monitor, hotfixBranchName,
+		mergeResult = mergeTo(monitor, hotfixBranchName,
 				repository.getMaster());
-		this.mergeResult = mergeResult;
 		if (!mergeResult.getMergeStatus().isSuccessful()) {
 			throw new CoreException(
 					error(CoreText.HotfixFinishOperation_mergeFromHotfixToMasterFailed));
 		}
 
 		mergeResult = finish(monitor, hotfixBranchName);
-		this.mergeResult = mergeResult;
 		if (!mergeResult.getMergeStatus().isSuccessful()) {
 			return;
 		}

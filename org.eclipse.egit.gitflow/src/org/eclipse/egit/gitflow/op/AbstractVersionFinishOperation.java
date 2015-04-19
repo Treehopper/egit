@@ -58,7 +58,7 @@ abstract public class AbstractVersionFinishOperation extends GitFlowOperation {
 			commitForTag = repository.findCommitForTag(versionName);
 			if (commitForTag == null) {
 				createTag(monitor, head, tagName, tagMessage);
-			} else if (commitForTag != null && !head.equals(commitForTag)) {
+			} else if (!head.equals(commitForTag)) {
 				throw new CoreException(error(format(
 						CoreText.AbstractVersionFinishOperation_tagNameExists,
 						versionName)));

@@ -33,5 +33,5 @@ import org.junit.runners.Suite.SuiteClasses;
 		FeatureRebaseOperationTest.class, HotfixStartOperationTest.class,
 		HotfixFinishOperationTest.class, GitFlowRepositoryTest.class })
 public class AllTests {
-
+	// test suite
 }

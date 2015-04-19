@@ -62,10 +62,10 @@ abstract public class AbstractGitFlowOperationTest extends GitTestCase {
 	protected RevCommit findCommit(Repository repo, ObjectId head)
 			throws MissingObjectException, IncorrectObjectTypeException,
 			IOException {
-		RevWalk revWalk = new RevWalk(repo);
-		RevCommit result = revWalk.parseCommit(head);
-		revWalk.release();
-		return result;
+		try (RevWalk revWalk = new RevWalk(repo)) {
+			RevCommit result = revWalk.parseCommit(head);
+			return result;
+		}
 	}
 
 	protected RevCommit addFileAndCommit(String fileName, String commitMessage)
