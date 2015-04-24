@@ -33,8 +33,9 @@ public final class FeatureCheckoutOperation extends AbstractFeatureOperation {
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String branchName = repository.getFeatureBranchName(featureName);
 
+		boolean dontCloseProjects = false;
 		BranchOperation branchOperation = new BranchOperation(
-				repository.getRepository(), branchName);
+				repository.getRepository(), branchName, dontCloseProjects);
 		branchOperation.execute(null);
 		result = branchOperation.getResult();
 	}
