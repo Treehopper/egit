@@ -85,7 +85,7 @@ public class FeatureTrackHandler extends AbstractHandler {
 					}
 				};
 				if (dialog.open() != Window.OK) {
-					return null;
+					return Status.CANCEL_STATUS;
 				}
 
 				setName(UIText.FeatureTrackHandler_trackingFeature);
