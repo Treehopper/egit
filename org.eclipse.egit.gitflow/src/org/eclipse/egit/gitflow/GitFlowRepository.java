@@ -1,6 +1,7 @@
 package org.eclipse.egit.gitflow;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.RemoteConfig;
 
 /**
  * Wrapper for JGit repository.
@@ -447,5 +449,27 @@ public class GitFlowRepository {
 			RevCommit result = revWalk.parseCommit(tagRef.getObjectId());
 			return result;
 		}
+	}
+
+	/**
+	 * @return Configured origin.
+	 */
+	public RemoteConfig getDefaultRemoteConfig() {
+		StoredConfig rc = repository.getConfig();
+		RemoteConfig result;
+		try {
+			result = new RemoteConfig(rc, DEFAULT_REMOTE_NAME);
+		} catch (URISyntaxException e) {
+			throw new IllegalStateException(e);
+		}
+		return result;
+	}
+
+	/**
+	 * @return Whether or not there is a default remote configured.
+	 */
+	public boolean hasDefaultRemote() {
+		RemoteConfig config = getDefaultRemoteConfig();
+		return !config.getURIs().isEmpty();
 	}
 }

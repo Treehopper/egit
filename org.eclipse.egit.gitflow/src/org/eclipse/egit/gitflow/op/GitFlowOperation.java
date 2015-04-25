@@ -8,6 +8,9 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import static java.lang.String.format;
+import static org.eclipse.egit.gitflow.Activator.error;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
@@ -22,21 +25,13 @@ import org.eclipse.egit.core.op.DeleteBranchOperation;
 import org.eclipse.egit.core.op.FetchOperation;
 import org.eclipse.egit.core.op.IEGitOperation;
 import org.eclipse.egit.core.op.MergeOperation;
-
-import static org.eclipse.egit.gitflow.Activator.error;
-
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.internal.CoreText;
 import org.eclipse.jgit.api.CheckoutResult;
 import org.eclipse.jgit.api.CheckoutResult.Status;
 import org.eclipse.jgit.api.MergeResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
-
-import static java.lang.String.format;
-import static org.eclipse.jgit.lib.Constants.*;
-
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -170,16 +165,10 @@ abstract public class GitFlowOperation implements IEGitOperation {
 	 */
 	protected FetchResult fetch(IProgressMonitor monitor)
 			throws URISyntaxException, InvocationTargetException {
-		RemoteConfig config = getDefaultRemoteConfig();
+		RemoteConfig config = repository.getDefaultRemoteConfig();
 		FetchOperation fetchOperation = new FetchOperation(
 				repository.getRepository(), config, 0, false);
 		fetchOperation.run(monitor);
 		return fetchOperation.getOperationResult();
-	}
-
-	private RemoteConfig getDefaultRemoteConfig() throws URISyntaxException {
-		StoredConfig rc = repository.getRepository().getConfig();
-		RemoteConfig config = new RemoteConfig(rc, DEFAULT_REMOTE_NAME);
-		return config;
 	}
 }

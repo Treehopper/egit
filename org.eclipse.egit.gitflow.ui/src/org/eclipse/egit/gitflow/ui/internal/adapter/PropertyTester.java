@@ -26,6 +26,8 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 
 	private static final String IS_FEATURE = "isFeature"; //$NON-NLS-1$
 
+	private static final String HAS_DEFAULT_REMOTE = "hasDefaultRemote"; //$NON-NLS-1$
+
 	public boolean test(Object receiver, String property, Object[] args,
 			Object expectedValue) {
 		PlatformObject firstElement = (PlatformObject) receiver;
@@ -45,6 +47,8 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 				return gitFlowRepository.isDevelop();
 			} else if (IS_MASTER.equals(property)) {
 				return gitFlowRepository.isMaster();
+			} else if (HAS_DEFAULT_REMOTE.equals(property)) {
+				return gitFlowRepository.hasDefaultRemote();
 			}
 		} catch (IOException e) {
 			Activator.getDefault().getLog().log(error(e.getMessage(), e));

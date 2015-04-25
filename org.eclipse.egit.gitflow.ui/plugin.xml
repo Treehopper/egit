@@ -348,6 +348,10 @@
                         forcePluginActivation="true"
                         property="GitFlowRepository.isFeature">
                   </test>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.hasDefaultRemote">
+                  </test>
                </and>
             </iterate>
          </enabledWhen> <activeWhen>
@@ -374,6 +378,18 @@
                </or>
             </iterate>
          </activeWhen>
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.hasDefaultRemote">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
       </handler>
       <handler
             commandId="org.eclipse.egit.gitflow.ui.command.featureCheckout">
@@ -480,7 +496,7 @@
             class="org.eclipse.egit.gitflow.ui.internal.adapter.PropertyTester"
             id="org.eclipse.egit.gitflow.ui.propertyTester"
             namespace="GitFlowRepository"
-            properties="isFeature,isRelease,isHotfix,isDevelop,isMaster,isInitialized"
+            properties="isFeature,isRelease,isHotfix,isDevelop,isMaster,isInitialized,hasDefaultRemote"
             type="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
       </propertyTester>
    </extension>
