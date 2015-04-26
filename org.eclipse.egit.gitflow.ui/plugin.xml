@@ -5,19 +5,44 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="popup:org.eclipse.egit.ui.RepositoriesView?after=branch">
-         <menu
-               label="%TeamGitFlowMenu.name">
             <command
                   commandId="org.eclipse.egit.gitflow.ui.command.init"
                   label="%TeamGitFlowInit.name"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
-                  <reference
-                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
-                  </reference>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <not>
+                     <test
+                           forcePluginActivation="true"
+                           property="GitFlowRepository.isInitialized">
+                     </test>
+                  </not>
+               </and>
+            </iterate>
                </visibleWhen>
             </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.egit.ui.RepositoriesView?after=branch">
+         <menu
+               label="%TeamGitFlowMenu.name">
+               <visibleWhen
+                     checkEnabled="false">
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                     <test
+                           forcePluginActivation="true"
+                           property="GitFlowRepository.isInitialized">
+                     </test>
+               </and>
+            </iterate>
+               </visibleWhen>
             <command
                   commandId="org.eclipse.egit.gitflow.ui.command.featureStart"
                   label="%TeamGitFlowFeatureStart.name"
