@@ -1,5 +1,15 @@
 package org.eclipse.egit.gitflow;
 
+import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.VERSION_TAG;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+import static org.eclipse.jgit.lib.Constants.HEAD;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
+import static org.eclipse.jgit.lib.Constants.R_TAGS;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -8,14 +18,9 @@ import java.util.Set;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
-
-import static org.eclipse.jgit.lib.Constants.*;
-import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
-
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -276,13 +281,7 @@ public class GitFlowRepository {
 			try {
 				ObjectId head = repository.resolve(HEAD);
 				return walk.parseCommit(head);
-			} catch (RevisionSyntaxException e) {
-				throw new RuntimeException(e);
-			} catch (AmbiguousObjectException e) {
-				throw new RuntimeException(e);
-			} catch (IncorrectObjectTypeException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
+			} catch (RevisionSyntaxException | IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -297,13 +296,7 @@ public class GitFlowRepository {
 			try {
 				ObjectId head = repository.resolve(R_HEADS + branchName);
 				return walk.parseCommit(head);
-			} catch (RevisionSyntaxException e) {
-				throw new RuntimeException(e);
-			} catch (AmbiguousObjectException e) {
-				throw new RuntimeException(e);
-			} catch (IncorrectObjectTypeException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
+			} catch (RevisionSyntaxException | IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -318,13 +311,7 @@ public class GitFlowRepository {
 			try {
 				ObjectId head = repository.resolve(sha1);
 				return walk.parseCommit(head);
-			} catch (RevisionSyntaxException e) {
-				throw new RuntimeException(e);
-			} catch (AmbiguousObjectException e) {
-				throw new RuntimeException(e);
-			} catch (IncorrectObjectTypeException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
+			} catch (RevisionSyntaxException | IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
