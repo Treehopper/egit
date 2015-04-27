@@ -22,13 +22,13 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureCheckoutOperation;
 import org.eclipse.egit.gitflow.ui.internal.UIText;
 import org.eclipse.egit.gitflow.ui.internal.dialog.AbstractSelectionDialog;
 import org.eclipse.egit.ui.internal.branch.CleanupUncomittedChangesDialog;
+import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jgit.api.CheckoutResult;
@@ -48,10 +48,9 @@ public class FeatureCheckoutHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getCurrentSelection(event);
-		final PlatformObject firstElement = (PlatformObject) selection
-				.getFirstElement();
-		final Repository repository = (Repository) firstElement
-				.getAdapter(Repository.class);
+
+		final Repository repository = SelectionUtils.getRepository(selection);
+
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		final List<Ref> refs = gfRepo.getFeatureBranches();

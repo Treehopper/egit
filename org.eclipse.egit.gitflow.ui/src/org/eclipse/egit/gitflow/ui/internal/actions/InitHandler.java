@@ -8,20 +8,19 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.op.InitOperation;
 import org.eclipse.egit.gitflow.ui.internal.UIText;
-
-import static org.eclipse.egit.gitflow.ui.Activator.error;
-
+import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -29,15 +28,15 @@ import org.eclipse.ui.handlers.HandlerUtil;
 /**
  * git flow feature init
  */
+@SuppressWarnings("restriction")
 public class InitHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection
-				.getFirstElement();
-		final Repository repository = (Repository) firstElement
-				.getAdapter(Repository.class);
+		final Repository repository = SelectionUtils.getRepository(selection);
+		if (repository == null)
+			return null;
 
 		Job job = new Job(UIText.InitHandler_initializing) {
 			@Override

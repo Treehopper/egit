@@ -8,6 +8,10 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow;
 
+/**
+ * Signifies that a git flow operation was performed on a git repository state,
+ * this operation is not intended for.
+ */
 public class WrongGitFlowStateException extends Exception {
 
 	/**
@@ -15,10 +19,16 @@ public class WrongGitFlowStateException extends Exception {
 	 */
 	private static final long serialVersionUID = 3091117695421525438L;
 
+	/**
+	 * @param e
+	 */
 	public WrongGitFlowStateException(Exception e) {
 		super(e);
 	}
 
+	/**
+	 * @param string
+	 */
 	public WrongGitFlowStateException(String string) {
 		super(string);
 	}

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
@@ -75,6 +76,7 @@ public class GitFlowRepository {
 	 * @param repository
 	 */
 	public GitFlowRepository(Repository repository) {
+		Assert.isNotNull(repository);
 		this.repository = repository;
 	}
 

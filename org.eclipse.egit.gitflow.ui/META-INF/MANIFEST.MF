@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.egit.ui,
  org.eclipse.egit.core,
  org.eclipse.core.expressions,
- org.eclipse.team.ui
+ org.eclipse.team.ui,
+ org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin

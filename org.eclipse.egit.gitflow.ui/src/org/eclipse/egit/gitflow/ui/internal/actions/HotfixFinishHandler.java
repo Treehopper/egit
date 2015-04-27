@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import java.io.IOException;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -16,16 +18,13 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.op.HotfixFinishOperation;
 import org.eclipse.egit.gitflow.ui.internal.UIText;
-
-import static org.eclipse.egit.gitflow.ui.Activator.error;
-
+import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -33,15 +32,13 @@ import org.eclipse.ui.handlers.HandlerUtil;
 /**
  * git flow hotfix finish
  */
+@SuppressWarnings("restriction")
 public class HotfixFinishHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection
-				.getFirstElement();
-		Repository repository = (Repository) firstElement
-				.getAdapter(Repository.class);
+		final Repository repository = SelectionUtils.getRepository(selection);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		Job job = new Job(UIText.HotfixFinishHandler_finishingHotfix) {

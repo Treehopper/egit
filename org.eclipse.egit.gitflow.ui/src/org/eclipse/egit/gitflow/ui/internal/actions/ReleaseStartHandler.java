@@ -8,6 +8,8 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -19,11 +21,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.ReleaseStartOperation;
-
-import static org.eclipse.egit.gitflow.ui.Activator.error;
-
 import org.eclipse.egit.gitflow.ui.internal.UIText;
 import org.eclipse.egit.gitflow.ui.internal.validation.ReleaseNameValidator;
+import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -37,10 +37,13 @@ import org.eclipse.ui.handlers.HandlerUtil;
 /**
  * git flow release start
  */
+@SuppressWarnings("restriction")
 public class ReleaseStartHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Repository repository = getRepository(event);
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+				.getCurrentSelection(event);
+		final Repository repository = SelectionUtils.getRepository(selection);
 		if (repository == null) {
 			return null;
 		}

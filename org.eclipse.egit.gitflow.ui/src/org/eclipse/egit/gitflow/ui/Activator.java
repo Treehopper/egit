@@ -11,6 +11,7 @@ package org.eclipse.egit.gitflow.ui;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -76,5 +77,40 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static String getPluginId() {
 		return getDefault().getBundle().getSymbolicName();
+	}
+	
+	/**
+	 * Handle an error. The error is logged. If <code>show</code> is
+	 * <code>true</code> the error is shown to the user.
+	 *
+	 * @param message 		a localized message
+	 * @param throwable
+	 * @param show
+	 */
+	public static void handleError(String message, Throwable throwable,
+			boolean show) {
+		handleIssue(IStatus.ERROR, message, throwable, show);
+	}
+
+	/**
+	 * Handle an issue. The issue is logged. If <code>show</code> is
+	 * <code>true</code> the issue is shown to the user.
+	 *
+	 * @param severity
+	 *            status severity, use constants defined in {@link IStatus}
+	 * @param message
+	 *            a localized message
+	 * @param throwable
+	 * @param show
+	 * @since 2.2
+	 */
+	public static void handleIssue(int severity, String message, Throwable throwable,
+			boolean show) {
+		IStatus status = new Status(severity, getPluginId(), message,
+				throwable);
+		int style = StatusManager.LOG;
+		if (show)
+			style |= StatusManager.SHOW;
+		StatusManager.getManager().handle(status, style);
 	}
 }

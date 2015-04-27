@@ -1,13 +1,11 @@
 package org.eclipse.egit.gitflow.ui.internal.adapter;
 
-import java.io.IOException;
-
-import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.egit.gitflow.Activator;
-import org.eclipse.egit.gitflow.GitFlowRepository;
-
 import static org.eclipse.egit.gitflow.ui.Activator.error;
 
+import java.io.IOException;
+
+import org.eclipse.egit.gitflow.Activator;
+import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Repository;
 
 /**
@@ -28,11 +26,11 @@ public class PropertyTester extends org.eclipse.core.expressions.PropertyTester 
 
 	private static final String HAS_DEFAULT_REMOTE = "hasDefaultRemote"; //$NON-NLS-1$
 
+	@Override
 	public boolean test(Object receiver, String property, Object[] args,
 			Object expectedValue) {
-		PlatformObject firstElement = (PlatformObject) receiver;
-		Repository repository = (Repository) firstElement
-				.getAdapter(Repository.class);
+		Repository repository = (Repository) receiver;
+
 		GitFlowRepository gitFlowRepository = new GitFlowRepository(repository);
 		try {
 			if (IS_INITIALIZED.equals(property)) {

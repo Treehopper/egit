@@ -8,21 +8,20 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.ui.internal.actions;
 
+import static org.eclipse.egit.gitflow.ui.Activator.error;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.egit.gitflow.op.FeatureRebaseOperation;
 import org.eclipse.egit.gitflow.ui.internal.UIText;
-
-import static org.eclipse.egit.gitflow.ui.Activator.error;
-
+import org.eclipse.egit.ui.internal.selection.SelectionUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jgit.api.RebaseResult;
@@ -34,16 +33,14 @@ import org.eclipse.ui.progress.UIJob;
 /**
  * git flow feature rebase
  */
+@SuppressWarnings("restriction")
 public class FeatureRebaseHandler extends AbstractHandler {
 	private static final String INTERACTIVE_REBASE_VIEW_ID = "org.eclipse.egit.ui.InteractiveRebaseView"; //$NON-NLS-1$
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getCurrentSelection(event);
-		PlatformObject firstElement = (PlatformObject) selection
-				.getFirstElement();
-		final Repository repository = (Repository) firstElement
-				.getAdapter(Repository.class);
+		final Repository repository = SelectionUtils.getRepository(selection);
 		final GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		Job job = new UIJob(HandlerUtil.getActiveShell(event).getDisplay(),
