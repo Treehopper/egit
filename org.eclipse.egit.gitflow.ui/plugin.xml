@@ -66,6 +66,39 @@
                </visibleWhen>
             </command>
             <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.featureRebase"
+                  label="%TeamGitFlowFeatureRebase.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.featureCheckout"
+                  label="%TeamGitFlowFeatureCheckout.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.featureTrack"
+                  label="%TeamGitFlowFeatureTrack.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
                   commandId="org.eclipse.egit.gitflow.ui.command.featurePublish"
                   label="%TeamGitFlowFeaturePublish.name"
                   style="push">
@@ -76,28 +109,10 @@
                   </reference>
                </visibleWhen>
             </command>
-            <command
-                  commandId="org.eclipse.egit.gitflow.ui.command.releasePublish"
-                  label="%TeamGitFlowReleasePublish.name"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <reference
-                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
-                  </reference>
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.eclipse.egit.gitflow.ui.command.hotfixPublish"
-                  label="%TeamGitFlowHotfixPublish.name"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <reference
-                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
-                  </reference>
-               </visibleWhen>
-            </command>
+            <separator
+                  name="org.eclipse.egit.gitflow.ui.separator1"
+                  visible="true">
+            </separator>
             <command
                   commandId="org.eclipse.egit.gitflow.ui.command.releaseStart"
                   label="%TeamGitFlowReleaseStart.name"
@@ -121,8 +136,8 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="org.eclipse.egit.gitflow.ui.command.featureTrack"
-                  label="%TeamGitFlowFeatureTrack.name"
+                  commandId="org.eclipse.egit.gitflow.ui.command.releasePublish"
+                  label="%TeamGitFlowReleasePublish.name"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -131,28 +146,10 @@
                   </reference>
                </visibleWhen>
             </command>
-            <command
-                  commandId="org.eclipse.egit.gitflow.ui.command.featureCheckout"
-                  label="%TeamGitFlowFeatureCheckout.name"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <reference
-                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
-                  </reference>
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.eclipse.egit.gitflow.ui.command.featureRebase"
-                  label="%TeamGitFlowFeatureRebase.name"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <reference
-                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
-                  </reference>
-               </visibleWhen>
-            </command>
+            <separator
+                  name="org.eclipse.egit.gitflow.ui.separator2"
+                  visible="true">
+            </separator>
             <command
                   commandId="org.eclipse.egit.gitflow.ui.command.hotfixStart"
                   label="%TeamGitFlowHotfixStart.name"
@@ -167,6 +164,17 @@
             <command
                   commandId="org.eclipse.egit.gitflow.ui.command.hotfixFinish"
                   label="%TeamGitFlowHotfixFinish.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.hotfixPublish"
+                  label="%TeamGitFlowHotfixPublish.name"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
