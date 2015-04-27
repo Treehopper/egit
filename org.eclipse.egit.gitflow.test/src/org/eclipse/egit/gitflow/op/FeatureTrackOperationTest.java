@@ -44,7 +44,7 @@ public class FeatureTrackOperationTest extends AbstractDualRepositoryTestCase {
 
 		RevCommit localCommit = repository2
 				.createInitialCommit("testFeatureTrack2");
-		new FeaturePublishOperation(gfRepo2, 0).execute(null);
+		new CurrentBranchPublishOperation(gfRepo2, 0).execute(null);
 		assertEquals(localCommit, findHead(repository2.getRepository()));
 
 		// config updated?

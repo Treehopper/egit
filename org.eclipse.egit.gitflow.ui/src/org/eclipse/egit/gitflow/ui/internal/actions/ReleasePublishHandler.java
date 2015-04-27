@@ -11,11 +11,11 @@ package org.eclipse.egit.gitflow.ui.internal.actions;
 import org.eclipse.egit.gitflow.ui.internal.UIText;
 
 /**
- * git flow feature finish
+ * git flow release finish
  */
-public class FeaturePublishHandler extends AbstractPublishHandler {
+public class ReleasePublishHandler extends AbstractPublishHandler {
 	@Override
 	protected String getProgressText() {
-		return UIText.FeaturePublishHandler_publishingFeature;
+		return UIText.ReleasePublishHandler_publishingRelease;
 	}
 }

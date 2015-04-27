@@ -8,6 +8,9 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow.op;
 
+import static org.eclipse.egit.gitflow.Activator.error;
+import static org.eclipse.jgit.lib.Constants.DEFAULT_REMOTE_NAME;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -15,50 +18,29 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.op.PushOperation;
 import org.eclipse.egit.core.op.PushOperationResult;
-
-import static org.eclipse.egit.gitflow.Activator.error;
-
 import org.eclipse.egit.gitflow.GitFlowRepository;
-import org.eclipse.egit.gitflow.WrongGitFlowStateException;
 import org.eclipse.egit.gitflow.internal.CoreText;
 
-import static org.eclipse.jgit.lib.Constants.*;
-
 /**
- * git flow feature publish
+ * git flow * publish
  */
 @SuppressWarnings("restriction")
-public final class FeaturePublishOperation extends AbstractFeatureOperation {
+public class CurrentBranchPublishOperation extends GitFlowOperation {
 	private PushOperationResult operationResult;
 
 	private int timeout;
 
 	/**
-	 * publish given feature branch
+	 * publish given branch
 	 *
 	 * @param repository
-	 * @param featureName
 	 * @param timeout
 	 * @throws CoreException
 	 */
-	public FeaturePublishOperation(GitFlowRepository repository,
-			String featureName, int timeout) throws CoreException {
-		super(repository, featureName);
+	public CurrentBranchPublishOperation(GitFlowRepository repository,
+			int timeout) throws CoreException {
+		super(repository);
 		this.timeout = timeout;
-	}
-
-	/**
-	 * publish current feature branch
-	 *
-	 * @param repository
-	 * @param timeout
-	 * @throws WrongGitFlowStateException
-	 * @throws CoreException
-	 * @throws IOException
-	 */
-	public FeaturePublishOperation(GitFlowRepository repository, int timeout)
-			throws WrongGitFlowStateException, CoreException, IOException {
-		this(repository, getFeatureName(repository), timeout);
 	}
 
 	public void execute(IProgressMonitor monitor) throws CoreException {
@@ -71,7 +53,7 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 
 			if (!operationResult.isSuccessfulConnectionForAnyURI()) {
 				String errorMessage = String.format(
-						CoreText.FeaturePublishOperation_pushToRemoteFailed,
+						CoreText.pushToRemoteFailed,
 						operationResult.getErrorStringForAllURis());
 				throw new CoreException(error(errorMessage));
 			}
@@ -81,14 +63,12 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 					targetException));
 		}
 
-		String newLocalBranch = repository.getFeatureBranchName(featureName);
+		String newLocalBranch = getCurrentBranchhName();
 		try {
-			setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
-			setMerge(newLocalBranch,
-					repository.getFullFeatureBranchName(featureName));
+			repository.setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
+			repository.setMerge(newLocalBranch, repository.getRepository().getFullBranch());
 		} catch (IOException e) {
-			throw new CoreException(error(
-					CoreText.FeaturePublishOperation_unableToStoreGitConfig, e));
+			throw new CoreException(error(CoreText.unableToStoreGitConfig, e));
 		}
 	}
 
@@ -97,5 +77,13 @@ public final class FeaturePublishOperation extends AbstractFeatureOperation {
 	 */
 	public PushOperationResult getOperationResult() {
 		return operationResult;
+	}
+
+	private String getCurrentBranchhName() {
+		try {
+			return repository.getRepository().getBranch();
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 }

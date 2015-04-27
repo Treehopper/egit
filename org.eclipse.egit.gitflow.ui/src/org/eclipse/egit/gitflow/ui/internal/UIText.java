@@ -103,6 +103,12 @@ public class UIText extends NLS {
 	public static String FeaturePublishHandler_publishingFeature;
 
 	/**	 */
+	public static String ReleasePublishHandler_publishingRelease;
+
+	/**	 */
+	public static String HotfixPublishHandler_publishingHotfix;
+
+	/**	 */
 	public static String NameValidator_invalidName;
 
 	/**	 */

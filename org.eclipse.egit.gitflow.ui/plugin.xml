@@ -77,6 +77,28 @@
                </visibleWhen>
             </command>
             <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.releasePublish"
+                  label="%TeamGitFlowReleasePublish.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.eclipse.egit.gitflow.ui.command.hotfixPublish"
+                  label="%TeamGitFlowHotfixPublish.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.eclipse.egit.ui.repositoryTreePathNode">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
                   commandId="org.eclipse.egit.gitflow.ui.command.releaseStart"
                   label="%TeamGitFlowReleaseStart.name"
                   style="push">
@@ -194,6 +216,14 @@
       <command
             id="org.eclipse.egit.gitflow.ui.command.featurePublish"
             name="%TeamGitFlowFeaturePublish.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.releasePublish"
+            name="%TeamGitFlowReleasePublish.name">
+      </command>
+      <command
+            id="org.eclipse.egit.gitflow.ui.command.hotfixPublish"
+            name="%TeamGitFlowHotfixPublish.name">
       </command>
       <command
             id="org.eclipse.egit.gitflow.ui.command.featureTrack"
@@ -372,6 +402,68 @@
                   <test
                         forcePluginActivation="true"
                         property="GitFlowRepository.isFeature">
+                  </test>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.hasDefaultRemote">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen> <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.releasePublish">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.ReleasePublishHandler">
+         </class>
+  
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isRelease">
+                  </test>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.hasDefaultRemote">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen> <activeWhen>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="org.eclipse.egit.ui.internal.repository.tree.RepositoryTreeNode">
+                  </instanceof>
+               </or>
+            </iterate>
+         </activeWhen>
+      </handler>
+      <handler
+            commandId="org.eclipse.egit.gitflow.ui.command.hotfixPublish">
+         <class
+               class="org.eclipse.egit.gitflow.ui.internal.actions.HotfixPublishHandler">
+         </class>
+  
+         <enabledWhen>
+            <iterate
+                  ifEmpty="false"
+                  operator="and">
+               <and>
+                  <test
+                        forcePluginActivation="true"
+                        property="GitFlowRepository.isHotfix">
                   </test>
                   <test
                         forcePluginActivation="true"

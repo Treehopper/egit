@@ -21,7 +21,7 @@ import org.eclipse.jgit.transport.PushResult;
 import org.junit.Test;
 
 @SuppressWarnings("restriction")
-public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase {
+public class CurrentBranchPublishOperationTest extends AbstractDualRepositoryTestCase {
 	@Test
 	public void testFeaturePublish() throws Exception {
 		new InitOperation(repository2.getRepository()).execute(null);
@@ -31,7 +31,7 @@ public class FeaturePublishOperationTest extends AbstractDualRepositoryTestCase 
 		new FeatureStartOperation(gfRepo2, MY_FEATURE).execute(null);
 		RevCommit branchCommit = repository2
 				.createInitialCommit("testFeaturePublish");
-		FeaturePublishOperation featurePublishOperation = new FeaturePublishOperation(
+		CurrentBranchPublishOperation featurePublishOperation = new CurrentBranchPublishOperation(
 				gfRepo2, 0);
 		featurePublishOperation.execute(null);
 		PushOperationResult result = featurePublishOperation

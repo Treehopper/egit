@@ -459,4 +459,40 @@ public class GitFlowRepository {
 		RemoteConfig config = getDefaultRemoteConfig();
 		return !config.getURIs().isEmpty();
 	}
+
+	/**
+	 * @param featureName
+	 * @param value
+	 * @throws IOException
+	 */
+	public void setRemote(String featureName, String value) throws IOException {
+		setBranchValue(featureName, value, REMOTE_KEY);
+	}
+
+	/**
+	 * @param featureName
+	 * @param value
+	 * @throws IOException
+	 */
+	public void setMerge(String featureName, String value) throws IOException {
+		setBranchValue(featureName, value, MERGE_KEY);
+	}
+
+	private void setBranchValue(String featureName, String value,
+			String mergeKey) throws IOException {
+		StoredConfig config = repository.getConfig();
+		config.setString(BRANCH_SECTION, featureName, mergeKey, value);
+		config.save();
+	}
+
+	/**
+	 * @return Current branch name
+	 */
+	public String getCurrentBranchName() {
+		try {
+			return repository.getBranch();
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
+	}
 }

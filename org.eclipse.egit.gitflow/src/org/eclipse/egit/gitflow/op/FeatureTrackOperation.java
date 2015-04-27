@@ -97,8 +97,8 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 			}
 
 			try {
-				setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
-				setMerge(newLocalBranch,
+				repository.setRemote(newLocalBranch, DEFAULT_REMOTE_NAME);
+				repository.setMerge(newLocalBranch,
 						repository.getFullFeatureBranchName(featureName));
 			} catch (IOException e) {
 				throw new CoreException(error(
