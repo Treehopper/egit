@@ -14,7 +14,7 @@ import org.eclipse.egit.gitflow.GitFlowRepository;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 
-public class HotfixStartOperationTest extends AbstractFeatureOperationTest {
+public class HotfixStartOperationTest extends AbstractGitFlowOperationTest {
 	@Test
 	public void testHotfixStart() throws Exception {
 		testRepository.createInitialCommit("testHotfixStart\n\nfirst commit\n");
