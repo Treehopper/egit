@@ -44,6 +44,12 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 
 	protected static final String MY_MASTER = "master";
 
+	protected static final String MY_RELEASE = "myRelease";
+
+	protected static final String MY_VERSION_TAG = "v";
+
+	protected static final String MY_HOTFIX = "myHotfix";
+
 	private File workdir;
 
 	private File workdir2;

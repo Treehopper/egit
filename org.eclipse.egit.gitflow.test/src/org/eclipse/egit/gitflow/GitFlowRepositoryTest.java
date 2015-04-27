@@ -8,30 +8,33 @@
  *******************************************************************************/
 package org.eclipse.egit.gitflow;
 
-import static org.eclipse.egit.gitflow.GitFlowDefaults.*;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.DEVELOP;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
+import static org.eclipse.egit.gitflow.GitFlowDefaults.VERSION_TAG;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.egit.gitflow.op.AbstractGitFlowOperationTest;
+import org.eclipse.egit.gitflow.op.AbstractDualRepositoryTestCase;
 import org.eclipse.egit.gitflow.op.FeatureStartOperation;
 import org.eclipse.egit.gitflow.op.HotfixStartOperation;
 import org.eclipse.egit.gitflow.op.InitOperation;
 import org.eclipse.egit.gitflow.op.ReleaseFinishOperation;
 import org.eclipse.egit.gitflow.op.ReleaseStartOperation;
-import static org.eclipse.jgit.lib.Constants.*;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 
-public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
-
+public class GitFlowRepositoryTest extends AbstractDualRepositoryTestCase {
 	@Test
 	public void testIsInitialized() throws Exception {
-		testRepository
+		repository1
 				.createInitialCommit("testIsInitialized\n\nfirst commit\n");
 
-		Repository repository = testRepository.getRepository();
+		Repository repository = repository2.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		assertFalse(gfRepo.isInitialized());
@@ -43,9 +46,9 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testIsMaster() throws Exception {
-		testRepository.createInitialCommit("testIsMaster\n\nfirst commit\n");
+		repository1.createInitialCommit("testIsMaster\n\nfirst commit\n");
 
-		Repository repository = testRepository.getRepository();
+		Repository repository = repository2.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		assertTrue(gfRepo.isMaster());
@@ -57,10 +60,10 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testGetFeatureBranches() throws Exception {
-		testRepository
+		repository1
 				.createInitialCommit("testGetFeatureBranches\n\nfirst commit\n");
 
-		Repository repository = testRepository.getRepository();
+		Repository repository = repository1.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new InitOperation(repository).execute(null);
@@ -75,10 +78,10 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testGetReleaseBranches() throws Exception {
-		testRepository
+		repository1
 				.createInitialCommit("testGetReleaseBranches\n\nfirst commit\n");
 
-		Repository repository = testRepository.getRepository();
+		Repository repository = repository1.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new InitOperation(repository).execute(null);
@@ -93,10 +96,10 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testGetHotfixBranches() throws Exception {
-		testRepository
+		repository1
 				.createInitialCommit("testGetHotfixBranches\n\nfirst commit\n");
 
-		Repository repository = testRepository.getRepository();
+		Repository repository = repository1.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new InitOperation(repository).execute(null);
@@ -113,10 +116,10 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 
 	@Test
 	public void testGetFeatureBranchName() throws Exception {
-		testRepository
+		repository1
 				.createInitialCommit("testGetFeatureBranchName\n\nfirst commit\n");
 
-		Repository repository = testRepository.getRepository();
+		Repository repository = repository1.getRepository();
 		GitFlowRepository gfRepo = new GitFlowRepository(repository);
 
 		new InitOperation(repository, DEVELOP, GitFlowDefaults.MASTER,
@@ -130,6 +133,20 @@ public class GitFlowRepositoryTest extends AbstractGitFlowOperationTest {
 		Ref actualFeatureRef = repository.getRef(R_HEADS
 				+ gfRepo.getFeaturePrefix() + MY_FEATURE);
 		assertEquals(MY_FEATURE, gfRepo.getFeatureBranchName(actualFeatureRef));
+	}
+
+	@Test
+	public void testHasDefaultRemote() throws Exception {
+		repository1
+				.createInitialCommit("testHasDefaultRemote\n\nfirst commit\n");
+
+		Repository repository = repository1.getRepository();
+		GitFlowRepository gfRepo = new GitFlowRepository(repository);
+
+		assertFalse(gfRepo.hasDefaultRemote());
+
+		GitFlowRepository gfRepo2 = new GitFlowRepository(repository2.getRepository());
+		assertTrue(gfRepo2.hasDefaultRemote());
 	}
 
 }
