@@ -13,7 +13,9 @@ import static org.eclipse.egit.gitflow.GitFlowDefaults.FEATURE_PREFIX;
 import static org.eclipse.egit.gitflow.GitFlowDefaults.HOTFIX_PREFIX;
 import static org.eclipse.egit.gitflow.GitFlowDefaults.MASTER;
 import static org.eclipse.egit.gitflow.GitFlowDefaults.RELEASE_PREFIX;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
@@ -66,7 +68,7 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 	}
 
-	@Test(expected = WrongGitFlowStateException.class)
+	@Test
 	public void testReleaseFinishFail() throws Exception {
 		testRepository
 				.createInitialCommit("testReleaseFinishFail\n\nfirst commit\n");
@@ -79,7 +81,12 @@ public class ReleaseFinishOperationTest extends AbstractGitFlowOperationTest {
 
 		new BranchOperation(repository, gfRepo.getDevelop()).execute(null);
 
-		new ReleaseFinishOperation(gfRepo).execute(null);
+		try {
+			new ReleaseFinishOperation(gfRepo).execute(null);
+			fail();
+		} catch (WrongGitFlowStateException e) {
+			// success
+		}
 	}
 
 	@Test
