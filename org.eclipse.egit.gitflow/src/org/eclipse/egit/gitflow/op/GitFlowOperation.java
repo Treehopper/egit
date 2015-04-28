@@ -58,6 +58,7 @@ abstract public class GitFlowOperation implements IEGitOperation {
 		this.repository = repository;
 	}
 
+	@Override
 	public ISchedulingRule getSchedulingRule() {
 		return RuleUtil.getRule(repository.getRepository());
 	}

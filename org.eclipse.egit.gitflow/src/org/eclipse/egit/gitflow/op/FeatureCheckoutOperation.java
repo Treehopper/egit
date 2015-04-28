@@ -30,6 +30,7 @@ public final class FeatureCheckoutOperation extends AbstractFeatureOperation {
 		super(repository, featureName);
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String branchName = repository.getFeatureBranchName(featureName);
 

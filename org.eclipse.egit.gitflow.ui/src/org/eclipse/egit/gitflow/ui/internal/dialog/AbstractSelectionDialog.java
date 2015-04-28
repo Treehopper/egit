@@ -74,11 +74,13 @@ public abstract class AbstractSelectionDialog<T> extends MessageDialog {
 		branchesList.setInput(nodes);
 		branchesList
 				.addSelectionChangedListener(new ISelectionChangedListener() {
+					@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						checkPage();
 					}
 				});
 		branchesList.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				buttonPressed(OK);
 			}

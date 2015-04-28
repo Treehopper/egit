@@ -56,6 +56,7 @@ public class AbstractDualRepositoryTestCase extends DualRepositoryTestCase {
 
 	String projectName = "FeaturePublishTest";
 
+	@Override
 	@Before
 	public void beforeTestCase() throws Exception {
 		workdir = testUtils.createTempDir("Repository1");

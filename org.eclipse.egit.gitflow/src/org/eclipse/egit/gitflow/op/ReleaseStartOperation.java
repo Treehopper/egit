@@ -56,6 +56,7 @@ public final class ReleaseStartOperation extends AbstractReleaseOperation {
 		this.startCommitSha1 = repository.findHead().getName();
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 
 		String branchName = repository.getReleaseBranchName(versionName);

@@ -43,6 +43,7 @@ public class CurrentBranchPublishOperation extends GitFlowOperation {
 		this.timeout = timeout;
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
 			PushOperation pushOperation = new PushOperation(

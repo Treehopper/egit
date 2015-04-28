@@ -54,6 +54,7 @@ public final class FeatureListOperation extends GitFlowOperation {
 		this.timeout = timeout;
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String uriString = FILE
 				+ repository.getRepository().getDirectory().getPath();

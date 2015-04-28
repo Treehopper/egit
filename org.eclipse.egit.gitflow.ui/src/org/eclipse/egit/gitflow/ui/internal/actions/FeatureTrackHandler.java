@@ -44,6 +44,7 @@ import org.eclipse.ui.progress.UIJob;
 @SuppressWarnings("restriction")
 public class FeatureTrackHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getCurrentSelection(event);

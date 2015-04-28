@@ -37,6 +37,7 @@ import org.eclipse.ui.progress.UIJob;
 public class FeatureRebaseHandler extends AbstractHandler {
 	private static final String INTERACTIVE_REBASE_VIEW_ID = "org.eclipse.egit.ui.InteractiveRebaseView"; //$NON-NLS-1$
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil
 				.getCurrentSelection(event);

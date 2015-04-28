@@ -68,6 +68,7 @@ public final class FeatureTrackOperation extends AbstractFeatureOperation {
 		this.remoteFeature = ref;
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
 			String newLocalBranch = repository

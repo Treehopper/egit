@@ -35,6 +35,7 @@ public final class FeatureRebaseOperation extends GitFlowOperation {
 		super(repository);
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
 			if (!repository.isFeature()) {

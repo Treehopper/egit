@@ -44,6 +44,7 @@ public final class ReleaseFinishOperation extends AbstractReleaseOperation {
 		this(repository, getReleaseName(repository));
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String releaseBranchName = repository.getReleaseBranchName(versionName);
 		mergeTo(monitor, releaseBranchName, repository.getMaster());

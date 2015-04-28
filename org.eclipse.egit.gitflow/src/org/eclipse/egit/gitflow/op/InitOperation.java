@@ -89,6 +89,7 @@ public final class InitOperation extends GitFlowOperation {
 				hotfixPrefix, VERSION_TAG);
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
 			setPrefixes(feature, release, hotfix, versionTag);

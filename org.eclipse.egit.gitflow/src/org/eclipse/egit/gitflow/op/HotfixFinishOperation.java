@@ -49,6 +49,7 @@ public final class HotfixFinishOperation extends AbstractHotfixOperation {
 		this(repository, getHotfixName(repository));
 	}
 
+	@Override
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		String hotfixBranchName = repository.getHotfixBranchName(versionName);
 		mergeResult = mergeTo(monitor, hotfixBranchName,

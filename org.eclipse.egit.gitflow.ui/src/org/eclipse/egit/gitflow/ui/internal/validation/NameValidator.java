@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.IInputValidator;
  *
  */
 abstract public class NameValidator implements IInputValidator {
+	@Override
 	public String isValid(String newText) {
 		try {
 			if (branchExists(newText)) {
