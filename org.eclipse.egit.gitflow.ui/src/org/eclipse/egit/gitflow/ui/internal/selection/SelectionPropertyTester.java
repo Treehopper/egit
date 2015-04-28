@@ -1,4 +1,4 @@
-package org.eclipse.egit.gitflow.ui.internal.adapter;
+package org.eclipse.egit.gitflow.ui.internal.selection;
 
 import static org.eclipse.egit.gitflow.ui.Activator.error;
 
@@ -11,7 +11,7 @@ import org.eclipse.jgit.lib.Repository;
 /**
  * Testing Git Flow states.
  */
-public class PropertyTester extends org.eclipse.core.expressions.PropertyTester {
+public class SelectionPropertyTester extends org.eclipse.core.expressions.PropertyTester {
 	private static final String IS_MASTER = "isMaster"; //$NON-NLS-1$
 
 	private static final String IS_DEVELOP = "isDevelop"; //$NON-NLS-1$

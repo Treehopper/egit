@@ -576,7 +576,7 @@
 	<extension
          point="org.eclipse.core.expressions.propertyTesters">
 		<propertyTester
-            class="org.eclipse.egit.gitflow.ui.internal.adapter.PropertyTester"
+            class="org.eclipse.egit.gitflow.ui.internal.selection.SelectionPropertyTester"
             id="org.eclipse.egit.gitflow.ui.propertyTester"
             namespace="GitFlowRepository"
             properties="isFeature,isRelease,isHotfix,isDevelop,isMaster,isInitialized,hasDefaultRemote"
@@ -601,7 +601,7 @@
 	<extension
          point="org.eclipse.core.runtime.adapters">
 		<factory adaptableType="org.eclipse.core.resources.IResource"
-             class="org.eclipse.egit.gitflow.ui.internal.adapter.RepositoryFactory">
+             class="org.eclipse.egit.gitflow.ui.internal.factories.GitFlowAdapterFactory">
 			<adapter type="org.eclipse.jgit.lib.Repository"/>
 		</factory>
 	</extension>

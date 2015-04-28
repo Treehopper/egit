@@ -1,4 +1,4 @@
-package org.eclipse.egit.gitflow.ui.internal.adapter;
+package org.eclipse.egit.gitflow.ui.internal.factories;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -11,7 +11,7 @@ import org.eclipse.jgit.lib.Repository;
  *
  */
 @SuppressWarnings("restriction")
-public class RepositoryFactory implements IAdapterFactory {
+public class GitFlowAdapterFactory implements IAdapterFactory {
 	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		Repository repository = null;
